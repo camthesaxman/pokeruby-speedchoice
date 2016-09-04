@@ -2073,35 +2073,41 @@ static u8 sub_8002FA0(struct Window *win, u8 *text)
 
 static u8 InterpretText(struct Window *win)
 {
-    u8 c = win->text[win->textIndex++];
-
-    switch (c)
+    u8 c;
+    
+    while(1)
     {
-    case 0xFF:
-        ClipRight(win);
-        win->state = WIN_STATE_END;
-        return 0;
-    case 0xFD:
-        win->state = WIN_STATE_PLACEHOLDER;
-        return 2;
-    case 0xFE:
-        ClipRight(win);
-        win->state = WIN_STATE_NEWLINE;
-        return 2;
-    case 0xFB:
-        DrawInitialDownArrow(win);
-        win->state = WIN_STATE_PARAGRAPH;
-        return 2;
-    case 0xFA:
-        DrawInitialDownArrow(win);
-        win->state = WIN_STATE_NEWLINE_WAIT;
-        return 2;
-    case 0xFC:
-        return HandleExtCtrlCode(win);
-    }
+        c = win->text[win->textIndex++];
 
-    sPrintGlyphFuncs[win->textMode](win, c);
-    return 1;
+        switch (c)
+        {
+        case 0xFF:
+            ClipRight(win);
+            win->state = WIN_STATE_END;
+            return 0;
+        case 0xFD:
+            win->state = WIN_STATE_PLACEHOLDER;
+            return 2;
+        case 0xFE:
+            ClipRight(win);
+            win->state = WIN_STATE_NEWLINE;
+            return 2;
+        case 0xFB:
+            DrawInitialDownArrow(win);
+            win->state = WIN_STATE_PARAGRAPH;
+            return 2;
+        case 0xFA:
+            DrawInitialDownArrow(win);
+            win->state = WIN_STATE_NEWLINE_WAIT;
+            return 2;
+        case 0xFC:
+            return HandleExtCtrlCode(win);
+        default:
+            sPrintGlyphFuncs[win->textMode](win, c);
+            break;
+        }
+
+    }
 }
 
 static u8 HandleExtCtrlCode(struct Window *win)
@@ -2390,7 +2396,7 @@ static u8 UpdateWindowText(struct Window *win)
     case WIN_STATE_WAIT_BUTTON:
         if (PlayerCanInterruptWait(win))
         {
-            if (gMain.newKeys & (A_BUTTON | B_BUTTON))
+            if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
             {
                 audio_play(SE_SELECT);
             }
@@ -2909,7 +2915,7 @@ static void SetForegroundColor(struct Window *win, u8 color)
 static u8 GetTextDelay(struct Window *win)
 {
     if (!PlayerCanInterruptWait(win))
-        return 3;
+        return 0;
 
     return sTextSpeedDelays[gSaveBlock2.optionsTextSpeed];
 }
@@ -3196,7 +3202,7 @@ static u8 WaitWithDownArrow(struct Window *win)
     }
     else
     {
-        if (gMain.newKeys & (A_BUTTON | B_BUTTON))
+        if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
         {
             audio_play(SE_SELECT);
             TryEraseDownArrow(win);
