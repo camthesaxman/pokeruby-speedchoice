@@ -4654,39 +4654,34 @@ _0800C6A0: .4byte 0x03004040
 
 	thumb_func_start unref_sub_800C6A4
 unref_sub_800C6A4: @ 800C6A4
-	push {r4-r6,lr}
-	lsls r0, 24
-	lsrs r6, r0, 24
-	lsls r2, 24
-	lsrs r4, r2, 24
-	ldr r0, _0800C6E0
-	movs r2, 0x3
-	strb r2, [r0]
-	strb r1, [r0, 0x1]
-	strb r4, [r0, 0x2]
-	adds r5, r0, 0
-	cmp r4, 0
-	beq _0800C6D0
-	adds r1, r5, 0x3
-	adds r2, r4, 0
-_0800C6C2:
-	ldrb r0, [r3]
-	strb r0, [r1]
-	adds r3, 0x1
-	adds r1, 0x1
-	subs r2, 0x1
-	cmp r2, 0
-	bne _0800C6C2
-_0800C6D0:
-	adds r2, r4, 0x3
-	adds r0, r6, 0
-	adds r1, r5, 0
-	bl dp01_prepare_buffer
-	pop {r4-r6}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0800C6E0: .4byte 0x03004040
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	thumb_func_end unref_sub_800C6A4
 
 	thumb_func_start dp01_build_cmdbuf_x04_4_4_4

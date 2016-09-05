@@ -2975,8 +2975,7 @@ gUnknown_0820C341:: @ 820C341
 	.string "セルセット$", 13
 	.string "OBJテキストADD$", 13
 	.string "システムメッセージADD$", 13
-	
-	.space 0xA
+	.space 13
 
 @ Shedinja's Japanese name
 @ sub_8048D44 compares a pokemon name with this string

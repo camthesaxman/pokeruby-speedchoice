@@ -2084,7 +2084,7 @@ static u8 InterpretText(struct Window *win)
         case 0xFF:
             ClipRight(win);
             win->state = WIN_STATE_END;
-            return 0;
+            return 2;
         case 0xFD:
             win->state = WIN_STATE_PLACEHOLDER;
             return 2;
@@ -2106,7 +2106,7 @@ static u8 InterpretText(struct Window *win)
             sPrintGlyphFuncs[win->textMode](win, c);
             break;
         }
-
+	
     }
 }
 
@@ -2481,7 +2481,7 @@ static u8 UpdateWindowText(struct Window *win)
     case WIN_STATE_NEWLINE_WAIT:
         if (PlayerCanInterruptWait(win))
             return 0;
-        win->delayCounter = 60;
+        win->delayCounter = 0;
         break;
     case WIN_STATE_PAUSE:
     case WIN_STATE_NEWLINE:
@@ -2499,7 +2499,7 @@ u8 sub_800374C(struct Window *win)
 {
     u8 retVal;
 
-    sWaitType = 1;
+    sWaitType = 0;
     sLineLength = 26;
     retVal = UpdateWindowText(win);
     sLineLength = 26;
@@ -2511,7 +2511,7 @@ u8 sub_8003778(struct Window *win)
 {
     u8 retVal;
 
-    sWaitType = 2;
+    sWaitType = 0;
     sLineLength = 26;
     retVal = UpdateWindowText(win);
     sWaitType = 0;
@@ -2522,7 +2522,7 @@ u8 sub_80037A0(struct Window *win)
 {
     u8 retVal;
 
-    sWaitType = 3;
+    sWaitType = 0;
     sLineLength = 17;
     retVal = UpdateWindowText(win);
     sLineLength = 26;
