@@ -2967,15 +2967,12 @@ gUnknown_0820C341:: @ 820C341
 	.align 2
 	.4byte gTileBuffer
 
-@ Unused debug strings?
-	.string "かいめの そうしん$", 13
-	.string "かいめの じゅしん$", 13
-	.string "ポケモンアイコンセット$", 13
-	.string "OBJテキストセット$", 13
-	.string "セルセット$", 13
-	.string "OBJテキストADD$", 13
-	.string "システムメッセージADD$", 13
-	.space 13
+@ replaced with ifdef spaces
+	.ifdef SAPPHIRE
+	.space 104
+	.else
+	.space 106
+	.endif
 
 @ Shedinja's Japanese name
 @ sub_8048D44 compares a pokemon name with this string
