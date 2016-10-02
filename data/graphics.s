@@ -4519,8 +4519,8 @@ gPokenavRibbonPokeView_Gfx:: @ 8EA0028
 	.incbin "graphics/pokenav/ribbon_pokeview.4bpp"
 
 	.align 2
-gTextWindowMainFrame_Gfx:: @ 8EA0108
-	.incbin "graphics/text_window/main.4bpp"
+gMessageBox_Gfx:: @ 8EA0108
+	.incbin "graphics/text_window/message_box.4bpp"
 
 	.align 2
 gUnknown_08EA02C8:: @ 8EA02C8
@@ -4560,11 +4560,19 @@ gDecoration10000_Gfx:: @ 8EA2A44
 
 	.align 2
 gFont3LatinGlyphs:: @ 8EA2C44
+	.if REVISION >= 1
+	.incbin "graphics/fonts/font3_lat_rev1.4bpp"
+	.else
 	.incbin "graphics/fonts/font3_lat.4bpp"
+	.endif
 
 	.align 2
 gFont4LatinGlyphs:: @ 8EA6BC4
+	.if REVISION >= 1
+	.incbin "graphics/fonts/font4_lat_rev1.4bpp"
+	.else
 	.incbin "graphics/fonts/font4_lat.4bpp"
+	.endif
 
 	.align 2
 gFont3JapaneseGlyphs:: @ 8EA8744

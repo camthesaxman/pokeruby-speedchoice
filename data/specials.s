@@ -1,3 +1,4 @@
+	.align 2
 gSpecials::
 	.4byte sp000_heal_pokemon
 	.4byte sub_8068FEC
@@ -130,7 +131,7 @@ gSpecials::
 	.4byte sub_80EB83C
 	.4byte sub_80FA648
 	.4byte sub_80A9884
-	.4byte calc_player_party_count
+	.4byte CalculatePlayerPartyCount
 	.4byte sub_8095B6C
 	.4byte sub_8095C10
 	.4byte sub_80C4CF8

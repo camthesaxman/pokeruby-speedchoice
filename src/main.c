@@ -6,6 +6,7 @@
 #include "rtc.h"
 #include "link.h"
 #include "rng.h"
+#include "sound.h"
 
 extern struct SoundInfo gSoundInfo;
 extern u32 gUnknown_3004820;
@@ -50,15 +51,15 @@ const IntrFunc gIntrTableTemplate[] =
 
 #define INTR_COUNT ((int)(sizeof(gIntrTableTemplate)/sizeof(IntrFunc)))
 
-COMM_2(u16 gKeyRepeatStartDelay)
-COMM_2(u8 gUnknown_3001764)
-COMM_4(struct Main gMain)
-COMM_2(u16 gKeyRepeatContinueDelay)
-COMM_2(u8 gUnknown_3001BB4)
-COMM_4(IntrFunc gIntrTable[INTR_COUNT])
-COMM_2(bool8 gLinkVSyncDisabled)
-COMM_4(u32 IntrMain_Buffer[0x200])
-COMM_2(u8 gPcmDmaCounter)
+u16 gKeyRepeatStartDelay;
+u8 gUnknown_3001764;
+struct Main gMain;
+u16 gKeyRepeatContinueDelay;
+u8 gUnknown_3001BB4;
+IntrFunc gIntrTable[INTR_COUNT];
+bool8 gLinkVSyncDisabled;
+u32 IntrMain_Buffer[0x200];
+u8 gPcmDmaCounter;
 
 EWRAM_DATA void (*gFlashTimerIntrFunc)(void) = NULL;
 
@@ -68,9 +69,7 @@ extern void c2_copyright_1();
 extern u32 sub_80558AC(void);
 extern u32 sub_8055910(void);
 extern u32 sub_8055940(void);
-extern void sound_something(void);
 extern void CheckForFlashMemory(void);
-extern void sound_sources_off(void);
 
 void UpdateLinkAndCallCallbacks(void);
 void InitMainCallbacks(void);
@@ -99,7 +98,7 @@ void AgbMain()
     RtcInit();
     CheckForFlashMemory();
     InitMainCallbacks();
-    sound_sources_off();
+    InitMapMusic();
     SeedRngWithRtc();
 
     gUnknown_3001BB4 = 0;
@@ -142,7 +141,7 @@ void AgbMain()
         }
 
         PlayTimeCounter_Update();
-        sound_something();
+        MapMusicMain();
         WaitForVBlank();
     }
 }

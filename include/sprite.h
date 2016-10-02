@@ -1,6 +1,8 @@
 #ifndef GUARD_SPRITE_H
 #define GUARD_SPRITE_H
 
+#define MAX_SPRITES 64
+
 struct SpriteSheet
 {
     u8 *data;
@@ -149,14 +151,14 @@ struct Sprite
     u8 animLoopCounter;
 
     // general purpose data fields
-    u16 data0;
-    u16 data1;
-    u16 data2;
-    u16 data3;
-    u16 data4;
-    u16 data5;
-    u16 data6;
-    u16 data7;
+    s16 data0;
+    s16 data1;
+    s16 data2;
+    s16 data3;
+    s16 data4;
+    s16 data5;
+    s16 data6;
+    s16 data7;
 
     u16 inUse:1;
     u16 coordOffsetEnabled:1;
@@ -182,6 +184,11 @@ struct Sprite
 
     u8 subpriority;
 };
+
+extern s16 gSpriteCoordOffsetX;
+extern s16 gSpriteCoordOffsetY;
+
+extern struct Sprite gSprites[];
 
 void ResetSpriteData(void);
 void AnimateSprites(void);

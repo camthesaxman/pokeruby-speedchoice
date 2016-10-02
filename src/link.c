@@ -7,6 +7,8 @@
 #include "link.h"
 #include "palette.h"
 #include "rng.h"
+#include "menu.h"
+#include "sound.h"
 
 #define SIO_MULTI_CNT ((struct SioMultiCnt *)REG_ADDR_SIOCNT)
 
@@ -27,7 +29,6 @@ struct LinkTestBGInfo
     u32 dummy_C;
 };
 
-extern void sub_8071C4C(const struct WindowConfig *);
 extern void sub_80516C4(u8, u16);
 
 extern u8 unk_2000000[];
@@ -37,7 +38,7 @@ extern u16 word_203855E;
 
 extern u16 word_3004858;
 
-extern u8 gUnknown_0842C34C[];
+extern u8 gMultiText_LinkError[];
 
 static void InitLinkTestBG(u8, u8, u8, u8);
 static void InitLinkTestBG_Unused(u8, u8, u8, u8);
@@ -111,48 +112,41 @@ static u16 sRecvNonzeroCheck;
 static u8 sChecksumAvailable;
 static u8 sHandshakePlayerCount;
 
-COMM_3(u16 word_3002910[MAX_LINK_PLAYERS])
-COMM_2(u32 gLinkDebugValue1)
-COMM_4(struct LinkPlayerBlock localLinkPlayerBlock)
-COMM_2(bool8 gLinkErrorOccurred)
-COMM_2(u32 gFiller_3002960)
-COMM_2(u32 gLinkDebugValue2)
-COMM_2(u32 gFiller_3002968)
-COMM_2(bool8 gLinkPlayerPending[MAX_LINK_PLAYERS])
-COMM_4(struct LinkPlayer gLinkPlayers[MAX_LINK_PLAYERS])
-COMM_2(bool8 gBlockReceived[MAX_LINK_PLAYERS])
-COMM_2(u32 gFiller_30029E4)
-COMM_2(u16 gLinkHeldKeys)
-COMM_2(u16 gLinkTimeOutCounter)
-COMM_2(u32 gFiller_30029F0)
-COMM_4(struct LinkPlayer localLinkPlayer)
-COMM_4(u16 gRecvCmds[CMD_LENGTH][MAX_LINK_PLAYERS])
-COMM_2(u32 gLinkStatus)
-COMM_2(bool8 gLinkDummyBool)
-COMM_2(u8 byte_3002A68)
-COMM_4(u8 gBlockSendBuffer[BLOCK_BUFFER_SIZE])
-COMM_2(bool8 u8_array_3002B70[MAX_LINK_PLAYERS])
-COMM_2(u16 gLinkType)
-COMM_2(bool8 u8_array_3002B78[MAX_LINK_PLAYERS])
-COMM_4(u16 gBlockRecvBuffer[MAX_LINK_PLAYERS][BLOCK_BUFFER_SIZE / 2])
-COMM_2(bool8 gSuppressLinkErrorMessage)
-COMM_2(u8 gSavedLinkPlayerCount)
-COMM_4(u16 gSendCmd[CMD_LENGTH])
-COMM_2(u8 gSavedMultiplayerId)
-COMM_2(bool8 gReceivedRemoteLinkPlayers)
-COMM_4(struct LinkTestBGInfo gLinkTestBGInfo)
-COMM_2(void (*gLinkCallback)(void))
-COMM_4(struct LinkPlayer gSavedLinkPlayers[MAX_LINK_PLAYERS])
-COMM_2(u8 gShouldAdvanceLinkState)
-COMM_3(u16 gLinkTestBlockChecksums[MAX_LINK_PLAYERS])
-COMM_2(u32 gFiller_3003050)
-COMM_2(u8 gBlockRequestType)
-COMM_2(u32 gFiller_3003058)
-COMM_2(u32 gFiller_300305C)
-COMM_2(u8 gLastSendQueueCount)
-COMM_4(struct Link gLink)
-COMM_2(u8 gLastRecvQueueCount)
-COMM_2(u16 gLinkSavedIme)
+u16 word_3002910[MAX_LINK_PLAYERS];
+u32 gLinkDebugValue1;
+struct LinkPlayerBlock localLinkPlayerBlock;
+bool8 gLinkErrorOccurred;
+u32 gLinkDebugValue2;
+bool8 gLinkPlayerPending[MAX_LINK_PLAYERS];
+struct LinkPlayer gLinkPlayers[MAX_LINK_PLAYERS];
+bool8 gBlockReceived[MAX_LINK_PLAYERS];
+u16 gLinkHeldKeys;
+u16 gLinkTimeOutCounter;
+struct LinkPlayer localLinkPlayer;
+u16 gRecvCmds[CMD_LENGTH][MAX_LINK_PLAYERS];
+u32 gLinkStatus;
+bool8 gLinkDummyBool;
+u8 byte_3002A68;
+u8 gBlockSendBuffer[BLOCK_BUFFER_SIZE];
+bool8 u8_array_3002B70[MAX_LINK_PLAYERS];
+u16 gLinkType;
+bool8 u8_array_3002B78[MAX_LINK_PLAYERS];
+u16 gBlockRecvBuffer[MAX_LINK_PLAYERS][BLOCK_BUFFER_SIZE / 2];
+bool8 gSuppressLinkErrorMessage;
+u8 gSavedLinkPlayerCount;
+u16 gSendCmd[CMD_LENGTH];
+u8 gSavedMultiplayerId;
+bool8 gReceivedRemoteLinkPlayers;
+struct LinkTestBGInfo gLinkTestBGInfo;
+void (*gLinkCallback)(void);
+struct LinkPlayer gSavedLinkPlayers[MAX_LINK_PLAYERS];
+u8 gShouldAdvanceLinkState;
+u16 gLinkTestBlockChecksums[MAX_LINK_PLAYERS];
+u8 gBlockRequestType;
+u8 gLastSendQueueCount;
+struct Link gLink;
+u8 gLastRecvQueueCount;
+u16 gLinkSavedIme;
 
 EWRAM_DATA bool8 gLinkTestDebugValuesEnabled = {0};
 EWRAM_DATA bool8 gLinkTestDummyBool = {0};
@@ -237,7 +231,7 @@ static void LinkTestScreen(void)
     ResetTasks();
     SetVBlankCallback(VBlankCB_LinkTest);
     SetUpWindowConfig(&gWindowConfig_81E6CE4);
-    sub_8071C4C(&gWindowConfig_81E6CE4);
+    InitMenuWindow((struct WindowConfig *)&gWindowConfig_81E6CE4);
     ResetBlockSend();
     gLinkType = 0x1111;
     OpenLink();
@@ -1224,15 +1218,15 @@ void CB2_LinkError(void)
     ResetTasks();
     SetVBlankCallback(VBlankCB_LinkTest);
     SetUpWindowConfig(&gWindowConfig_81E7198);
-    sub_8071C4C(&gWindowConfig_81E7198);
-    sub_8071EF4();
+    InitMenuWindow((struct WindowConfig *)&gWindowConfig_81E7198);
+    MenuZeroFillScreen();
     REG_BLDALPHA = 0;
     REG_BG0VOFS = 0;
     REG_BG0HOFS = 0;
     REG_DISPCNT = 320;
     gUnknown_3001BB4 = 0;
     CreateTask(Task_DestroySelf, 0);
-    sub_8074D08();
+    StopMapMusic();
     RunTasks();
     AnimateSprites();
     BuildOamBuffer();
@@ -1247,14 +1241,14 @@ static void CB2_PrintErrorMessage(void)
     switch (gMain.state)
     {
     case 0:
-        sub_80729D8(gUnknown_0842C34C, 20, 56, 1);
+        sub_80729D8(gMultiText_LinkError, 20, 56, 1);
         break;
     case 30:
     case 60:
-        audio_play(SE_BOO);
+        PlaySE(SE_BOO);
         break;
     case 90:
-        audio_play(SE_BOO);
+        PlaySE(SE_BOO);
         break;
     }
 

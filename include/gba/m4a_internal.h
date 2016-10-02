@@ -283,7 +283,7 @@ struct MusicPlayerTrack
 
 #define MAX_MUSICPLAYER_TRACKS 16
 
-#define STOP_AFTER_FADE 0x0001
+#define TEMPORARY_FADE  0x0001
 #define FADE_IN         0x0002
 #define FADE_VOL_MAX    64
 #define FADE_VOL_SHIFT  2
@@ -400,6 +400,26 @@ void MPlayJumpTableCopy(void **mplayJumpTable);
 void SampleFreqSet(u32 freq);
 void m4aSoundVSyncOn(void);
 void m4aSoundVSyncOff(void);
+
+void m4aMPlayTempoControl(struct MusicPlayerInfo *mplayInfo, u16 tempo);
+void m4aMPlayVolumeControl(struct MusicPlayerInfo *mplayInfo, u16 trackBits, u16 volume);
+void m4aMPlayPitchControl(struct MusicPlayerInfo *mplayInfo, u16 trackBits, u16 pitch);
+void m4aMPlayPanpotControl(struct MusicPlayerInfo *mplayInfo, u16 trackBits, s8 pan);
+void ClearModM(struct MusicPlayerTrack *track);
+void m4aMPlayModDepthSet(struct MusicPlayerInfo *mplayInfo, u16 trackBits, u8 modDepth);
+void m4aMPlayLFOSpeedSet(struct MusicPlayerInfo *mplayInfo, u16 trackBits, u8 lfoSpeed);
+
+struct MusicPlayerInfo *SetPokemonCryTone(struct ToneData *tone);
+void SetPokemonCryVolume(u8 val);
+void SetPokemonCryPanpot(s8 val);
+void SetPokemonCryPitch(s16 val);
+void SetPokemonCryLength(u16 val);
+void SetPokemonCryRelease(u8 val);
+void SetPokemonCryProgress(u32 val);
+int IsPokemonCryPlaying(struct MusicPlayerInfo *mplayInfo);
+void SetPokemonCryChorus(s8 val);
+void SetPokemonCryStereo(u32 val);
+void SetPokemonCryPriority(u8 val);
 
 // sound command handler functions
 void ply_fine(struct MusicPlayerInfo *, struct MusicPlayerTrack *);

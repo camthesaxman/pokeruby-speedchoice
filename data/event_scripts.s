@@ -7,6 +7,7 @@
 @ 814AE30
 	.include "data/script_cmd_table.s"
 
+	.align 2
 gUnknown_0814B14C::
 	.4byte 0x202e8c4
 	.4byte 0x202e8c6
@@ -29,6 +30,7 @@ gUnknown_0814B14C::
 
 	.include "data/specials.s"
 
+	.align 2
 gStdScripts::
 	.4byte Std_ObtainItem
 	.4byte Std_FindItem
@@ -1442,7 +1444,7 @@ VerdanturfTown_PokemonCenter_1F_EventScript_19FD5B:: @ 819FD5B
 	end
 
 OldaleTown_PokemonCenter_1F_EventScript_19FD7C:: @ 819FD7C
-	inccounter 15
+	inccounter GAME_STAT_USED_POKECENTER
 	message OldaleTown_PokemonCenter_1F_Text_1A1245
 	waittext
 	move 0x800b, OldaleTown_PokemonCenter_1F_Movement_1A083F
@@ -4377,7 +4379,7 @@ FallarborTown_ContestLobby_EventScript_1ADE46:: @ 81ADE46
 SlateportCity_OceanicMuseum_1F_EventScript_1ADE46:: @ 81ADE46
 SlateportCity_PokemonFanClub_EventScript_1ADE46:: @ 81ADE46
 	special 68
-	inccounter 6
+	inccounter GAME_STAT_GOT_INTERVIEWED
 	release
 	end
 
@@ -4953,8 +4955,10 @@ Text_1C6C62: @ 81C6C62
 	.string "テストよう　メッセージです！\n"
 	.string "ざひょう　チェックの　イベントです$"
 
-@ 81C6C83
-	.string " $"
+@ 81C6C84
+@ object file boundary?
+	.align 2
+	.string "$"
 
 	.include "data/text/save.s"
-	.include "data/text/intro.s"
+	.include "data/text/birch_speech.s"
