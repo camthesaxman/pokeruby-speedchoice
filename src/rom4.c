@@ -6,6 +6,7 @@
 #include "rng.h"
 #include "main.h"
 #include "palette.h"
+#include "text.h"
 
 #ifdef SAPPHIRE
 #define LEGENDARY_MUSIC BGM_OOAME  // Heavy Rain
@@ -61,6 +62,7 @@ extern struct MapData * const gMapAttributes[];
 extern struct MapHeader * const * const gMapGroups[];
 extern const struct WarpData gDummyWarpData;
 extern s32 gUnknown_0839ACE8;
+extern u32 gUnknown_08216694[];
 
 extern struct UnkWarpStruct *sub_80FA8CC(u8);
 extern u16 VarGet(u16);
@@ -121,6 +123,11 @@ void c2_exit_to_overworld_2_local(void);
 void FieldClearVBlankHBlankCallbacks(void);
 void SetFieldVBlankCallback(void);
 void VBlankCB_Field(void);
+bool32 sub_805483C(u8 *);
+bool32 sub_805493C(u8 *, u32);
+bool32 sub_8054A4C(u8 *);
+bool32 sub_8054A9C(u8 *a1);
+void do_load_map_stuff_loop(u8 *a1);
 
 void sub_8052F5C(void)
 {
@@ -701,7 +708,7 @@ void sub_8053CE4(s32 a1)
     gSaveBlock1.flashUsed = a1;
 }
 
-u8 sav1_get_flash_used_on_map()
+u8 sav1_get_flash_used_on_map(void)
 {
     return gSaveBlock1.flashUsed;
 }
@@ -1316,4 +1323,250 @@ void VBlankCB_Field(void)
     sub_8057A58();
     TransferPlttBuffer();
     sub_8072E74();
+}
+
+void sub_8054814(void)
+{
+    u8 val = sav1_get_flash_used_on_map();
+    if (val)
+    {
+        sub_80815E0(val);
+        sub_80895F8(gUnknown_08216694[0], gUnknown_08216694[1], gUnknown_08216694[2]);
+    }
+}
+
+bool32 sub_805483C(u8 *a1)
+{
+    switch (*a1)
+    {
+    case 0:
+        FieldClearVBlankHBlankCallbacks();
+        ScriptContext1_Init();
+        ScriptContext2_Disable();
+        sub_8054F70();
+        sub_8054BA8();
+        (*a1)++;
+        break;
+    case 1:
+        sub_8053994(1);
+        (*a1)++;
+        break;
+    case 2:
+        sub_8054D4C(1);
+        (*a1)++;
+        break;
+    case 3:
+        sub_8054E98();
+        sub_8054D90();
+        sub_8054EC8();
+        sub_8054E60();
+        (*a1)++;
+        break;
+    case 4:
+        sub_8054814();
+        sub_8054C54();
+        SetUpWindowConfig(&gWindowConfig_81E6C3C);
+        InitMenuWindow(&gWindowConfig_81E6CE4);
+        (*a1)++;
+        break;
+    case 5:
+        move_tilemap_camera_to_upper_left_corner();
+        (*a1)++;
+        break;
+    case 6:
+        sub_8056D28(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 7:
+        sub_8056D38(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 8:
+        apply_map_tileset1_tileset2_palette(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 9:
+        DrawWholeMapView();
+        (*a1)++;
+        break;
+    case 10:
+        cur_mapheader_run_tileset_funcs_after_some_cpuset();
+        (*a1)++;
+        break;
+    case 12:
+        sub_80543E8();
+        (*a1)++;
+        break;
+    case 11:
+        (*a1)++;
+        break;
+    case 13:
+        return 1;
+    }
+    return 0;
+}
+
+bool32 sub_805493C(u8 *a1, u32 a2)
+{
+    switch (*a1)
+    {
+    case 0:
+        FieldClearVBlankHBlankCallbacks();
+        sub_8053994(a2);
+        (*a1)++;
+        break;
+    case 1:
+        sub_8054BA8();
+        (*a1)++;
+        break;
+    case 2:
+        sub_8054D4C(a2);
+        (*a1)++;
+        break;
+    case 3:
+        mli4_mapscripts_and_other();
+        sub_8054E34();
+        (*a1)++;
+        break;
+    case 4:
+        sub_8054814();
+        sub_8054C54();
+        SetUpWindowConfig(&gWindowConfig_81E6C3C);
+        InitMenuWindow((u8 *)&gWindowConfig_81E6CE4);
+        (*a1)++;
+        break;
+    case 5:
+        move_tilemap_camera_to_upper_left_corner();
+        (*a1)++;
+        break;
+    case 6:
+        sub_8056D28(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 7:
+        sub_8056D38(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 8:
+        apply_map_tileset1_tileset2_palette(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 9:
+        DrawWholeMapView();
+        (*a1)++;
+        break;
+    case 10:
+        cur_mapheader_run_tileset_funcs_after_some_cpuset();
+        (*a1)++;
+        break;
+    case 11:
+        if (gMapHeader.flags == 1 && sub_80BBB24() == 1)
+            AddMapNamePopUpWindowTask();
+        (*a1)++;
+        break;
+    case 12:
+        sub_80543E8();
+        (*a1)++;
+        break;
+    case 13:
+        return 1;
+    }
+    return 0;
+}
+
+bool32 sub_8054A4C(u8 *a1)
+{
+    switch (*a1)
+    {
+    case 0:
+        sub_8054BA8();
+        sub_8054D4C(0);
+        sub_8054E20();
+        sub_8054E34();
+        (*a1)++;
+        break;
+    case 1:
+        sub_8054C2C();
+        (*a1)++;
+        break;
+    case 2:
+        sub_80543E8();
+        (*a1)++;
+        break;
+    case 3:
+        return 1;
+    }
+    return 0;
+}
+
+bool32 sub_8054A9C(u8 *a1)
+{
+    switch (*a1)
+    {
+    case 0:
+        FieldClearVBlankHBlankCallbacks();
+        sub_8054BA8();
+        (*a1)++;
+        break;
+    case 1:
+        sub_8054D4C(1);
+        (*a1)++;
+        break;
+    case 2:
+        sub_8054F48();
+        sub_8054E20();
+        sub_8054E7C();
+        (*a1)++;
+        break;
+    case 3:
+        sub_8054814();
+        sub_8054C54();
+        SetUpWindowConfig(&gWindowConfig_81E6C3C);
+        InitMenuWindow(&gWindowConfig_81E6CE4);
+        (*a1)++;
+        break;
+    case 4:
+        move_tilemap_camera_to_upper_left_corner();
+        (*a1)++;
+        break;
+    case 5:
+        sub_8056D28(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 6:
+        sub_8056D38(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 7:
+        apply_map_tileset1_tileset2_palette(gMapHeader.mapData);
+        (*a1)++;
+        break;
+    case 8:
+        DrawWholeMapView();
+        (*a1)++;
+        break;
+    case 9:
+        cur_mapheader_run_tileset_funcs_after_some_cpuset();
+        (*a1)++;
+        break;
+    case 12:
+        sub_80543E8();
+        (*a1)++;
+        break;
+    case 10:
+    case 11:
+        (*a1)++;
+        break;
+    case 13:
+        SetFieldVBlankCallback();
+        (*a1)++;
+        return 1;
+    }
+    return 0;
+}
+
+void do_load_map_stuff_loop(u8 *a1)
+{
+    while (!sub_805493C(a1, 0))
+        ;
 }
