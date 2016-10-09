@@ -1270,9 +1270,9 @@ bool8 ScrCmd_closebutton(struct ScriptContext *ctx)
 
 bool8 sub_80670C0()
 {
-    if (gMain.newKeys & A_BUTTON)
+    if (gMain.heldKeys & A_BUTTON)
         return TRUE;
-    if (gMain.newKeys & B_BUTTON)
+    if (gMain.heldKeys & B_BUTTON)
         return TRUE;
     return FALSE;
 }
