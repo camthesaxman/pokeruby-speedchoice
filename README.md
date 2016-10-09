@@ -4,8 +4,8 @@ This is a fork of the disassembly of Pokémon Ruby. It is used in Ruby Bingo and
 
 It builds the following roms:
 
-* pokeruby.gba `sha1: a178d6bf3b032243bde9ff8edc337a297bf7bd65`
-* pokesapphire.gba: `sha1: 463ccd7e14ff79b26e5883d8f694e81373eca47f`
+* pokeruby.gba `sha1: 581d33a3b526670bc5073bbb6fe7705bd02e85e0`
+* pokesapphire.gba: `sha1: fa6f22762b4f0a1904a18a7ed222b1442b2676a7`
 
 To set up the repository, see [INSTALL.md](INSTALL.md).
 
