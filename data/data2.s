@@ -31683,43 +31683,46 @@ gOtherText_DataCannotUseVersion:: @ 842F93A
 	.string "This data cannot be used in\nthis version.$"
 
 gSpeedchoiceText_Header::
-	.string "SPEEDCHOICE$"
+	.string "{PALETTE 9}SPEEDCHOICE$"
 
 gSpeedchoiceText_InstantText::
-	.string "INSTANT TEXT$"
+	.string "{PALETTE 9}INSTANT TEXT$"
 
 gSpeedchoiceText_Spinners::
-	.string "SPINNERS$"
+	.string "{PALETTE 9}SPINNERS$"
 
 gSpeedchoiceText_MaxVision::
-	.string "MAX VISION$"
+	.string "{PALETTE 9}MAX VISION$"
 
 gSpeedchoiceText_NerfRoxanne::
-	.string "NERF ROXANNE$"
+	.string "{PALETTE 9}NERF ROXANNE$"
 
 gSpeedchoiceText_SuperBike::
-	.string "SUPER BIKE$"
+	.string "{PALETTE 9}SUPER BIKE$"
 
 gSpeedchoiceText_NerfRareEnc::
-	.string "NERF RARE ENC.$"
+	.string "{PALETTE 9}NERF RARE ENC.$"
 
 gSpeedchoiceText_StartGame::
-	.string "START GAME$"
+	.string "{PALETTE 9}START GAME$"
 
 gSpeedchoiceText_On::
-	.string "ON$"
+	.string "{PALETTE 15}ON$"
 
 gSpeedchoiceText_Off::
-	.string "OFF$"
+	.string "{PALETTE 15}OFF$"
 
 gSpeedchoiceText_Yes::
-	.string "YES$"
+	.string "{PALETTE 15}YES$"
 	
 gSpeedchoiceText_No::
-	.string "NO$"
+	.string "{PALETTE 15}NO$"
 
 gSpeedchoiceText_Hell::
-	.string "HELL$"
+	.string "{PALETTE 15}HELL$"
 	
 gSpeedchoiceText_Why::
-	.string "WHY$"
+	.string "{PALETTE 15}WHY$"
+
+gSpeedchoiceText_StartTheGame::
+	.string "Start the game?$"

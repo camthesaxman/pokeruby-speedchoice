@@ -47,6 +47,7 @@ extern u8 gSpeedchoiceText_Yes[];
 extern u8 gSpeedchoiceText_No[];
 extern u8 gSpeedchoiceText_Hell[];
 extern u8 gSpeedchoiceText_Why[];
+extern u8 gSpeedchoiceText_StartTheGame[];
 
 //functions
 static void Task_SpeedchoiceMenuFadeIn(u8 taskId);
@@ -61,6 +62,9 @@ static void MaxVision_DrawChoices(u8 selection);
 static void NerfRoxanne_DrawChoices(u8 selection);
 static void SuperBike_DrawChoices(u8 selection);
 static void NerfRareEnc_DrawChoices(u8 selection);
+static void Task_AskToStartGame(u8 taskId);
+static void Task_SpeedchoiceMenuSave(u8 taskId);
+static void Task_SpeedchoiceMenuFadeOut(u8 taskId);
 
 extern void Task_NewGameSpeech1(u8 taskId);
 
@@ -252,16 +256,10 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 	 if(gMain.newKeys & A_BUTTON)
     {
         if(gTasks[taskId].data[TD_MENUSELECTION] == MENUITEM_STARTGAME)
-			FadeOutBGM(5);
-			BeginNormalPaletteFade(-1, 0, 0x10, 0, 0x0000);
+			MenuDrawTextWindow(2, 14, 27, 19);
+			MenuPrint(gSpeedchoiceText_StartTheGame, 3, 15);
 			
-			for (i = 0; i < 30; i++)
-			{
-				UpdatePaletteFade();
-				WaitForVBlank();
-			}
-			
-            gTasks[taskId].func = Task_NewGameSpeech1;
+			gTasks[taskId].func = Task_AskToStartGame;
     }
     else if(gMain.newKeys & DPAD_UP)
     {
@@ -326,7 +324,7 @@ static void InstantText_DrawChoices(u8 selection)
     styles[1] = 0xF;
     styles[selection] = 0x8;
     
-    DrawOptionMenuChoice2(gSpeedchoiceText_On, 166, 40, styles[0]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_On, 155, 40, styles[0]);
     DrawOptionMenuChoice2(gSpeedchoiceText_Off, 184, 40, styles[1]);
 }
 
@@ -349,6 +347,15 @@ static u8 Spinners_ProcessInput(u8 selection)
     return selection;
 }
 
+static void Task_AskToStartGame(u8 taskId)
+{
+	if (MenuUpdateWindowText())
+    {
+        DisplayYesNoMenu(2, 1, 1);
+        gTasks[taskId].func = Task_SpeedchoiceMenuSave;
+    }
+}
+
 static void Spinners_DrawChoices(u8 selection)
 {
     u8 styles[3];
@@ -358,7 +365,7 @@ static void Spinners_DrawChoices(u8 selection)
     styles[2] = 0xF;
     styles[selection] = 0x8;
     
-    DrawOptionMenuChoice2(gSpeedchoiceText_No, 120, 56, styles[0]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_No, 130, 56, styles[0]);
     DrawOptionMenuChoice2(gSpeedchoiceText_Yes, 155, 56, styles[1]);
     DrawOptionMenuChoice2(gSpeedchoiceText_Hell, 184, 56, styles[2]);
 }
@@ -409,4 +416,25 @@ static void NerfRareEnc_DrawChoices(u8 selection)
     
     DrawOptionMenuChoice2(gSpeedchoiceText_No, 155, 120, styles[0]);
     DrawOptionMenuChoice2(gSpeedchoiceText_Yes, 184, 120, styles[1]);
+}
+
+static void Task_SpeedchoiceMenuSave(u8 taskId)
+{
+    gSaveBlock2.speedchoiceInstantText = gTasks[taskId].data[TD_INSTANTTEXT];
+    gSaveBlock2.speedchoiceSpinners = gTasks[taskId].data[TD_SPINNERS];
+    gSaveBlock2.speedchoiceMaxVision = gTasks[taskId].data[TD_MAXVISION];
+    gSaveBlock2.speedchoiceNerfRoxanne = gTasks[taskId].data[TD_NERFROXANNE];
+    gSaveBlock2.speedchoiceSuperBike = gTasks[taskId].data[TD_SUPERBIKE];
+    gSaveBlock2.speedchoiceNerfRareEnc = gTasks[taskId].data[TD_NERFRAREENC];
+    
+    BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+    gTasks[taskId].func = Task_SpeedchoiceMenuFadeOut;
+}
+
+static void Task_SpeedchoiceMenuFadeOut(u8 taskId)
+{
+    if(!gPaletteFade.active)
+    {
+        gTasks[taskId].func = Task_NewGameSpeech1;
+    }
 }
