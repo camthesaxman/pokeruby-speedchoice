@@ -31681,3 +31681,45 @@ gOtherText_NewTrainerInHoenn:: @ 842F8E5
 
 gOtherText_DataCannotUseVersion:: @ 842F93A
 	.string "This data cannot be used in\nthis version.$"
+
+gSpeedchoiceText_Header::
+	.string "SPEEDCHOICE$"
+
+gSpeedchoiceText_InstantText::
+	.string "INSTANT TEXT$"
+
+gSpeedchoiceText_Spinners::
+	.string "SPINNERS$"
+
+gSpeedchoiceText_MaxVision::
+	.string "MAX VISION$"
+
+gSpeedchoiceText_NerfRoxanne::
+	.string "NERF ROXANNE$"
+
+gSpeedchoiceText_SuperBike::
+	.string "SUPER BIKE$"
+
+gSpeedchoiceText_NerfRareEnc::
+	.string "NERF RARE ENC.$"
+
+gSpeedchoiceText_StartGame::
+	.string "START GAME$"
+
+gSpeedchoiceText_On::
+	.string "ON$"
+
+gSpeedchoiceText_Off::
+	.string "OFF$"
+
+gSpeedchoiceText_Yes::
+	.string "YES$"
+	
+gSpeedchoiceText_No::
+	.string "NO$"
+
+gSpeedchoiceText_Hell::
+	.string "HELL$"
+	
+gSpeedchoiceText_Why::
+	.string "WHY$"

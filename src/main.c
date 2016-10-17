@@ -76,7 +76,7 @@ static void CallCallbacks(void);
 static void SeedRngWithRtc(void);
 static void ReadKeys(void);
 static void InitIntrHandlers(void);
-static void WaitForVBlank(void);
+void WaitForVBlank(void);
 
 #define B_START_SELECT (B_BUTTON | START_BUTTON | SELECT_BUTTON)
 
@@ -338,7 +338,7 @@ static void IntrDummy(void)
 {
 }
 
-static void WaitForVBlank(void)
+void WaitForVBlank(void)
 {
     gMain.intrCheck &= ~INTR_FLAG_VBLANK;
     VBlankIntrWait();

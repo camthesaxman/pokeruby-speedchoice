@@ -31,6 +31,7 @@ extern void DecompressPicFromTable_2(const struct SpriteSheet *, u8, u8, void *,
 extern void LoadCompressedObjectPalette(const struct SpritePalette *);
 extern u8 AddNewGameBirchObject(u8, u8, u8);
 extern u8 sub_80859BC(u8, u16, u16, u8, void *);
+extern void CB2_InitSpeedchoiceMenu(void);
 
 extern struct PaletteFadeControl gPaletteFade;
 extern u8 gSaveFileDeletedMessage[];
@@ -485,7 +486,7 @@ void Task_MainMenuPressedA(u8 taskId)
     default:
         gPlttBufferUnfaded[0] = 0;
         gPlttBufferFaded[0] = 0;
-        gTasks[taskId].func = Task_NewGameSpeech1;
+        gTasks[taskId].func = CB2_InitSpeedchoiceMenu;
         break;
     case CONTINUE:
         gPlttBufferUnfaded[0] = 0;

@@ -198,6 +198,12 @@ struct SaveBlock2
     /*0x98*/ struct Time localTimeOffset;
     /*0xA0*/ struct Time lastBerryTreeUpdate;
     /*0xA8*/ u8 filler_A8[0x7E8];
+			u8 speedchoiceInstantText:1;
+			u8 speedchoiceSpinners:3;
+			u8 speedchoiceMaxVision:1;
+			u8 speedchoiceNerfRoxanne:1;
+			u8 speedchoiceSuperBike:1;
+			u8 speedchoiceNerfRareEnc:1;
 };
 
 extern struct SaveBlock2 gSaveBlock2;
