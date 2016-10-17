@@ -7934,17 +7934,17 @@ gUnknown_08376D1C:: @ 8376D1C
 	.byte 0x3D @ Speed
 
 	.align 2
-gUnknown_08376D24:: @ 8376D24
-	.4byte SystemText_Pokedex, StartMenu_Pokedex
-	.4byte SystemText_Pokemon, sub_807144C
-	.4byte SystemText_BAG, sub_8071478
-	.4byte SystemText_Pokenav, sub_80714A4
-	.4byte SystemText_Player, sub_80714D0
-	.4byte SystemText_Save, sub_80714FC
-	.4byte SystemText_Option, sub_8071518
-	.4byte SystemText_Exit, sub_8071554
-	.4byte SystemText_Retire, sub_8071560
-	.4byte SystemText_Player, sub_8071570
+gStartMenuItems:: @ 8376D24
+	.4byte SystemText_Pokedex, StartMenu_PokedexCallback
+	.4byte SystemText_Pokemon, StartMenu_PokemonCallback
+	.4byte SystemText_BAG, StartMenu_BagCallback
+	.4byte SystemText_Pokenav, StartMenu_PokenavCallback
+	.4byte SystemText_Player, StartMenu_PlayerCallback
+	.4byte SystemText_Save, StartMenu_SaveCallback
+	.4byte SystemText_Option, StartMenu_OptionCallback
+	.4byte SystemText_Exit, StartMenu_ExitCallback
+	.4byte SystemText_Retire, StartMenu_RetireCallback
+	.4byte SystemText_Player, StartMenu_PlayerLinkCallback
 
 	.align 2
 gUnknown_08376D74:: @ 8376D74
@@ -25815,11 +25815,27 @@ gUnknown_08401D9C:: @ 8401D9C
 	.4byte sub_8123EB8
 	.4byte sub_8123F44
 
-gUnknown_08401DA4:: @ 8401DA4
-	.incbin "baserom.gba", 0x00401da4, 0x70
+	.align 2
+gSaveSectionLocations:: @ 8401DA4
+	.4byte gSaveBlock2,                 0x890
+	.4byte gSaveBlock1 + 0xF80 * 0,     0xF80
+	.4byte gSaveBlock1 + 0xF80 * 1,     0xF80
+	.4byte gSaveBlock1 + 0xF80 * 2,     0xF80
+	.4byte gSaveBlock1 + 0xF80 * 3,     0xC40
+	.4byte gPokemonStorage + 0xF80 * 0, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 1, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 2, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 3, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 4, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 5, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 6, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 7, 0xF80
+	.4byte gPokemonStorage + 0xF80 * 8, 0x7D0
 
-gUnknown_08401E14:: @ 8401E14
-	.incbin "baserom.gba", 0x00401e14, 0x10
+	.align 2
+gHallOfFameSaveSectionLocations:: @ 8401E14
+	.4byte gHallOfFame + 0xF80 * 0, 0xF80
+	.4byte gHallOfFame + 0xF80 * 1, 0xF80
 
 gUnknown_08401E24:: @ 8401E24
 	.byte 0x1E, 0x1F @ flash sectors
