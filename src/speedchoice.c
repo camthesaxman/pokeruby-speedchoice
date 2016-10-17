@@ -82,7 +82,6 @@ static void VBlankCB(void)
 void CB2_InitSpeedchoiceMenu()
 {
 	PlayBGM(BGM_FUNE_KAN);
-	BeginNormalPaletteFade(-1, 0, 0, 0x10, 0x0000); // fade to black
 	
 	switch(gMain.state)
     {

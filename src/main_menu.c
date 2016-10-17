@@ -486,7 +486,8 @@ void Task_MainMenuPressedA(u8 taskId)
     default:
         gPlttBufferUnfaded[0] = 0;
         gPlttBufferFaded[0] = 0;
-        gTasks[taskId].func = CB2_InitSpeedchoiceMenu;
+		SetMainCallback2(CB2_InitSpeedchoiceMenu);
+		DestroyTask(taskId);
         break;
     case CONTINUE:
         gPlttBufferUnfaded[0] = 0;
