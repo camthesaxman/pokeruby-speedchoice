@@ -662,7 +662,7 @@ extern const u8 gUnknown_081E768C[];
 extern const u8 gUnknown_081E7834[];
 extern const u8 gUnknown_081E796C[];
 extern const u8 gSystemText_NewPara[];
-extern const u16 gIntroMonID[];
+extern u16 gIntroMonID;
 
 extern u8 gSpriteAffineAnimTable_81E79AC[];
 
@@ -853,7 +853,7 @@ void Task_NewGameSpeech7(u8 taskId)
         gTasks[taskId].data[TD_COUNTER]++;
         //Play Azurill cry at frame 32
         if (gTasks[taskId].data[TD_COUNTER] == 32)
-            PlayCry1(SPECIES_AZURILL, 0);
+            PlayCry1(gIntroMonID, 0);
     }
 }
 
@@ -1417,14 +1417,14 @@ void sub_800B240(struct Sprite *sprite)
 u8 CreateAzurillSprite(u8 a1, u8 a2)
 {
     DecompressPicFromTable_2(
-        &gMonFrontPicTable[SPECIES_AZURILL],
-        gMonFrontPicCoords[SPECIES_AZURILL].x,
-        gMonFrontPicCoords[SPECIES_AZURILL].y,
+        &gMonFrontPicTable[gIntroMonID],
+        gMonFrontPicCoords[gIntroMonID].x,
+        gMonFrontPicCoords[gIntroMonID].y,
         gUnknown_081FAF4C[0],
         gUnknown_081FAF4C[1],
-        SPECIES_AZURILL);
-    LoadCompressedObjectPalette(&gMonPaletteTable[SPECIES_AZURILL]);
-    GetMonSpriteTemplate_803C56C(SPECIES_AZURILL, 1);
+        gIntroMonID);
+    LoadCompressedObjectPalette(&gMonPaletteTable[gIntroMonID]);
+    GetMonSpriteTemplate_803C56C(gIntroMonID, 1);
     return CreateSprite(&gUnknown_02024E8C, a1, a2, 0);
 }
 

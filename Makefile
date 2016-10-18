@@ -54,7 +54,7 @@ asm/rom_813BA94.o asm/rom_81258BC.o
 DATA_ASM_OBJS := data/data2.o data/graphics.o data/sound_data.o \
 data/event_scripts.o data/battle_anim_scripts.o \
 data/battle_scripts_1.o data/battle_scripts_2.o data/field_effect_scripts.o \
-data/battle_ai_scripts.o data/contest_ai_scripts.o data/script_funcs.o
+data/battle_ai_scripts.o data/contest_ai_scripts.o data/script_funcs.o data/speedchoice.o
 
 SONG_SRCS := $(wildcard sound/songs/*.s)
 SONG_OBJS := $(SONG_SRCS:%.s=%.o)
