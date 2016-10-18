@@ -3026,12 +3026,14 @@ gUnknown_08211798:: @ 8211798
 gUnknown_08211F98:: @ 8211F98
 	.incbin "graphics/trade/pokeball_symbol_map.bin"
 
+	.align 2
 	.incbin "graphics/unused/unknown/8212098.gbapal"
 
 	.align 2
 gTradeCableEndPalette:: @ 82120B8
 	.incbin "graphics/trade/cable_end.gbapal"
 
+	.align 2
 	.incbin "graphics/unused/unknown/82120D8.gbapal"
 
 	.space 32
@@ -3418,6 +3420,7 @@ gUnknown_08215C2C:: @ 8215C2C
 gUnknown_0821602C:: @ 821602C
 	.incbin "graphics/berry_blender/outer.gbapal"
 
+	.align 2
 	.incbin "graphics/unused/unknown/821604C.gbapal"
 
 	.space 0x1C0
@@ -23559,6 +23562,7 @@ gUnknown_083EDCDC:: @ 83EDCDC
 gUnknown_083EDCE4:: @ 83EDCE4
 	.4byte gUnknownPalette_08E997E8
 
+	.align 1
 UnknownPalette_83EDCE8:
 	.ifdef SAPPHIRE
 	.incbin "graphics/unknown/sapphire_83EDD40.gbapal"
