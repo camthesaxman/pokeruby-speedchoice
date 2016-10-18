@@ -2065,6 +2065,7 @@ static u8 sub_8002FA0(struct Window *win, const u8 *text)
 static u8 InterpretText(struct Window *win)
 {
     u8 c;
+	u8 instantText = gSaveBlock2.speedchoiceInstantText;
     
     while(1)
     {
@@ -2095,7 +2096,10 @@ static u8 InterpretText(struct Window *win)
             return HandleExtCtrlCode(win);
         default:
             sPrintGlyphFuncs[win->textMode](win, c);
-            break;
+			if (!instantText) // is Instant Text enabled?
+					break;
+			else // IT is disabled.
+					return 1;
         }
 	
     }
@@ -2382,15 +2386,21 @@ u8 sub_80035AC(struct Window *win)
 
 static u8 UpdateWindowText(struct Window *win)
 {
+	u8 instantText = gSaveBlock2.speedchoiceInstantText;
+
     switch (win->state)
     {
     case WIN_STATE_WAIT_BUTTON:
         if (PlayerCanInterruptWait(win))
         {
-            if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
+            if ((gMain.heldKeys & (A_BUTTON | B_BUTTON)) || instantText == 1)
             {
                 PlaySE(SE_SELECT);
             }
+			else if (gMain.newKeys & (A_BUTTON | B_BUTTON))
+			{
+				PlaySE(SE_SELECT);
+			}
             else
             {
                 return 0;
@@ -3177,6 +3187,7 @@ static void DrawDownArrow(struct Window *win)
 static u8 WaitWithDownArrow(struct Window *win)
 {
     u8 retVal = 1;
+	u8 instantText = gSaveBlock2.speedchoiceInstantText;
 
     if (!PlayerCanInterruptWait(win))
     {
@@ -3193,16 +3204,33 @@ static u8 WaitWithDownArrow(struct Window *win)
     }
     else
     {
-        if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
-        {
-            PlaySE(SE_SELECT);
-            TryEraseDownArrow(win);
-        }
-        else
-        {
-            DrawMovingDownArrow(win);
-            retVal = 0;
-        }
+		if (!instantText) // is IT on?
+		{
+			if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
+			{
+				PlaySE(SE_SELECT);
+				TryEraseDownArrow(win);
+			}
+			else
+			{
+				DrawMovingDownArrow(win);
+				retVal = 0;
+			}
+			return retVal;
+		}
+		else
+		{
+			if (gMain.newKeys & (A_BUTTON | B_BUTTON))
+			{
+				PlaySE(SE_SELECT);
+				TryEraseDownArrow(win);
+			}
+			else
+			{
+				DrawMovingDownArrow(win);
+				retVal = 0;
+			}
+		}
     }
 
     return retVal;

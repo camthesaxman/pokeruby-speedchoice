@@ -1270,17 +1270,35 @@ bool8 ScrCmd_closebutton(struct ScriptContext *ctx)
 
 bool8 sub_80670C0()
 {
-    if (gMain.heldKeys & A_BUTTON)
+	if (gMain.newKeys & A_BUTTON)
+        return TRUE;
+    if (gMain.newKeys & B_BUTTON)
+        return TRUE;
+	return FALSE;
+}
+
+bool8 handleInstantText()
+{
+	if (gMain.heldKeys & A_BUTTON)
         return TRUE;
     if (gMain.heldKeys & B_BUTTON)
         return TRUE;
-    return FALSE;
+	return FALSE;
 }
 
 bool8 ScrCmd_waitbutton(struct ScriptContext *ctx)
 {
-    SetupNativeScript(ctx, sub_80670C0);
-    return TRUE;
+	u8 instantText = gSaveBlock2.speedchoiceInstantText;
+	if(!instantText) // is instantText enabled?
+	{
+		SetupNativeScript(ctx, handleInstantText);
+		return TRUE;
+	}
+	else
+	{
+		SetupNativeScript(ctx, sub_80670C0);
+		return TRUE;
+	}
 }
 
 bool8 ScrCmd_yesnobox(struct ScriptContext *ctx)

@@ -193,17 +193,17 @@ struct SaveBlock2
              u16 optionsBattleStyle:1; // OPTIONS_BATTLE_STYLE_[SHIFT/SET]
              u16 optionsBattleSceneOff:1; // whether battle animations are disabled
              u16 regionMapZoom:1; // whether the map is zoomed in
+			u8 speedchoiceInstantText:1;
+			u8 speedchoiceSpinners:2;
+			u8 speedchoiceMaxVision:1;
+			u8 speedchoiceNerfRoxanne:1;
+			u8 speedchoiceSuperBike:1;
+			u8 speedchoiceNerfRareEnc:1;
     /*0x18*/ struct Pokedex pokedex;
     /*0x90*/ u8 filler_90[0x8];
     /*0x98*/ struct Time localTimeOffset;
     /*0xA0*/ struct Time lastBerryTreeUpdate;
     /*0xA8*/ u8 filler_A8[0x7E8];
-			u8 speedchoiceInstantText:1;
-			u8 speedchoiceSpinners:3;
-			u8 speedchoiceMaxVision:1;
-			u8 speedchoiceNerfRoxanne:1;
-			u8 speedchoiceSuperBike:1;
-			u8 speedchoiceNerfRareEnc:1;
 };
 
 extern struct SaveBlock2 gSaveBlock2;

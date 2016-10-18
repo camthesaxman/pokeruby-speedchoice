@@ -63,8 +63,12 @@ static void NerfRoxanne_DrawChoices(u8 selection);
 static void SuperBike_DrawChoices(u8 selection);
 static void NerfRareEnc_DrawChoices(u8 selection);
 static void Task_AskToStartGame(u8 taskId);
+static void Task_HandleYesNoStartGame(u8 taskId);
 static void Task_SpeedchoiceMenuSave(u8 taskId);
 static void Task_SpeedchoiceMenuFadeOut(u8 taskId);
+static void Task_RedrawSpeedchoiceMenu(u8 taskId);
+static void HighlightYesNoMenu(void);
+static void HighlightTextBox(void);
 
 extern void Task_NewGameSpeech1(u8 taskId);
 
@@ -85,8 +89,7 @@ static void VBlankCB(void)
 
 void CB2_InitSpeedchoiceMenu()
 {
-	PlayBGM(BGM_FUNE_KAN);
-	
+
 	switch(gMain.state)
     {
         default:
@@ -212,6 +215,7 @@ void CB2_InitSpeedchoiceMenu()
             REG_WIN0V = WIN_RANGE(1, 31);
             
             HighlightOptionMenuItem2(gTasks[taskId].data[TD_MENUSELECTION]);
+			PlayBGM(BGM_CONLOBBY);
             gMain.state++;
             break;
 		}
@@ -219,6 +223,35 @@ void CB2_InitSpeedchoiceMenu()
 			SetMainCallback2(MainCB);
 			return;
 	}
+}
+
+static void Task_RedrawSpeedchoiceMenu(u8 taskId)
+{
+	MenuDrawTextWindow(2, 0, 27, 3);
+    MenuDrawTextWindow(2, 4, 27, 19);
+            
+    MenuPrint(gSpeedchoiceText_Header, 4, 1);
+    MenuPrint(gSpeedchoiceText_InstantText, 4, 5);
+    MenuPrint(gSpeedchoiceText_Spinners, 4, 7);
+    MenuPrint(gSpeedchoiceText_MaxVision, 4, 9);
+    MenuPrint(gSpeedchoiceText_NerfRoxanne, 4, 11);
+    MenuPrint(gSpeedchoiceText_SuperBike, 4, 13);
+    MenuPrint(gSpeedchoiceText_NerfRareEnc, 4, 15);
+    MenuPrint(gSpeedchoiceText_StartGame, 4, 17);
+			
+	InstantText_DrawChoices(gTasks[taskId].data[TD_INSTANTTEXT]);
+    Spinners_DrawChoices(gTasks[taskId].data[TD_SPINNERS]);
+    MaxVision_DrawChoices(gTasks[taskId].data[TD_MAXVISION]);
+    NerfRoxanne_DrawChoices(gTasks[taskId].data[TD_NERFROXANNE]);
+    SuperBike_DrawChoices(gTasks[taskId].data[TD_SUPERBIKE]);
+    NerfRareEnc_DrawChoices(gTasks[taskId].data[TD_NERFRAREENC]);
+            
+    REG_WIN0H = WIN_RANGE(17, 223);
+    REG_WIN0V = WIN_RANGE(1, 31);
+            
+    HighlightOptionMenuItem2(gTasks[taskId].data[TD_MENUSELECTION]);
+	
+	gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
 }
 
 static void Task_SpeedchoiceMenuFadeIn(u8 taskId)
@@ -235,6 +268,18 @@ static void HighlightOptionMenuItem2(u8 index)
 {
     REG_WIN1H = WIN_RANGE(24, 215);
     REG_WIN1V = WIN_RANGE_(index * 16 + 40, index * 16 + 56);
+}
+
+static void HighlightTextBox()
+{
+	REG_WIN1H = WIN_RANGE(1, 241);
+    REG_WIN1V = WIN_RANGE(114, 160);
+}
+
+static void HighlightYesNoMenu()
+{
+	REG_WIN0H = WIN_RANGE(168, 242);
+	REG_WIN0V = WIN_RANGE_(64, 112);
 }
 
 static void DrawOptionMenuChoice2(u8 *text, u8 x, u8 y, u8 style)
@@ -256,10 +301,13 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 	 if(gMain.newKeys & A_BUTTON)
     {
         if(gTasks[taskId].data[TD_MENUSELECTION] == MENUITEM_STARTGAME)
+		{
 			MenuDrawTextWindow(2, 14, 27, 19);
+			HighlightTextBox();
 			MenuPrint(gSpeedchoiceText_StartTheGame, 3, 15);
 			
 			gTasks[taskId].func = Task_AskToStartGame;
+		}
     }
     else if(gMain.newKeys & DPAD_UP)
     {
@@ -351,9 +399,27 @@ static void Task_AskToStartGame(u8 taskId)
 {
 	if (MenuUpdateWindowText())
     {
-        DisplayYesNoMenu(2, 1, 1);
-        gTasks[taskId].func = Task_SpeedchoiceMenuSave;
+        DisplayYesNoMenu(21, 8, 1);
+		HighlightYesNoMenu();
+        gTasks[taskId].func = Task_HandleYesNoStartGame;
     }
+}
+
+static void Task_HandleYesNoStartGame(u8 taskId)
+{
+	 switch (ProcessMenuInputNoWrap_())
+    {
+		case 0: // YES
+			PlaySE(SE_SELECT);
+			gTasks[taskId].func = Task_SpeedchoiceMenuSave;
+			break;
+		case -1:
+		case 1: // NO
+			PlaySE(SE_SELECT);
+			MenuZeroFillWindowRect(2, 1, 8, 7);
+			gTasks[taskId].func = Task_RedrawSpeedchoiceMenu;
+			break;
+	}
 }
 
 static void Spinners_DrawChoices(u8 selection)

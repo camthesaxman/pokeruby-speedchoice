@@ -662,6 +662,7 @@ extern const u8 gUnknown_081E768C[];
 extern const u8 gUnknown_081E7834[];
 extern const u8 gUnknown_081E796C[];
 extern const u8 gSystemText_NewPara[];
+extern const u16 gIntroMonID[];
 
 extern u8 gSpriteAffineAnimTable_81E79AC[];
 

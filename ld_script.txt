@@ -85,6 +85,8 @@ SECTIONS {
         src/intro.o(.text);
         asm/rom_813BA94.o(.text);
     } =0
+	
+	. = 0x08150000;
 
     script_data :
     ALIGN(4)
@@ -129,6 +131,8 @@ SECTIONS {
         tools/agbcc/lib/libgcc.a:_negdi2.o(.text);
         src/libc.o(.text);
     } =0
+	
+	. = 0x81F0000;
 
     .rodata :
     ALIGN(4)
@@ -141,6 +145,10 @@ SECTIONS {
         src/link.o(.rodata);
         src/rtc.o(.rodata);
         data/data2.o(.rodata);
+		
+		. = 0x310000;
+		data/speedchoice.o(.rodata);
+		
         src/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
     } =0
