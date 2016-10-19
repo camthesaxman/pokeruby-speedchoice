@@ -5,7 +5,7 @@
 
 @ fix the offsets at a known location.
 gIntroMonID::
-	.2byte SPECIES_BULBASAUR
+	.2byte SPECIES_AZURILL
 
 gSpeedchoiceText_Header::
 	.string "{PALETTE 9}SPEEDCHOICE SETTINGS$"
