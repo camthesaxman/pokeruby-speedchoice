@@ -2096,7 +2096,7 @@ static u8 InterpretText(struct Window *win)
             return HandleExtCtrlCode(win);
         default:
             sPrintGlyphFuncs[win->textMode](win, c);
-			if (!instantText) // is Instant Text enabled?
+			if (instantText) // is Instant Text enabled?
 					break;
 			else // IT is disabled.
 					return 1;
@@ -2393,7 +2393,7 @@ static u8 UpdateWindowText(struct Window *win)
     case WIN_STATE_WAIT_BUTTON:
         if (PlayerCanInterruptWait(win))
         {
-            if ((gMain.heldKeys & (A_BUTTON | B_BUTTON)) || instantText == 1)
+            if ((gMain.heldKeys & (A_BUTTON | B_BUTTON)) || instantText)
             {
                 PlaySE(SE_SELECT);
             }
@@ -3204,7 +3204,7 @@ static u8 WaitWithDownArrow(struct Window *win)
     }
     else
     {
-		if (!instantText) // is IT on?
+		if (instantText) // is IT on?
 		{
 			if (gMain.heldKeys & (A_BUTTON | B_BUTTON))
 			{

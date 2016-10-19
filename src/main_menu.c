@@ -695,6 +695,7 @@ void Task_NewGameSpeech23(u8 taskId);
 void Task_NewGameSpeech24(u8 taskId);
 void Task_NewGameSpeech25(u8 taskId);
 void Task_NewGameSpeech26(u8 taskId);
+void Task_Between26And27(u8 taskId);
 void Task_NewGameSpeech27(u8 taskId);
 void Task_NewGameSpeech28(u8 taskId);
 void Task_NewGameSpeech29(u8 taskId);
@@ -720,6 +721,10 @@ s8 GenderMenuProcessInput(void);
 void CreateNameMenu(u8 a, u8 b);
 s8 NameMenuProcessInput(void);
 void SetPresetPlayerName(u8 a);
+void AddMayObject(u8);
+void AddAzurillObject(u8);
+void AddMayObject2(u8);
+void AddMayObject3(u8);
 
 //Task data
 enum {
@@ -903,13 +908,13 @@ void Task_NewGameSpeech11(u8 taskId)
     else
     {
         gTasks[taskId].data[TD_BGHOFS] = -60;
-        gTasks[taskId].func = Task_NewGameSpeech12;
+		gTasks[taskId].func = Task_NewGameSpeech12;
     }
 }
 
 void Task_NewGameSpeech12(u8 taskId)
 {
-    if (gTasks[taskId].data[TD_SUBTASK_DONE])
+	 if (gTasks[taskId].data[TD_SUBTASK_DONE])
     {
         //Hide Birch and Azurill
         gSprites[gTasks[taskId].data[TD_BIRCH_SPRITE_ID]].invisible = TRUE;
@@ -932,7 +937,7 @@ void Task_NewGameSpeech12(u8 taskId)
             gTasks[taskId].data[TD_GENDER_SELECTION] = 0;
             StartSpriteFadeIn(taskId, 2);
             StartBackgroundFadeIn(taskId, 1);
-            gTasks[taskId].func = Task_NewGameSpeech13;
+            gTasks[taskId].func = AddMayObject;
         }
     }
 }
@@ -1153,8 +1158,16 @@ void Task_NewGameSpeech26(u8 taskId)
     }
     else
     {
-        gTasks[taskId].func = Task_NewGameSpeech27;
+        gTasks[taskId].func = Task_Between26And27;
     }
+}
+
+void Task_Between26And27(u8 taskId)
+{
+	 if (gTasks[taskId].data[TD_SUBTASK_DONE])
+    {
+		gTasks[taskId].func = AddAzurillObject;
+	}
 }
 
 void Task_NewGameSpeech27(u8 taskId)
@@ -1168,8 +1181,8 @@ void Task_NewGameSpeech27(u8 taskId)
         gSprites[spriteId].invisible = TRUE;
         spriteId = gTasks[taskId].data[TD_MAY_SPRITE_ID];
         gSprites[spriteId].invisible = TRUE;
-
-        //Fade in Birch and Azurill
+		
+		//Fade in Birch and Azurill
         spriteId = (u8)gTasks[taskId].data[TD_BIRCH_SPRITE_ID];
         gSprites[spriteId].pos1.x = 136;
         gSprites[spriteId].pos1.y = 64;
@@ -1238,7 +1251,14 @@ void Task_NewGameSpeech29(u8 taskId)
         }
         else
         {
-            u8 spriteId;
+			gTasks[taskId].func = AddMayObject3;
+        }
+    }
+}
+
+void Task_Between29And30(u8 taskId)
+{
+	        u8 spriteId;
             
             //Fade in trainer and background
             if (gSaveBlock2.playerGender)
@@ -1256,8 +1276,6 @@ void Task_NewGameSpeech29(u8 taskId)
             MenuDrawTextWindow(2, 13, 27, 18);
             MenuPrintMessage(gBirchSpeech_AreYouReady, 3, 14);
             gTasks[taskId].func = Task_NewGameSpeech30;
-        }
-    }
 }
 
 void Task_NewGameSpeech30(u8 taskId)
@@ -1358,6 +1376,7 @@ void CB_ContinueNewGameSpeechPart2()
     ResetSpriteData();
     FreeAllSpritePalettes();
     AddBirchSpeechObjects(taskId);
+	AddMayObject2(taskId);
 
     SetUpWindowConfig(&gWindowConfig_81E6C3C);
     InitMenuWindow((struct WindowConfig *)&gWindowConfig_81E6CE4);
@@ -1423,7 +1442,7 @@ u8 CreateAzurillSprite(u8 a1, u8 a2)
         gUnknown_081FAF4C[0],
         gUnknown_081FAF4C[1],
         gIntroMonID);
-    LoadCompressedObjectPalette(&gMonPaletteTable[gIntroMonID]);
+	LoadCompressedObjectPalette(&gMonPaletteTable[gIntroMonID]);
     GetMonSpriteTemplate_803C56C(gIntroMonID, 1);
     return CreateSprite(&gUnknown_02024E8C, a1, a2, 0);
 }
@@ -1450,13 +1469,68 @@ void AddBirchSpeechObjects(u8 taskId)
     gSprites[spriteId].invisible = 1;
     gSprites[spriteId].oam.priority = 0;
     gTasks[taskId].data[TD_BRENDAN_SPRITE_ID] = spriteId;
+}
 
-    //Create May sprite
+void AddMayObject(u8 taskId)
+{
+	u8 spriteId;
+	
+	FreeSpritePaletteByTag(1);
+	
+	//Create May sprite
     spriteId = CreateTrainerSprite_BirchSpeech(1, 120, 60, 0, unk_2000000 + 0x800);
     gSprites[spriteId].callback = nullsub_34;
     gSprites[spriteId].invisible = 1;
     gSprites[spriteId].oam.priority = 0;
     gTasks[taskId].data[TD_MAY_SPRITE_ID] = spriteId;
+	
+	gTasks[taskId].func = Task_NewGameSpeech13;
+}
+
+void AddMayObject2(u8 taskId)
+{
+	u8 spriteId;
+	
+	FreeSpritePaletteByTag(1);
+	
+	//Create May sprite
+    spriteId = CreateTrainerSprite_BirchSpeech(1, 120, 60, 0, unk_2000000 + 0x800);
+    gSprites[spriteId].callback = nullsub_34;
+    gSprites[spriteId].invisible = 1;
+    gSprites[spriteId].oam.priority = 0;
+    gTasks[taskId].data[TD_MAY_SPRITE_ID] = spriteId;
+}
+
+void AddMayObject3(u8 taskId)
+{
+	u8 spriteId;
+	
+	FreeSpritePaletteByTag(1);
+	
+	//Create May sprite
+    spriteId = CreateTrainerSprite_BirchSpeech(1, 120, 60, 0, unk_2000000 + 0x800);
+    gSprites[spriteId].callback = nullsub_34;
+    gSprites[spriteId].invisible = 1;
+    gSprites[spriteId].oam.priority = 0;
+    gTasks[taskId].data[TD_MAY_SPRITE_ID] = spriteId;
+	
+	gTasks[taskId].func = Task_Between29And30;
+}
+
+void AddAzurillObject(u8 taskId)
+{
+	u8 spriteId;
+	
+	FreeSpritePaletteByTag(1);
+	
+	//Create Mon sprite
+    spriteId = CreateAzurillSprite(0x68, 0x48);
+    gSprites[spriteId].callback = nullsub_34;
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].invisible = 1;
+    gTasks[taskId].data[TD_AZURILL_SPRITE_ID] = spriteId;
+	
+	gTasks[taskId].func = Task_NewGameSpeech27;
 }
 
 enum {

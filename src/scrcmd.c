@@ -1289,7 +1289,7 @@ bool8 handleInstantText()
 bool8 ScrCmd_waitbutton(struct ScriptContext *ctx)
 {
 	u8 instantText = gSaveBlock2.speedchoiceInstantText;
-	if(!instantText) // is instantText enabled?
+	if(instantText) // is instantText enabled?
 	{
 		SetupNativeScript(ctx, handleInstantText);
 		return TRUE;

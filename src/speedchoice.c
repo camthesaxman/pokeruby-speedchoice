@@ -47,6 +47,8 @@ extern u8 gSpeedchoiceText_Yes[];
 extern u8 gSpeedchoiceText_No[];
 extern u8 gSpeedchoiceText_Hell[];
 extern u8 gSpeedchoiceText_Why[];
+extern u8 gSpeedchoiceText_Nerf[];
+extern u8 gSpeedchoiceText_Keep[];
 extern u8 gSpeedchoiceText_StartTheGame[];
 
 //functions
@@ -372,8 +374,8 @@ static void InstantText_DrawChoices(u8 selection)
     styles[1] = 0xF;
     styles[selection] = 0x8;
     
-    DrawOptionMenuChoice2(gSpeedchoiceText_On, 155, 40, styles[0]);
-    DrawOptionMenuChoice2(gSpeedchoiceText_Off, 184, 40, styles[1]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_Off, 155, 40, styles[0]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_On, 184, 40, styles[1]);
 }
 
 static u8 Spinners_ProcessInput(u8 selection)
@@ -410,13 +412,17 @@ static void Task_HandleYesNoStartGame(u8 taskId)
 	 switch (ProcessMenuInputNoWrap_())
     {
 		case 0: // YES
+			PlayBGM(BGM_STOP);
 			PlaySE(SE_SELECT);
 			gTasks[taskId].func = Task_SpeedchoiceMenuSave;
 			break;
 		case -1:
 		case 1: // NO
 			PlaySE(SE_SELECT);
-			MenuZeroFillWindowRect(2, 1, 8, 7);
+			REG_WIN1H = WIN_RANGE(0, 0); // unhighlight the text box and YES/NO window before redrawing.
+			REG_WIN1V = WIN_RANGE(0, 0);
+			REG_WIN0H = WIN_RANGE(0, 0);
+			REG_WIN0V = WIN_RANGE_(0, 0);
 			gTasks[taskId].func = Task_RedrawSpeedchoiceMenu;
 			break;
 	}
@@ -431,8 +437,8 @@ static void Spinners_DrawChoices(u8 selection)
     styles[2] = 0xF;
     styles[selection] = 0x8;
     
-    DrawOptionMenuChoice2(gSpeedchoiceText_No, 130, 56, styles[0]);
-    DrawOptionMenuChoice2(gSpeedchoiceText_Yes, 155, 56, styles[1]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_Nerf, 124, 56, styles[0]);
+    DrawOptionMenuChoice2(gSpeedchoiceText_Keep, 154, 56, styles[1]);
     DrawOptionMenuChoice2(gSpeedchoiceText_Hell, 184, 56, styles[2]);
 }
 
