@@ -42,6 +42,14 @@ void sub_8052D54(void)
     gSaveBlock2.optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2.optionsBattleSceneOff = FALSE;
     gSaveBlock2.regionMapZoom = FALSE;
+	
+	// reset speedchoice stuff too
+	gSaveBlock2.speedchoiceInstantText = SPEEDCHOICE_INSTANTTEXT_OFF;
+	gSaveBlock2.speedchoiceSpinners = SPEEDCHOICE_SPINNERS_KEEP;
+	gSaveBlock2.speedchoiceMaxVision = SPEEDCHOICE_MAXVISION_NO;
+	gSaveBlock2.speedchoiceNerfRoxanne = SPEEDCHOICE_NERFROXANNE_NO;
+	gSaveBlock2.speedchoiceSuperBike = SPEEDCHOICE_SUPERBIKE_NO;
+	gSaveBlock2.speedchoiceNerfRareEnc = SPEEDCHOICE_NERFRAREENC_NO;
 }
 
 void sub_8052D78(void)
