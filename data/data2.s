@@ -11345,10 +11345,10 @@ gUnknown_0839F268:: @ 839F268
 
 	.align 2
 gUnknown_0839F278:: @ 839F278
-	.4byte HallOfFameRecord_0
-	.4byte HallOfFameRecord_1
-	.4byte HallOfFameRecord_2
-	.4byte HallOfFameRecord_3
+	.4byte HallOfFameRecordEffect_0
+	.4byte HallOfFameRecordEffect_1
+	.4byte HallOfFameRecordEffect_2
+	.4byte HallOfFameRecordEffect_3
 
 	.align 2
 gUnknown_0839F288:: @ 839F288
@@ -11529,31 +11529,31 @@ gUnknown_0839F470:: @ 839F470
 	.incbin "baserom.gba", 0x0039f470, 0x24
 
 	.align 2
-gUnknown_0839F494:: @ 839F494
-	.4byte OtherText_Summary, sub_8089FCC
-	.4byte OtherText_Switch2, sub_808A02C
-	.4byte OtherText_Item, sub_808A140
-	.4byte gOtherText_CancelNoTerminator, sub_808A918
-	.4byte OtherText_Give2, sub_808A630
-	.4byte OtherText_Take2, sub_808A688
-	.4byte OtherText_Take, sub_808A6B8
-	.4byte OtherText_Mail, sub_808A6E8
-	.4byte OtherText_Read2, sub_808A810
-	.4byte gOtherText_CancelNoTerminator, sub_808A938
-	.4byte gMoveNames + 13 * MOVE_CUT, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_FLASH, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_ROCK_SMASH, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_STRENGTH, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_SURF, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_FLY, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_DIVE, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_WATERFALL, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_TELEPORT, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_DIG, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_SECRET_POWER, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_MILK_DRINK, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_SOFT_BOILED, sub_808A984
-	.4byte gMoveNames + 13 * MOVE_SWEET_SCENT, sub_808A984
+gPokemonMenuActions:: @ 839F494
+	.4byte OtherText_Summary, PokemonMenu_Summary
+	.4byte OtherText_Switch2, PokemonMenu_Switch
+	.4byte OtherText_Item, PokemonMenu_Item
+	.4byte gOtherText_CancelNoTerminator, PokemonMenu_Cancel
+	.4byte OtherText_Give2, PokemonMenu_GiveItem
+	.4byte OtherText_Take2, PokemonMenu_TakeItem
+	.4byte OtherText_Take, PokemonMenu_TakeMail
+	.4byte OtherText_Mail, PokemonMenu_Mail
+	.4byte OtherText_Read2, PokemonMenu_ReadMail
+	.4byte gOtherText_CancelNoTerminator, PokemonMenu_CancelSubmenu
+	.4byte gMoveNames + 13 * MOVE_CUT, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_FLASH, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_ROCK_SMASH, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_STRENGTH, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_SURF, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_FLY, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_DIVE, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_WATERFALL, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_TELEPORT, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_DIG, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_SECRET_POWER, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_MILK_DRINK, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_SOFT_BOILED, PokemonMenu_FieldMove
+	.4byte gMoveNames + 13 * MOVE_SWEET_SCENT, PokemonMenu_FieldMove
 
 gUnknown_0839F554:: @ 839F554
 	.incbin "baserom.gba", 0x39f554, 0x1e
@@ -11575,21 +11575,21 @@ gUnknown_0839F584:: @ 839F584
 	.4byte Unknown_39F580
 
 	.align 2
-gUnknown_0839F58C:: @ 839F58C
-	.4byte sub_80A2504, 0x6
-	.4byte sub_810CBB4, 0x9
-	.4byte hm_prepare_rocksmash, 0x9
-	.4byte sub_811A99C, 0x9
-	.4byte sub_808AC48, 0x7
-	.4byte sub_808ACA8, 0x9
-	.4byte sub_808ADC8, 0x9
-	.4byte hm_prepare_waterfall, 0x9
-	.4byte sub_814A374, 0x9
-	.4byte sub_810B5A4, 0x9
-	.4byte sub_80C62C4, 0x9
-	.4byte sub_8133CCC, 0x10
-	.4byte sub_8133CCC, 0x10
-	.4byte sub_812BFB4, 0x9
+gFieldMoveFuncs:: @ 839F58C
+	.4byte SetUpFieldMove_Cut, 0x6
+	.4byte SetUpFieldMove_Flash, 0x9
+	.4byte SetUpFieldMove_RockSmash, 0x9
+	.4byte SetUpFieldMove_Strength, 0x9
+	.4byte SetUpFieldMove_Surf, 0x7
+	.4byte SetUpFieldMove_Fly, 0x9
+	.4byte SetUpFieldMove_Dive, 0x9
+	.4byte SetUpFieldMove_Waterfall, 0x9
+	.4byte SetUpFieldMove_Teleport, 0x9
+	.4byte SetUpFieldMove_Dig, 0x9
+	.4byte SetUpFieldMove_SecretPower, 0x9
+	.4byte SetUpFieldMove_SoftBoiled, 0x10
+	.4byte SetUpFieldMove_SoftBoiled, 0x10
+	.4byte SetUpFieldMove_SweetScent, 0x9
 
 	.align 2
 gUnknown_0839F5FC:: @ 839F5FC
