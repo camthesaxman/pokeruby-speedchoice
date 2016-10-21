@@ -6,6 +6,7 @@
 #include "sound.h"
 #include "task.h"
 #include "songs.h"
+#include "string_util.h"
 
 extern void remove_some_task(void);
 
@@ -50,6 +51,7 @@ extern u8 gSpeedchoiceText_Why[];
 extern u8 gSpeedchoiceText_Nerf[];
 extern u8 gSpeedchoiceText_Keep[];
 extern u8 gSpeedchoiceText_StartTheGame[];
+extern u32 gCheckValue;
 
 //functions
 static void Task_SpeedchoiceMenuFadeIn(u8 taskId);
@@ -71,6 +73,7 @@ static void Task_SpeedchoiceMenuFadeOut(u8 taskId);
 static void Task_RedrawSpeedchoiceMenu(u8 taskId);
 static void HighlightYesNoMenu(void);
 static void HighlightTextBox(void);
+static void Task_DrawYesNoText(u8 taskId);
 
 extern void Task_NewGameSpeech1(u8 taskId);
 
@@ -297,18 +300,37 @@ static void DrawOptionMenuChoice2(u8 *text, u8 x, u8 y, u8 style)
     sub_80729D8(dst, x, y, 1);
 }
 
+static u32 CalculateCheckValue()
+{
+	u32 checkValue;
+	
+	// calculate CV.
+	checkValue = gSaveBlock2.speedchoiceInstantText << 1;
+	checkValue += gSaveBlock2.speedchoiceSpinners << 2; // takes 2 bits.
+	checkValue += gSaveBlock2.speedchoiceMaxVision << 4;
+	checkValue += gSaveBlock2.speedchoiceNerfRoxanne << 5;
+	checkValue += gSaveBlock2.speedchoiceSuperBike << 6;
+	checkValue += gSaveBlock2.speedchoiceNerfRareEnc << 7;
+	
+	// seed RNG with checkValue for more hash-like number.
+	checkValue = 0x41c64e6d * checkValue + 0x00006073;
+    checkValue = checkValue >> 1; // if I don't shift it 1 bit, it's too large.
+	
+	// xor with randomizer value.
+	checkValue = checkValue ^ gCheckValue;
+	
+	return checkValue;
+}
+
 static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 {
 	u8 i;
+	
 	 if(gMain.newKeys & A_BUTTON)
     {
         if(gTasks[taskId].data[TD_MENUSELECTION] == MENUITEM_STARTGAME)
 		{
-			MenuDrawTextWindow(2, 14, 27, 19);
-			HighlightTextBox();
-			MenuPrint(gSpeedchoiceText_StartTheGame, 3, 15);
-			
-			gTasks[taskId].func = Task_AskToStartGame;
+			gTasks[taskId].func = Task_SpeedchoiceMenuSave; // save the options.
 		}
     }
     else if(gMain.newKeys & DPAD_UP)
@@ -414,7 +436,8 @@ static void Task_HandleYesNoStartGame(u8 taskId)
 		case 0: // YES
 			PlayBGM(BGM_STOP);
 			PlaySE(SE_SELECT);
-			gTasks[taskId].func = Task_SpeedchoiceMenuSave;
+			BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+			gTasks[taskId].func = Task_SpeedchoiceMenuFadeOut;
 			break;
 		case -1:
 		case 1: // NO
@@ -492,15 +515,28 @@ static void NerfRareEnc_DrawChoices(u8 selection)
 
 static void Task_SpeedchoiceMenuSave(u8 taskId)
 {
+	u32 checkValue;
+	
     gSaveBlock2.speedchoiceInstantText = gTasks[taskId].data[TD_INSTANTTEXT];
     gSaveBlock2.speedchoiceSpinners = gTasks[taskId].data[TD_SPINNERS];
     gSaveBlock2.speedchoiceMaxVision = gTasks[taskId].data[TD_MAXVISION];
     gSaveBlock2.speedchoiceNerfRoxanne = gTasks[taskId].data[TD_NERFROXANNE];
     gSaveBlock2.speedchoiceSuperBike = gTasks[taskId].data[TD_SUPERBIKE];
     gSaveBlock2.speedchoiceNerfRareEnc = gTasks[taskId].data[TD_NERFRAREENC];
-    
-    BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
-    gTasks[taskId].func = Task_SpeedchoiceMenuFadeOut;
+	
+	// calculate check Value.
+	checkValue = ConvertIntToHexStringN(gStringVar1, CalculateCheckValue(), STR_CONV_MODE_LEADING_ZEROS, 8);
+
+    gTasks[taskId].func = Task_DrawYesNoText;
+}
+
+static void Task_DrawYesNoText(u8 taskId)
+{
+	MenuDrawTextWindow(2, 14, 27, 19);
+	HighlightTextBox();
+	MenuPrint(gSpeedchoiceText_StartTheGame, 3, 15);
+
+    gTasks[taskId].func = Task_AskToStartGame;
 }
 
 static void Task_SpeedchoiceMenuFadeOut(u8 taskId)

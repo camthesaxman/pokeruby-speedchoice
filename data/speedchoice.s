@@ -3,9 +3,13 @@
 
 	.section .rodata
 
-@ fix the offsets at a known location.
+	@ fix the offsets at a known location.
 gIntroMonID::
 	.2byte SPECIES_AZURILL
+
+	.align 2
+gCheckValue:: @ 500004
+	.4byte 0x00000000
 
 gSpeedchoiceText_Header::
 	.string "{PALETTE 9}SPEEDCHOICE MENU$"
@@ -56,4 +60,4 @@ gSpeedchoiceText_Keep::
 	.string "{PALETTE 15}KEEP$"
 
 gSpeedchoiceText_StartTheGame::
-	.string "CV: NO CV YET\nStart the game?$"
+	.string "CV: {STR_VAR_1}\nStart the game?$"
