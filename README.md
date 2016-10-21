@@ -2,7 +2,7 @@
 
 WARNING: This is a beta and may still crash in very specific scenarios. Play at your own peril.
 
-This is a fork of the disassembly of Pokémon Ruby. It is used in Ruby Bingo and requires the following altered version of Dabomstew's randomizer: https://mega.nz/#!Top3hKDB!WRLQ9DiGn_di4_EjVGyvknycORiK3z5xGRLlW8LHkZU as using the normal one will cause a crash at New Game due to shifted offsets.
+This is a fork of the disassembly of Pokémon Ruby. It is used in Ruby Bingo and requires the following altered version of Dabomstew's randomizer: https://mega.nz/#!H5RHmBQQ!Uu-Vqk23CQnGFfPFHQYcZcPPcRVMF0_cL4cCfWnWK8s as using the normal one will cause a crash at New Game due to shifted offsets.
 
 It builds the following roms:
 
