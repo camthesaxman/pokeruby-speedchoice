@@ -8924,7 +8924,7 @@ sub_810F83C: @ 810F83C
 	cmp r0, 0x1
 	beq _0810F858
 	movs r0, 0x14
-	bl sub_80806B4
+	bl SetSav1Weather
 _0810F858:
 	pop {r0}
 	bx r0
@@ -8942,7 +8942,7 @@ sub_810F85C: @ 810F85C
 	cmp r0, 0x1
 	beq _0810F878
 	movs r0, 0x15
-	bl sub_80806B4
+	bl SetSav1Weather
 _0810F878:
 	pop {r0}
 	bx r0
@@ -30800,8 +30800,8 @@ _0811A838: .4byte gSaveBlock1
 _0811A83C: .4byte 0x00000494
 	thumb_func_end GetCoins
 
-	thumb_func_start sub_811A840
-sub_811A840: @ 811A840
+	thumb_func_start GiveCoins
+GiveCoins: @ 811A840
 	push {r4,lr}
 	lsls r0, 16
 	lsrs r4, r0, 16
@@ -30845,10 +30845,10 @@ _0811A88C:
 	bx r1
 	.align 2, 0
 _0811A894: .4byte 0x0000270f
-	thumb_func_end sub_811A840
+	thumb_func_end GiveCoins
 
-	thumb_func_start sub_811A898
-sub_811A898: @ 811A898
+	thumb_func_start TakeCoins
+TakeCoins: @ 811A898
 	push {r4,lr}
 	lsls r0, 16
 	lsrs r4, r0, 16
@@ -30874,7 +30874,7 @@ _0811A8BC:
 	.align 2, 0
 _0811A8C4: .4byte gSaveBlock1
 _0811A8C8: .4byte 0x00000494
-	thumb_func_end sub_811A898
+	thumb_func_end TakeCoins
 
 	thumb_func_start sub_811A8CC
 sub_811A8CC: @ 811A8CC
@@ -43594,7 +43594,7 @@ _08120D40:
 	ldr r6, _08120D50
 	b _08120F70
 	.align 2, 0
-_08120D44: .4byte word_202FF5E
+_08120D44: .4byte gTrainerBattleOpponent
 _08120D48: .4byte gUnknown_020239F8
 _08120D4C: .4byte gUnknown_08400771
 _08120D50: .4byte gUnknown_08400781
@@ -44803,7 +44803,7 @@ _0812174C:
 	movs r1, 0xD
 	b _081217AE
 	.align 2, 0
-_08121764: .4byte word_202FF5E
+_08121764: .4byte gTrainerBattleOpponent
 _08121768:
 	ldr r0, _08121784
 	ldrh r1, [r0]
@@ -44865,7 +44865,7 @@ _081217C0:
 	mov r4, sp
 	b _081219E6
 	.align 2, 0
-_081217E4: .4byte word_202FF5E
+_081217E4: .4byte gTrainerBattleOpponent
 _081217E8: .4byte 0x02017002
 _081217EC:
 	ldr r0, _08121804
@@ -48964,7 +48964,7 @@ _081238B6:
 	b _081239D6
 _081238C2:
 	ldrb r0, [r3, 0x2]
-	bl sub_807C91C
+	bl DoWeatherEffect
 	ldr r1, [r5]
 	movs r0, 0x1
 	strb r0, [r1, 0x1]

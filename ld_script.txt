@@ -89,6 +89,8 @@ SECTIONS {
         asm/rom5_part2.o(.text);
         asm/berry.o(.text);
         asm/rom_80B5054.o(.text);
+        asm/battle_ai.o(.text);
+        asm/trader.o(.text);
         src/starter_choose.o(.text);
         src/wallclock.o(.text);
         asm/rom6.o(.text);
@@ -99,6 +101,14 @@ SECTIONS {
         asm/rom_81258BC.o(.text);
         src/intro.o(.text);
         asm/rom_813BA94.o(.text);
+        asm/lottery_corner.o(.text);
+        asm/diploma.o(.text);
+        asm/berry_tag_screen.o(.text);
+        asm/mystery_event_menu.o(.text);
+        asm/save_failed_screen.o(.text);
+        asm/rom_81473B8.o(.text);
+        asm/clear_save_data_menu.o(.text);
+        asm/rom_8148B8C.o(.text);
     } =0
 	
 	. = 0x08150000;

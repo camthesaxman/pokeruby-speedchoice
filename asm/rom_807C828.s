@@ -114,8 +114,8 @@ _0807C914: .4byte sub_807C9E4
 _0807C918: .4byte 0x000006c9
 	thumb_func_end sub_807C828
 
-	thumb_func_start sub_807C91C
-sub_807C91C: @ 807C91C
+	thumb_func_start DoWeatherEffect
+DoWeatherEffect: @ 807C91C
 	push {r4,lr}
 	lsls r0, 24
 	lsrs r4, r0, 24
@@ -125,7 +125,7 @@ sub_807C91C: @ 807C91C
 	beq _0807C932
 	cmp r4, 0xD
 	beq _0807C932
-	bl play_some_sound
+	bl PlayRainSoundEffect
 _0807C932:
 	ldr r1, _0807C974
 	ldr r2, _0807C978
@@ -165,7 +165,7 @@ _0807C978: .4byte 0x000006d1
 _0807C97C: .4byte gUnknown_08396FC8
 _0807C980: .4byte 0x000006d3
 _0807C984: .4byte 0x000006ce
-	thumb_func_end sub_807C91C
+	thumb_func_end DoWeatherEffect
 
 	thumb_func_start sub_807C988
 sub_807C988: @ 807C988
@@ -173,7 +173,7 @@ sub_807C988: @ 807C988
 	adds r4, r0, 0
 	lsls r4, 24
 	lsrs r4, 24
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	ldr r0, _0807C9AC
 	movs r2, 0xDA
 	lsls r2, 3
@@ -196,7 +196,7 @@ sub_807C9B4: @ 807C9B4
 	adds r4, r0, 0
 	lsls r4, 24
 	lsrs r4, 24
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	ldr r1, _0807C9E0
 	movs r2, 0xDA
 	lsls r2, 3
@@ -2834,8 +2834,8 @@ _0807DDAE:
 _0807DDB4: .4byte 0x000006dd
 	thumb_func_end sub_807DD5C
 
-	thumb_func_start play_some_sound
-play_some_sound: @ 807DDB8
+	thumb_func_start PlayRainSoundEffect
+PlayRainSoundEffect: @ 807DDB8
 	push {lr}
 	bl IsSpecialSEPlaying
 	lsls r0, 24
@@ -2867,7 +2867,7 @@ _0807DDF0:
 _0807DDF6:
 	pop {r0}
 	bx r0
-	thumb_func_end play_some_sound
+	thumb_func_end PlayRainSoundEffect
 
 	thumb_func_start sub_807DDFC
 sub_807DDFC: @ 807DDFC
@@ -8184,35 +8184,35 @@ _080806AE:
 	bx r0
 	thumb_func_end unc_0807DAB4
 
-	thumb_func_start sub_80806B4
-sub_80806B4: @ 80806B4
+	thumb_func_start SetSav1Weather
+SetSav1Weather: @ 80806B4
 	push {r4,r5,lr}
 	ldr r4, _080806D4
 	adds r4, 0x2E
 	ldrb r5, [r4]
 	lsls r0, 24
 	lsrs r0, 24
-	bl sub_8080764
+	bl TranslateWeatherNum
 	strb r0, [r4]
 	ldrb r0, [r4]
 	adds r1, r5, 0
-	bl sub_8080854
+	bl UpdateRainCounter
 	pop {r4,r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _080806D4: .4byte gSaveBlock1
-	thumb_func_end sub_80806B4
+	thumb_func_end SetSav1Weather
 
-	thumb_func_start sav1_get_weather_probably
-sav1_get_weather_probably: @ 80806D8
+	thumb_func_start GetSav1Weather
+GetSav1Weather: @ 80806D8
 	ldr r0, _080806E0
 	adds r0, 0x2E
 	ldrb r0, [r0]
 	bx lr
 	.align 2, 0
 _080806E0: .4byte gSaveBlock1
-	thumb_func_end sav1_get_weather_probably
+	thumb_func_end GetSav1Weather
 
 	thumb_func_start sub_80806E4
 sub_80806E4: @ 80806E4
@@ -8222,11 +8222,11 @@ sub_80806E4: @ 80806E4
 	ldrb r5, [r4]
 	ldr r0, _08080708
 	ldrb r0, [r0, 0x16]
-	bl sub_8080764
+	bl TranslateWeatherNum
 	strb r0, [r4]
 	ldrb r0, [r4]
 	adds r1, r5, 0
-	bl sub_8080854
+	bl UpdateRainCounter
 	pop {r4,r5}
 	pop {r0}
 	bx r0
@@ -8238,11 +8238,11 @@ _08080708: .4byte gMapHeader
 	thumb_func_start sub_808070C
 sub_808070C: @ 808070C
 	push {lr}
-	bl sub_80806B4
-	bl sav1_get_weather_probably
+	bl SetSav1Weather
+	bl GetSav1Weather
 	lsls r0, 24
 	lsrs r0, 24
-	bl sub_807C91C
+	bl DoWeatherEffect
 	pop {r0}
 	bx r0
 	thumb_func_end sub_808070C
@@ -8250,8 +8250,8 @@ sub_808070C: @ 808070C
 	thumb_func_start sub_8080724
 sub_8080724: @ 8080724
 	push {lr}
-	bl sub_80806B4
-	bl sav1_get_weather_probably
+	bl SetSav1Weather
+	bl GetSav1Weather
 	lsls r0, 24
 	lsrs r0, 24
 	bl sub_807C988
@@ -8262,10 +8262,10 @@ sub_8080724: @ 8080724
 	thumb_func_start sub_808073C
 sub_808073C: @ 808073C
 	push {lr}
-	bl sav1_get_weather_probably
+	bl GetSav1Weather
 	lsls r0, 24
 	lsrs r0, 24
-	bl sub_807C91C
+	bl DoWeatherEffect
 	pop {r0}
 	bx r0
 	thumb_func_end sub_808073C
@@ -8273,7 +8273,7 @@ sub_808073C: @ 808073C
 	thumb_func_start sub_8080750
 sub_8080750: @ 8080750
 	push {lr}
-	bl sav1_get_weather_probably
+	bl GetSav1Weather
 	lsls r0, 24
 	lsrs r0, 24
 	bl sub_807C988
@@ -8281,8 +8281,8 @@ sub_8080750: @ 8080750
 	bx r0
 	thumb_func_end sub_8080750
 
-	thumb_func_start sub_8080764
-sub_8080764: @ 8080764
+	thumb_func_start TranslateWeatherNum
+TranslateWeatherNum: @ 8080764
 	push {lr}
 	lsls r0, 24
 	lsrs r0, 24
@@ -8383,7 +8383,7 @@ _0808082C:
 _0808082E:
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8080764
+	thumb_func_end TranslateWeatherNum
 
 	thumb_func_start sub_8080834
 sub_8080834: @ 8080834
@@ -8404,8 +8404,8 @@ sub_8080834: @ 8080834
 _08080850: .4byte gSaveBlock1
 	thumb_func_end sub_8080834
 
-	thumb_func_start sub_8080854
-sub_8080854: @ 8080854
+	thumb_func_start UpdateRainCounter
+UpdateRainCounter: @ 8080854
 	push {lr}
 	lsls r0, 24
 	lsls r1, 24
@@ -8422,7 +8422,7 @@ _08080868:
 _0808086E:
 	pop {r0}
 	bx r0
-	thumb_func_end sub_8080854
+	thumb_func_end UpdateRainCounter
 
 	thumb_func_start palette_bg_faded_fill_black
 palette_bg_faded_fill_black: @ 8080874
@@ -9211,7 +9211,7 @@ sub_8080E88: @ 8080E88
 	bl ScriptContext2_Enable
 	bl sub_8053FF8
 	bl sub_8080918
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	movs r0, 0x9
 	bl PlaySE
 	ldr r0, _08080EB4
@@ -9234,7 +9234,7 @@ sp13E_warp_to_last_warp: @ 8080EC0
 	bl ScriptContext2_Enable
 	bl sub_8053FF8
 	bl sub_8080918
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	ldr r0, _08080EE4
 	ldr r1, _08080EE8
 	str r1, [r0]
@@ -9723,7 +9723,7 @@ _080812A2:
 _080812A8:
 	bl sub_8053FF8
 	bl sub_8080918
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	movs r0, 0
 	strh r0, [r5, 0x8]
 	ldr r0, _080812C4
@@ -9798,7 +9798,7 @@ sub_8081334: @ 8081334
 	bl ScriptContext2_Enable
 	bl sub_8053FF8
 	bl sub_8080918
-	bl play_some_sound
+	bl PlayRainSoundEffect
 	movs r0, 0x9
 	bl PlaySE
 	ldr r0, _08081360
@@ -11198,7 +11198,7 @@ _08081E62:
 	lsls r0, 5
 	cmp r1, r0
 	beq _08081E84
-	bl sav1_get_weather_probably
+	bl GetSav1Weather
 	lsls r0, 24
 	lsrs r0, 24
 	cmp r0, 0x8
@@ -11471,7 +11471,7 @@ sub_8082034: @ 8082034
 	b _08082070
 	.align 2, 0
 _08082064: .4byte gEnemyParty
-_08082068: .4byte gUnknown_0839ACF8
+_08082068: .4byte gBattleTransitionTable_Wild
 _0808206C:
 	ldr r0, _0808207C
 	lsls r1, r5, 1
@@ -11482,7 +11482,7 @@ _08082070:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0808207C: .4byte gUnknown_0839ACF8
+_0808207C: .4byte gBattleTransitionTable_Wild
 	thumb_func_end sub_8082034
 
 	thumb_func_start sub_8082080
@@ -11510,7 +11510,7 @@ sub_8082080: @ 8082080
 	movs r0, 0xC
 	b _0808212C
 	.align 2, 0
-_080820AC: .4byte word_202FF5E
+_080820AC: .4byte gTrainerBattleOpponent
 _080820B0: .4byte gTrainers
 _080820B4: .4byte 0x00000105
 _080820B8:
@@ -11568,7 +11568,7 @@ _080820F2:
 	adds r0, 0x1
 	b _08082128
 	.align 2, 0
-_08082120: .4byte gUnknown_0839AD00
+_08082120: .4byte gBattleTransitionTable_Trainer
 _08082124:
 	ldr r0, _08082134
 	lsls r1, r6, 1
@@ -11580,7 +11580,7 @@ _0808212C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08082134: .4byte gUnknown_0839AD00
+_08082134: .4byte gBattleTransitionTable_Trainer
 	thumb_func_end sub_8082080
 
 	thumb_func_start sub_8082138
@@ -11751,7 +11751,7 @@ trainerflag_opponent: @ 8082264
 	lsrs r0, 16
 	bx lr
 	.align 2, 0
-_08082278: .4byte word_202FF5E
+_08082278: .4byte gTrainerBattleOpponent
 	thumb_func_end trainerflag_opponent
 
 	thumb_func_start battle_exit_is_player_defeat
@@ -11810,15 +11810,15 @@ sub_80822BC: @ 80822BC
 	str r1, [r0]
 	bx lr
 	.align 2, 0
-_080822E8: .4byte gUnknown_0202FF5C
-_080822EC: .4byte word_202FF5E
-_080822F0: .4byte gUnknown_0202FF60
-_080822F4: .4byte gUnknown_0202FF64
-_080822F8: .4byte gUnknown_0202FF68
-_080822FC: .4byte gUnknown_0202FF6C
-_08082300: .4byte gUnknown_0202FF70
-_08082304: .4byte gUnknown_0202FF74
-_08082308: .4byte gUnknown_0202FF78
+_080822E8: .4byte gTrainerBattleMode
+_080822EC: .4byte gTrainerBattleOpponent
+_080822F0: .4byte gTrainerMapObjectLocalId
+_080822F4: .4byte gTrainerIntroSpeech
+_080822F8: .4byte gTrainerDefeatSpeech
+_080822FC: .4byte gTrainerVictorySpeech
+_08082300: .4byte gTrainerCannotBattleSpeech
+_08082304: .4byte gTrainerBattleScriptReturnAddress
+_08082308: .4byte gTrainerBattleEndScript
 	thumb_func_end sub_80822BC
 
 	thumb_func_start TrainerBattleLoadArgs
@@ -11913,14 +11913,14 @@ _080823B4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080823B8: .4byte gUnknown_0202FF60
+_080823B8: .4byte gTrainerMapObjectLocalId
 _080823BC: .4byte gUnknown_0202E8DE
 _080823C0: .4byte gSaveBlock1
 _080823C4: .4byte gSelectedMapObject
 	thumb_func_end battle_80801F0
 
-	thumb_func_start sub_80823C8
-sub_80823C8: @ 80823C8
+	thumb_func_start TrainerBattleConfigure
+TrainerBattleConfigure: @ 80823C8
 	push {r4,r5,lr}
 	adds r5, r0, 0
 	bl sub_80822BC
@@ -11940,7 +11940,7 @@ sub_80823C8: @ 80823C8
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_080823F0: .4byte gUnknown_0202FF5C
+_080823F0: .4byte gTrainerBattleMode
 _080823F4: .4byte _080823F8
 	.align 2, 0
 _080823F8:
@@ -11959,18 +11959,18 @@ _08082418:
 	ldr r0, _08082428
 	b _080824B2
 	.align 2, 0
-_08082424: .4byte gUnknown_0839ADE0
+_08082424: .4byte gTrainerBattleSpecs_3
 _08082428: .4byte gUnknown_0819F878
 _0808242C:
 	ldr r0, _08082430
 	b _0808243E
 	.align 2, 0
-_08082430: .4byte gUnknown_0839AD98
+_08082430: .4byte gTrainerBattleSpecs_2
 _08082434:
 	ldr r0, _08082438
 	b _080824A6
 	.align 2, 0
-_08082438: .4byte gUnknown_0839AD50
+_08082438: .4byte gTrainerBattleSpecs_1
 _0808243C:
 	ldr r0, _0808244C
 _0808243E:
@@ -11980,7 +11980,7 @@ _0808243E:
 	ldr r0, _08082450
 	b _080824B2
 	.align 2, 0
-_0808244C: .4byte gUnknown_0839AE28
+_0808244C: .4byte gTrainerBattleSpecs_4
 _08082450: .4byte gUnknown_0819F840
 _08082454:
 	ldr r0, _08082470
@@ -11994,8 +11994,8 @@ _08082454:
 	ldr r0, _08082478
 	b _080824B2
 	.align 2, 0
-_08082470: .4byte gUnknown_0839AD98
-_08082474: .4byte word_202FF5E
+_08082470: .4byte gTrainerBattleSpecs_2
+_08082474: .4byte gTrainerBattleOpponent
 _08082478: .4byte gUnknown_0819F8AE
 _0808247C:
 	ldr r0, _08082498
@@ -12009,8 +12009,8 @@ _0808247C:
 	ldr r0, _080824A0
 	b _080824B2
 	.align 2, 0
-_08082498: .4byte gUnknown_0839AD08
-_0808249C: .4byte word_202FF5E
+_08082498: .4byte gTrainerBattleSpecs_0
+_0808249C: .4byte gTrainerBattleOpponent
 _080824A0: .4byte gUnknown_0819F887
 _080824A4:
 	ldr r0, _080824B8
@@ -12024,12 +12024,12 @@ _080824B2:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080824B8: .4byte gUnknown_0839AD08
+_080824B8: .4byte gTrainerBattleSpecs_0
 _080824BC: .4byte gUnknown_0819F818
-	thumb_func_end sub_80823C8
+	thumb_func_end TrainerBattleConfigure
 
-	thumb_func_start SingleTrainerWantsBattle
-SingleTrainerWantsBattle: @ 80824C0
+	thumb_func_start TrainerWantsBattle
+TrainerWantsBattle: @ 80824C0
 	push {r4,lr}
 	lsls r0, 24
 	lsrs r0, 24
@@ -12045,7 +12045,7 @@ SingleTrainerWantsBattle: @ 80824C0
 	strh r0, [r4]
 	adds r1, 0x1
 	adds r0, r1, 0
-	bl sub_80823C8
+	bl TrainerBattleConfigure
 	ldr r0, _08082500
 	bl ScriptContext1_SetupScript
 	bl ScriptContext2_Enable
@@ -12057,7 +12057,7 @@ _080824F4: .4byte gSelectedMapObject
 _080824F8: .4byte gUnknown_0202E8DE
 _080824FC: .4byte gMapObjects
 _08082500: .4byte gUnknown_0819F80B
-	thumb_func_end SingleTrainerWantsBattle
+	thumb_func_end TrainerWantsBattle
 
 	thumb_func_start GetTrainerFlagFromScriptPointer
 GetTrainerFlagFromScriptPointer: @ 8082504
@@ -12109,7 +12109,7 @@ sub_8082558: @ 8082558
 	ldrb r0, [r0]
 	bx lr
 	.align 2, 0
-_08082560: .4byte gUnknown_0202FF5C
+_08082560: .4byte gTrainerBattleMode
 	thumb_func_end sub_8082558
 
 	thumb_func_start sub_8082564
@@ -12220,7 +12220,7 @@ sub_808260C: @ 808260C
 	bl SetMainCallback2
 	b _08082652
 	.align 2, 0
-_08082624: .4byte word_202FF5E
+_08082624: .4byte gTrainerBattleOpponent
 _08082628: .4byte c2_exit_to_overworld_1_continue_scripts_restart_music
 _0808262C:
 	ldr r0, _08082640
@@ -12258,7 +12258,7 @@ do_choose_name_or_words_screen: @ 808265C
 	bl SetMainCallback2
 	b _080826A6
 	.align 2, 0
-_08082674: .4byte word_202FF5E
+_08082674: .4byte gTrainerBattleOpponent
 _08082678: .4byte c2_exit_to_overworld_1_continue_scripts_restart_music
 _0808267C:
 	ldr r0, _08082690
@@ -12324,7 +12324,7 @@ _080826F4:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080826F8: .4byte gUnknown_0202FF74
+_080826F8: .4byte gTrainerBattleScriptReturnAddress
 _080826FC: .4byte gUnknown_081C6C02
 	thumb_func_end sub_80826E8
 
@@ -12340,7 +12340,7 @@ _0808270C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08082710: .4byte gUnknown_0202FF78
+_08082710: .4byte gTrainerBattleEndScript
 _08082714: .4byte gUnknown_081C6C02
 	thumb_func_end sub_8082700
 
@@ -12375,8 +12375,8 @@ sub_8082728: @ 8082728
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08082750: .4byte gUnknown_0202FF5C
-_08082754: .4byte word_202FF5E
+_08082750: .4byte gTrainerBattleMode
+_08082754: .4byte gTrainerBattleOpponent
 _08082758: .4byte _0808275C
 	.align 2, 0
 _0808275C:
@@ -12489,7 +12489,7 @@ sub_808281C: @ 808281C
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0808282C: .4byte gUnknown_0202FF64
+_0808282C: .4byte gTrainerIntroSpeech
 	thumb_func_end sub_808281C
 
 	thumb_func_start sub_8082830
@@ -12504,7 +12504,7 @@ sub_8082830: @ 8082830
 	bl sub_80BCCE8
 	b _0808284C
 	.align 2, 0
-_08082844: .4byte word_202FF5E
+_08082844: .4byte gTrainerBattleOpponent
 _08082848:
 	ldr r0, _08082864
 	ldr r0, [r0]
@@ -12519,7 +12519,7 @@ _0808284C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08082864: .4byte gUnknown_0202FF68
+_08082864: .4byte gTrainerDefeatSpeech
 _08082868: .4byte gStringVar4
 	thumb_func_end sub_8082830
 
@@ -12532,7 +12532,7 @@ unref_sub_808286C: @ 808286C
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0808287C: .4byte gUnknown_0202FF6C
+_0808287C: .4byte gTrainerVictorySpeech
 	thumb_func_end unref_sub_808286C
 
 	thumb_func_start sub_8082880
@@ -12544,7 +12544,7 @@ sub_8082880: @ 8082880
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08082890: .4byte gUnknown_0202FF70
+_08082890: .4byte gTrainerCannotBattleSpeech
 	thumb_func_end sub_8082880
 
 	thumb_func_start sub_8082894
@@ -13126,7 +13126,7 @@ sub_8082C68: @ 8082C68
 	b _08082C96
 	.align 2, 0
 _08082C8C: .4byte gTrainerEyeTrainers
-_08082C90: .4byte word_202FF5E
+_08082C90: .4byte gTrainerBattleOpponent
 _08082C94:
 	movs r0, 0x1
 _08082C96:
@@ -13148,7 +13148,7 @@ sub_8082C9C: @ 8082C9C
 	bx r1
 	.align 2, 0
 _08082CB0: .4byte gTrainerEyeTrainers
-_08082CB4: .4byte word_202FF5E
+_08082CB4: .4byte gTrainerBattleOpponent
 	thumb_func_end sub_8082C9C
 
 	thumb_func_start sub_8082CB8
@@ -13163,7 +13163,7 @@ sub_8082CB8: @ 8082CB8
 	bx r0
 	.align 2, 0
 _08082CCC: .4byte gTrainerEyeTrainers
-_08082CD0: .4byte word_202FF5E
+_08082CD0: .4byte gTrainerBattleOpponent
 	thumb_func_end sub_8082CB8
 
 	thumb_func_start sub_8082CD4
@@ -15292,8 +15292,8 @@ _08083D6A:
 	bx r1
 	thumb_func_end sub_8083D4C
 
-	thumb_func_start sub_8083D70
-sub_8083D70: @ 8083D70
+	thumb_func_start MoriDebugMenu_SearchChild
+MoriDebugMenu_SearchChild: @ 8083D70
 	push {r4-r6,lr}
 	sub sp, 0x34
 	ldr r0, _08083DE4
@@ -15350,10 +15350,10 @@ _08083DEC: .4byte gUnknown_0839B24D
 _08083DF0: .4byte gUnknown_0839B255
 _08083DF4: .4byte gCallback_03004AE8
 _08083DF8: .4byte sub_8083D4C
-	thumb_func_end sub_8083D70
+	thumb_func_end MoriDebugMenu_SearchChild
 
-	thumb_func_start sub_8083DFC
-sub_8083DFC: @ 8083DFC
+	thumb_func_start MoriDebugMenu_Egg
+MoriDebugMenu_Egg: @ 8083DFC
 	push {lr}
 	ldr r0, _08083E24
 	bl daycare_count_pokemon
@@ -15373,10 +15373,10 @@ _08083E1A:
 	bx r1
 	.align 2, 0
 _08083E24: .4byte gSaveBlock1 + 0x2F9C
-	thumb_func_end sub_8083DFC
+	thumb_func_end MoriDebugMenu_Egg
 
-	thumb_func_start sub_8083E28
-sub_8083E28: @ 8083E28
+	thumb_func_start MoriDebugMenu_MaleEgg
+MoriDebugMenu_MaleEgg: @ 8083E28
 	push {lr}
 	ldr r0, _08083E50
 	bl daycare_count_pokemon
@@ -15396,10 +15396,10 @@ _08083E46:
 	bx r1
 	.align 2, 0
 _08083E50: .4byte gSaveBlock1 + 0x2F9C
-	thumb_func_end sub_8083E28
+	thumb_func_end MoriDebugMenu_MaleEgg
 
-	thumb_func_start sub_8083E54
-sub_8083E54: @ 8083E54
+	thumb_func_start MoriDebugMenu_1000Steps
+MoriDebugMenu_1000Steps: @ 8083E54
 	push {lr}
 	movs r0, 0xFA
 	lsls r0, 2
@@ -15408,10 +15408,10 @@ sub_8083E54: @ 8083E54
 	movs r0, 0x1
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8083E54
+	thumb_func_end MoriDebugMenu_1000Steps
 
-	thumb_func_start sub_8083E68
-sub_8083E68: @ 8083E68
+	thumb_func_start MoriDebugMenu_10000Steps
+MoriDebugMenu_10000Steps: @ 8083E68
 	push {lr}
 	ldr r0, _08083E7C
 	bl sub_8041790
@@ -15421,20 +15421,20 @@ sub_8083E68: @ 8083E68
 	bx r1
 	.align 2, 0
 _08083E7C: .4byte 0x00002710
-	thumb_func_end sub_8083E68
+	thumb_func_end MoriDebugMenu_10000Steps
 
-	thumb_func_start sub_8083E80
-sub_8083E80: @ 8083E80
+	thumb_func_start MoriDebugMenu_MoveTutor
+MoriDebugMenu_MoveTutor: @ 8083E80
 	push {lr}
 	bl sub_8132670
 	bl sub_8071C20
 	movs r0, 0x1
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8083E80
+	thumb_func_end MoriDebugMenu_MoveTutor
 
-	thumb_func_start sub_8083E90
-sub_8083E90: @ 8083E90
+	thumb_func_start MoriDebugMenu_BreedEgg
+MoriDebugMenu_BreedEgg: @ 8083E90
 	push {r4-r6,lr}
 	sub sp, 0x4
 	movs r5, 0
@@ -15477,10 +15477,10 @@ _08083EBC:
 _08083EE0: .4byte gPlayerParty
 _08083EE4: .4byte gSaveBlock1
 _08083EE8: .4byte 0x000030b6
-	thumb_func_end sub_8083E90
+	thumb_func_end MoriDebugMenu_BreedEgg
 
-	thumb_func_start sub_8083EEC
-sub_8083EEC: @ 8083EEC
+	thumb_func_start MoriDebugMenu_LongName
+MoriDebugMenu_LongName: @ 8083EEC
 	push {lr}
 	ldr r0, _08083F04
 	ldr r2, _08083F08
@@ -15493,10 +15493,10 @@ sub_8083EEC: @ 8083EEC
 	.align 2, 0
 _08083F04: .4byte gPlayerParty
 _08083F08: .4byte gUnknown_0839B257
-	thumb_func_end sub_8083EEC
+	thumb_func_end MoriDebugMenu_LongName
 
-	thumb_func_start sub_8083F0C
-sub_8083F0C: @ 8083F0C
+	thumb_func_start MoriDebugMenu_PokeblockCase
+MoriDebugMenu_PokeblockCase: @ 8083F0C
 	push {r4,lr}
 	movs r4, 0
 _08083F10:
@@ -15511,10 +15511,10 @@ _08083F10:
 	pop {r4}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8083F0C
+	thumb_func_end MoriDebugMenu_PokeblockCase
 
-	thumb_func_start sub_8083F2C
-sub_8083F2C: @ 8083F2C
+	thumb_func_start MoriDebugMenuProcessInput
+MoriDebugMenuProcessInput: @ 8083F2C
 	push {lr}
 	bl ProcessMenuInput
 	lsls r0, 24
@@ -15538,17 +15538,17 @@ _08083F52:
 	b _08083F66
 	.align 2, 0
 _08083F58: .4byte gCallback_03004AE8
-_08083F5C: .4byte gUnknown_0839B2C0
+_08083F5C: .4byte gMoriDebugMenuActions
 _08083F60:
 	bl sub_8071C20
 	movs r0, 0x1
 _08083F66:
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8083F2C
+	thumb_func_end MoriDebugMenuProcessInput
 
-	thumb_func_start unref_sub_8083F6C
-unref_sub_8083F6C: @ 8083F6C
+	thumb_func_start InitMoriDebugMenu
+InitMoriDebugMenu: @ 8083F6C
 	push {lr}
 	sub sp, 0x8
 	bl MenuZeroFillScreen
@@ -15579,13 +15579,13 @@ unref_sub_8083F6C: @ 8083F6C
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08083FB0: .4byte gUnknown_0839B2C0
+_08083FB0: .4byte gMoriDebugMenuActions
 _08083FB4: .4byte gCallback_03004AE8
-_08083FB8: .4byte sub_8083F2C
-	thumb_func_end unref_sub_8083F6C
+_08083FB8: .4byte MoriDebugMenuProcessInput
+	thumb_func_end InitMoriDebugMenu
 
-	thumb_func_start sub_8083FBC
-sub_8083FBC: @ 8083FBC
+	thumb_func_start CheckTrainers
+CheckTrainers: @ 8083FBC
 	push {r4,r5,lr}
 	movs r4, 0
 	ldr r5, _08083FEC
@@ -15605,7 +15605,7 @@ _08083FC2:
 	bne _08083FF0
 _08083FDC:
 	adds r0, r4, 0
-	bl sub_8084004
+	bl CheckTrainer
 	lsls r0, 24
 	cmp r0, 0
 	beq _08083FF0
@@ -15624,10 +15624,10 @@ _08083FFC:
 	pop {r4,r5}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8083FBC
+	thumb_func_end CheckTrainers
 
-	thumb_func_start sub_8084004
-sub_8084004: @ 8084004
+	thumb_func_start CheckTrainer
+CheckTrainer: @ 8084004
 	push {r4-r7,lr}
 	lsls r0, 24
 	lsrs r4, r0, 24
@@ -15644,7 +15644,7 @@ sub_8084004: @ 8084004
 	ldr r1, _08084038
 	adds r5, r0, r1
 	adds r0, r5, 0
-	bl CheckIfTrainerCanApproachPlayer
+	bl TrainerCanApproachPlayer
 	lsls r0, 24
 	lsrs r4, r0, 24
 	cmp r4, 0
@@ -15657,7 +15657,7 @@ _08084038: .4byte gMapObjects
 _0808403C:
 	adds r0, r7, 0
 	adds r1, r6, 0
-	bl SingleTrainerWantsBattle
+	bl TrainerWantsBattle
 	subs r1, r4, 0x1
 	lsls r1, 24
 	lsrs r1, 24
@@ -15668,10 +15668,10 @@ _08084052:
 	pop {r4-r7}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8084004
+	thumb_func_end CheckTrainer
 
-	thumb_func_start CheckIfTrainerCanApproachPlayer
-CheckIfTrainerCanApproachPlayer: @ 8084058
+	thumb_func_start TrainerCanApproachPlayer
+TrainerCanApproachPlayer: @ 8084058
 	push {r4-r7,lr}
 	mov r7, r8
 	push {r7}
@@ -15758,7 +15758,7 @@ _080840F8:
 	bx r1
 	.align 2, 0
 _08084104: .4byte gUnknown_0839B488
-	thumb_func_end CheckIfTrainerCanApproachPlayer
+	thumb_func_end TrainerCanApproachPlayer
 
 	thumb_func_start IsTrainerInRangeSouth
 IsTrainerInRangeSouth: @ 8084108

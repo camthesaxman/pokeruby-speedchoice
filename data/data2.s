@@ -10939,28 +10939,75 @@ gUnknown_0839ACE8:: @ 839ACE8
 
 	.align 2
 gUnknown_0839ACEC:: @ 839ACEC
-	.incbin "baserom.gba", 0x0039acec, 0xc
+	.4byte REG_WIN0H
+	.4byte ((DMA_ENABLE | DMA_START_HBLANK | DMA_REPEAT | DMA_DEST_RELOAD) << 16) | 1
+	.4byte 1
 
-gUnknown_0839ACF8:: @ 839ACF8
-	.incbin "baserom.gba", 0x0039acf8, 0x8
+gBattleTransitionTable_Wild:: @ 839ACF8
+	.byte  8,  9,  5, 10,  0, 10,  7,  6
 
-gUnknown_0839AD00:: @ 839AD00
-	.incbin "baserom.gba", 0x0039ad00, 0x8
+gBattleTransitionTable_Trainer:: @ 839AD00
+	.byte  4, 11,  2,  3,  0, 10,  1,  6
 
-gUnknown_0839AD08:: @ 839AD08
-	.incbin "baserom.gba", 0x0039ad08, 0x48
+	.align 2
+gTrainerBattleSpecs_0:: @ 839AD08
+	.4byte gTrainerBattleMode, 0
+	.4byte gTrainerBattleOpponent, 1
+	.4byte gTrainerMapObjectLocalId, 1
+	.4byte gTrainerIntroSpeech, 2
+	.4byte gTrainerDefeatSpeech, 2
+	.4byte gTrainerVictorySpeech, 5
+	.4byte gTrainerCannotBattleSpeech, 5
+	.4byte gTrainerBattleEndScript, 5
+	.4byte gTrainerBattleScriptReturnAddress, 6
 
-gUnknown_0839AD50:: @ 839AD50
-	.incbin "baserom.gba", 0x0039ad50, 0x48
+	.align 2
+gTrainerBattleSpecs_1:: @ 839AD50
+	.4byte gTrainerBattleMode, 0
+	.4byte gTrainerBattleOpponent, 1
+	.4byte gTrainerMapObjectLocalId, 1
+	.4byte gTrainerIntroSpeech, 2
+	.4byte gTrainerDefeatSpeech, 2
+	.4byte gTrainerVictorySpeech, 5
+	.4byte gTrainerCannotBattleSpeech, 5
+	.4byte gTrainerBattleEndScript, 2
+	.4byte gTrainerBattleScriptReturnAddress, 6
 
-gUnknown_0839AD98:: @ 839AD98
-	.incbin "baserom.gba", 0x0039ad98, 0x48
+	.align 2
+gTrainerBattleSpecs_2:: @ 839AD98
+	.4byte gTrainerBattleMode, 0
+	.4byte gTrainerBattleOpponent, 1
+	.4byte gTrainerMapObjectLocalId, 1
+	.4byte gTrainerIntroSpeech, 2
+	.4byte gTrainerDefeatSpeech, 2
+	.4byte gTrainerVictorySpeech, 5
+	.4byte gTrainerCannotBattleSpeech, 2
+	.4byte gTrainerBattleEndScript, 5
+	.4byte gTrainerBattleScriptReturnAddress, 6
 
-gUnknown_0839ADE0:: @ 839ADE0
-	.incbin "baserom.gba", 0x0039ade0, 0x48
+	.align 2
+gTrainerBattleSpecs_3:: @ 839ADE0
+	.4byte gTrainerBattleMode, 0
+	.4byte gTrainerBattleOpponent, 1
+	.4byte gTrainerMapObjectLocalId, 1
+	.4byte gTrainerIntroSpeech, 5
+	.4byte gTrainerDefeatSpeech, 2
+	.4byte gTrainerVictorySpeech, 5
+	.4byte gTrainerCannotBattleSpeech, 5
+	.4byte gTrainerBattleEndScript, 5
+	.4byte gTrainerBattleScriptReturnAddress, 6
 
-gUnknown_0839AE28:: @ 839AE28
-	.incbin "baserom.gba", 0x0039ae28, 0x48
+	.align 2
+gTrainerBattleSpecs_4:: @ 839AE28
+	.4byte gTrainerBattleMode, 0
+	.4byte gTrainerBattleOpponent, 1
+	.4byte gTrainerMapObjectLocalId, 1
+	.4byte gTrainerIntroSpeech, 2
+	.4byte gTrainerDefeatSpeech, 2
+	.4byte gTrainerVictorySpeech, 5
+	.4byte gTrainerCannotBattleSpeech, 2
+	.4byte gTrainerBattleEndScript, 2
+	.4byte gTrainerBattleScriptReturnAddress, 6
 
 @ 839AE70
 	.include "data/trainer_eye_trainers.s"
@@ -11038,16 +11085,16 @@ Text_39B2B9: @ 839B2B9
 	.string "ポロックけす$" @ "{POKEBLOCK} CASE$"
 
 	.align 2
-gUnknown_0839B2C0:: @ 839B2C0
-	.4byte Text_39B262, sub_8083D70
-	.4byte Text_39B271, sub_8083DFC
-	.4byte Text_39B275, sub_8083E28
-	.4byte Text_39B280, sub_8083E54
-	.4byte Text_39B28B, sub_8083E68
-	.4byte Text_39B297, sub_8083E80
-	.4byte Text_39B2A2, sub_8083E90
-	.4byte Text_39B2AF, sub_8083EEC
-	.4byte Text_39B2B9, sub_8083F0C
+gMoriDebugMenuActions:: @ 839B2C0
+	.4byte Text_39B262, MoriDebugMenu_SearchChild
+	.4byte Text_39B271, MoriDebugMenu_Egg
+	.4byte Text_39B275, MoriDebugMenu_MaleEgg
+	.4byte Text_39B280, MoriDebugMenu_1000Steps
+	.4byte Text_39B28B, MoriDebugMenu_10000Steps
+	.4byte Text_39B297, MoriDebugMenu_MoveTutor
+	.4byte Text_39B2A2, MoriDebugMenu_BreedEgg
+	.4byte Text_39B2AF, MoriDebugMenu_LongName
+	.4byte Text_39B2B9, MoriDebugMenu_PokeblockCase
 
 	.align 2
 gSpriteImage_839B308:: @ 839B308
@@ -27020,8 +27067,10 @@ gUnknown_084062E8:: @ 84062E8
 	.4byte sub_813B578
 	.4byte sub_813B610
 
-gUnknown_084062F0:: @ 84062F0
-	.incbin "baserom.gba", 0x004062f0, 0x8
+	.align 2
+gNewGamePCItems:: @ 84062F0
+	.2byte ITEM_POTION, 1
+	.2byte 0, 0
 
 	.align 2
 gUnknown_084062F8:: @ 84062F8
