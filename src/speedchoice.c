@@ -297,7 +297,7 @@ static void DrawOptionMenuChoice2(u8 *text, u8 x, u8 y, u8 style)
     
     dst[2] = style;
     dst[i] = EOS;
-    sub_80729D8(dst, x, y, 1);
+    MenuPrint_PixelCoords(dst, x, y, 1);
 }
 
 static u32 CalculateCheckValue()

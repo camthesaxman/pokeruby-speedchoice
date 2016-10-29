@@ -1,5 +1,5 @@
-	.include "asm/macros.s"
-	.include "constants/constants.s"
+	.include "asm/macros.inc"
+	.include "constants/constants.inc"
 
 	.section .rodata
 
@@ -30,7 +30,7 @@ gSpeedchoiceText_SuperBike::
 	.string "{PALETTE 8}SUPER BIKE$"
 
 gSpeedchoiceText_NerfRareEnc::
-	.string "{PALETTE 8}NERF RARE ENC.$"
+	.string "{PALETTE 9}NERF RARE ENC.$"
 
 gSpeedchoiceText_StartGame::
 	.string "{PALETTE 9}START GAME$"

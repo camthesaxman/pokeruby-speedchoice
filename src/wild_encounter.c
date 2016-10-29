@@ -183,46 +183,92 @@ u8 PickWildMon_Grass(void)
 {
     u8 val = Random() % 100;
 
-    if(val < 20)
-        return 0;
-    if(val >= 20 && val < 40)
-        return 1;
-    if(val >= 40 && val < 50)
-        return 2;
-    if(val >= 50 && val < 60)
-        return 3;
-    if(val >= 60 && val < 70)
-        return 4;
-    if(val >= 70 && val < 80)
-        return 5;
-    if(val >= 80 && val < 85)
-        return 6;
-    if(val >= 85 && val < 90)
-        return 7;
-    if(val >= 90 && val < 94)
-        return 8;
-    if(val >= 94 && val < 98)
-        return 9;
-    if(val == 98)
-        return 10;
-    else
-        return 11;
+	if (gSaveBlock2.speedchoiceNerfRareEnc == SPEEDCHOICE_NERFRAREENC_YES)
+	{
+		if(val < 15) // 15%
+			return 0;
+		if(val >= 15 && val < 25) // 10%
+			return 1;
+		if(val >= 25 && val < 35) // 10%
+			return 2;
+		if(val >= 35 && val < 45) // 10%
+			return 3;
+		if(val >= 45 && val < 55) // 10%
+			return 4;
+		if(val >= 55 && val < 65) // 10%
+			return 5;
+		if(val >= 65 && val < 75) // 10%
+			return 6;
+		if(val >= 75 && val < 80) // 5%
+			return 7;
+		if(val >= 80 && val < 85) // 5%
+			return 8;
+		if(val >= 85 && val < 90) // 5%
+			return 9;
+		if(val >= 90 && val < 95) // 5%
+			return 10;
+		else // 5%
+			return 11;
+	}
+	else
+	{
+		if(val < 20)
+			return 0;
+		if(val >= 20 && val < 40)
+			return 1;
+		if(val >= 40 && val < 50)
+			return 2;
+		if(val >= 50 && val < 60)
+			return 3;
+		if(val >= 60 && val < 70)
+			return 4;
+		if(val >= 70 && val < 80)
+			return 5;
+		if(val >= 80 && val < 85)
+			return 6;
+		if(val >= 85 && val < 90)
+			return 7;
+		if(val >= 90 && val < 94)
+			return 8;
+		if(val >= 94 && val < 98)
+			return 9;
+		if(val == 98)
+			return 10;
+		else
+			return 11;
+	}
 }
 
 u8 PickWildMon_Water(void)
 {
     u8 val = Random() % 100;
 
-    if(val < 60)
-        return 0;
-    if(val >= 60 && val < 90)
-        return 1;
-    if(val >= 90 && val < 95)
-        return 2;
-    if(val >= 95 && val < 99)
-        return 3;
-    else
-        return 4;
+	if (gSaveBlock2.speedchoiceNerfRareEnc == SPEEDCHOICE_NERFRAREENC_YES)
+	{
+        if(val < 30) // 30%
+            return 0;
+        if(val >= 30 && val < 60) // 30%
+            return 1;
+        if(val >= 60 && val < 80) // 20%
+            return 2;
+        if(val >= 80 && val < 90) // 10%
+            return 3;
+        else // 10%
+            return 4;
+	}
+	else
+	{
+        if(val < 60)
+            return 0;
+        if(val >= 60 && val < 90)
+            return 1;
+        if(val >= 90 && val < 95)
+            return 2;
+        if(val >= 95 && val < 99)
+            return 3;
+        else
+            return 4;
+	}
 }
 
 u8 PickWildMon_Fishing(u8 rod)
@@ -233,9 +279,9 @@ u8 PickWildMon_Fishing(u8 rod)
     switch(rod)
     {
         case 0: //old rod?
-            if(val < 70)
+            if(val < 70) // 70%
                 r5 = 0;
-            else
+            else // 30%
                 r5 = 1;
             return r5;
         case 1: //good rod?
@@ -247,17 +293,33 @@ u8 PickWildMon_Fishing(u8 rod)
                 r5 = 4;
             return r5;
         case 2: //super rod?
-            if(val < 40)
-                r5 = 5;
-            if(val >= 40 && val < 80)
-                r5 = 6;
-            if(val >= 80 && val < 95)
-                r5 = 7;
-            if(val >= 95 && val < 99)
-                r5 = 8;
-            if(val == 99)
-                r5 = 9;
-            return r5;
+			if (gSaveBlock2.speedchoiceNerfRareEnc == SPEEDCHOICE_NERFRAREENC_YES)
+			{
+				if(val < 30) // 30%
+					return 5;
+				if(val >= 30 && val < 55) // 25%
+					return 6;
+				if(val >= 55 && val < 70) // 15%
+					return 7;
+				if(val >= 70 && val < 85) // 15%
+					return 8;
+				if(val >= 85 && val <= 100) // 15%
+					return 9;
+			}
+			else
+			{
+				if(val < 40)
+					r5 = 5;
+				if(val >= 40 && val < 80)
+					r5 = 6;
+				if(val >= 80 && val < 95)
+					r5 = 7;
+				if(val >= 95 && val < 99)
+					r5 = 8;
+				if(val == 99)
+					r5 = 9;
+				return r5;
+			}
         default:
             return r5;
     }
@@ -673,6 +735,7 @@ void FishingWildEncounter(u8 rod)
 u16 GetLocalWildMon(bool8 *isWaterMon)
 {
     u16 headerNum;
+	u8 loopCount;
     struct WildPokemonInfo *landMonsInfo;
     struct WildPokemonInfo *waterMonsInfo;
 
@@ -681,8 +744,8 @@ u16 GetLocalWildMon(bool8 *isWaterMon)
     if(headerNum == 0xFFFF)
         return 0;
 
-    landMonsInfo = gWildMonHeaders[headerNum].landMonsInfo;
-    waterMonsInfo = gWildMonHeaders[headerNum].waterMonsInfo;
+	landMonsInfo = gWildMonHeaders[headerNum].landMonsInfo;
+	waterMonsInfo = gWildMonHeaders[headerNum].waterMonsInfo;
 
     if (!landMonsInfo && !waterMonsInfo)
         return 0;
