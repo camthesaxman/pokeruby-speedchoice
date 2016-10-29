@@ -3701,7 +3701,7 @@ void ConvertInternationalString(u8 *s, u8 language)
         u8 i;
         u8 length;
 
-        SkipExtCtrlCodes(s);
+        StripExtCtrlCodes(s);
         i = StringLength(s);
         s[i++] = 0xFC;
         s[i++] = 22;
@@ -3720,7 +3720,7 @@ void ConvertInternationalString(u8 *s, u8 language)
     }
 }
 
-void SkipExtCtrlCodes(u8 *str)
+void StripExtCtrlCodes(u8 *str)
 {
     u16 srcIndex = 0;
     u16 destIndex = 0;

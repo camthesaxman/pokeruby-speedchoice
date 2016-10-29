@@ -1,6 +1,6 @@
-	.include "constants/gba_constants.s"
-	.include "constants/species_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "constants/species_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -96,7 +96,7 @@ _0803E22C:
 _0803E238: .4byte gSaveBlock1
 _0803E23C: .4byte 0x00003688
 _0803E240:
-	bl itemid_get_x12
+	bl ItemId_GetHoldEffect
 	lsls r0, 24
 	lsrs r0, 24
 _0803E248:
@@ -234,7 +234,7 @@ _0803E35C:
 	mov r0, r8
 	movs r2, 0
 	ldr r3, [sp, 0xC]
-	bl sub_8111924
+	bl BeginEvolutionScene
 	movs r0, 0
 	bl _0803F15C
 _0803E36C:
@@ -888,7 +888,7 @@ _0803E88C:
 	.4byte _0803EDF4
 _0803E8AC:
 	mov r0, r8
-	bl sub_8040020
+	bl GetMonEVCount
 	lsls r0, 16
 	lsrs r5, r0, 16
 	ldr r0, _0803E8EC @ =0x000001fd
@@ -1593,7 +1593,7 @@ _0803EE54:
 	.4byte _0803F07C
 _0803EE74:
 	mov r0, r8
-	bl sub_8040020
+	bl GetMonEVCount
 	lsls r0, 16
 	lsrs r5, r0, 16
 	ldr r0, _0803EEBC @ =0x000001fd
@@ -2436,7 +2436,7 @@ GetEvolutionTargetSpecies: @ 803F48C
 _0803F4F8: .4byte gSaveBlock1
 _0803F4FC: .4byte 0x00003688
 _0803F500:
-	bl itemid_get_x12
+	bl ItemId_GetHoldEffect
 	lsls r0, 24
 	lsrs r0, 24
 _0803F508:
@@ -3589,8 +3589,8 @@ _0803FCCE:
 	bx r1
 	thumb_func_end nature_stat_mod
 
-	thumb_func_start sub_803FCD4
-sub_803FCD4: @ 803FCD4
+	thumb_func_start AdjustFriendship
+AdjustFriendship: @ 803FCD4
 	push {r4-r7,lr}
 	sub sp, 0x4
 	adds r7, r0, 0
@@ -3634,7 +3634,7 @@ _0803FD20:
 _0803FD2C: .4byte gSaveBlock1
 _0803FD30: .4byte 0x00003688
 _0803FD34:
-	bl itemid_get_x12
+	bl ItemId_GetHoldEffect
 	lsls r0, 24
 	lsrs r4, r0, 24
 _0803FD3C:
@@ -3793,10 +3793,10 @@ _0803FE60: .4byte gUnknown_020239F8
 _0803FE64: .4byte gTrainers
 _0803FE68: .4byte gTrainerBattleOpponent
 _0803FE6C: .4byte gUnknown_082082FE
-	thumb_func_end sub_803FCD4
+	thumb_func_end AdjustFriendship
 
-	thumb_func_start sub_803FE70
-sub_803FE70: @ 803FE70
+	thumb_func_start MonGainEVs
+MonGainEVs: @ 803FE70
 	push {r4-r7,lr}
 	mov r7, r8
 	push {r7}
@@ -3828,7 +3828,7 @@ _0803FE84:
 _0803FEA8:
 	mov r0, r8
 	movs r1, 0
-	bl sub_8040178
+	bl CheckPartyHasHadPokerus
 	lsls r0, 24
 	movs r2, 0x1
 	cmp r0, 0
@@ -3955,7 +3955,7 @@ _0803FF94:
 _0803FFA0: .4byte gSaveBlock1
 _0803FFA4: .4byte 0x00003688
 _0803FFA8:
-	bl itemid_get_x12
+	bl ItemId_GetHoldEffect
 	lsls r0, 24
 	lsrs r0, 24
 _0803FFB0:
@@ -4018,10 +4018,10 @@ _0804000E:
 	bx r0
 	.align 2, 0
 _0804001C: .4byte 0x000001fd
-	thumb_func_end sub_803FE70
+	thumb_func_end MonGainEVs
 
-	thumb_func_start sub_8040020
-sub_8040020: @ 8040020
+	thumb_func_start GetMonEVCount
+GetMonEVCount: @ 8040020
 	push {r4-r6,lr}
 	adds r6, r0, 0
 	movs r5, 0
@@ -4042,10 +4042,10 @@ _08040028:
 	pop {r4-r6}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8040020
+	thumb_func_end GetMonEVCount
 
-	thumb_func_start sub_8040048
-sub_8040048: @ 8040048
+	thumb_func_start RandomlyGivePartyPokerus
+RandomlyGivePartyPokerus: @ 8040048
 	push {r4-r6,lr}
 	sub sp, 0x4
 	adds r6, r0, 0
@@ -4092,7 +4092,7 @@ _0804006E:
 	adds r0, r1
 	ldrb r1, [r0]
 	adds r0, r6, 0
-	bl sub_8040178
+	bl CheckPartyHasHadPokerus
 	lsls r0, 24
 	cmp r0, 0
 	bne _08040104
@@ -4142,10 +4142,10 @@ _08040104:
 	bx r0
 	.align 2, 0
 _0804010C: .4byte gBitTable
-	thumb_func_end sub_8040048
+	thumb_func_end RandomlyGivePartyPokerus
 
-	thumb_func_start sub_8040110
-sub_8040110: @ 8040110
+	thumb_func_start CheckPartyPokerus
+CheckPartyPokerus: @ 8040110
 	push {r4-r7,lr}
 	sub sp, 0x4
 	adds r7, r0, 0
@@ -4199,10 +4199,10 @@ _0804016C:
 	pop {r4-r7}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8040110
+	thumb_func_end CheckPartyPokerus
 
-	thumb_func_start sub_8040178
-sub_8040178: @ 8040178
+	thumb_func_start CheckPartyHasHadPokerus
+CheckPartyHasHadPokerus: @ 8040178
 	push {r4-r7,lr}
 	sub sp, 0x4
 	adds r7, r0, 0
@@ -4252,10 +4252,10 @@ _080401CC:
 	pop {r4-r7}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8040178
+	thumb_func_end CheckPartyHasHadPokerus
 
-	thumb_func_start sub_80401D8
-sub_80401D8: @ 80401D8
+	thumb_func_start UpdatePartyPokerusTime
+UpdatePartyPokerusTime: @ 80401D8
 	push {r4-r7,lr}
 	sub sp, 0x4
 	lsls r0, 16
@@ -4317,10 +4317,10 @@ _0804023C:
 	bx r0
 	.align 2, 0
 _0804024C: .4byte gPlayerParty
-	thumb_func_end sub_80401D8
+	thumb_func_end UpdatePartyPokerusTime
 
-	thumb_func_start atkE5_pickupitemcalculation
-atkE5_pickupitemcalculation: @ 8040250
+	thumb_func_start PartySpreadPokerus
+PartySpreadPokerus: @ 8040250
 	push {r4-r7,lr}
 	sub sp, 0x4
 	adds r7, r0, 0
@@ -4404,10 +4404,10 @@ _080402F6:
 	pop {r4-r7}
 	pop {r0}
 	bx r0
-	thumb_func_end atkE5_pickupitemcalculation
+	thumb_func_end PartySpreadPokerus
 
-	thumb_func_start sub_8040300
-sub_8040300: @ 8040300
+	thumb_func_start TryIncrementMonLevel
+TryIncrementMonLevel: @ 8040300
 	push {r4-r6,lr}
 	sub sp, 0x4
 	adds r6, r0, 0
@@ -4462,10 +4462,10 @@ _0804036C:
 	pop {r4-r6}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_8040300
+	thumb_func_end TryIncrementMonLevel
 
-	thumb_func_start sub_8040374
-sub_8040374: @ 8040374
+	thumb_func_start CanMonLearnTMHM
+CanMonLearnTMHM: @ 8040374
 	push {r4,r5,lr}
 	lsls r1, 24
 	lsrs r4, r1, 24
@@ -4512,7 +4512,7 @@ _080403C2:
 	bx r1
 	.align 2, 0
 _080403C8: .4byte gTMHMLearnsets
-	thumb_func_end sub_8040374
+	thumb_func_end CanMonLearnTMHM
 
 	thumb_func_start sub_80403CC
 sub_80403CC: @ 80403CC
@@ -4922,12 +4922,12 @@ _080406D0: .4byte 0x0000ffff
 _080406D4: .4byte 0x000001ff
 	thumb_func_end sub_8040574
 
-	thumb_func_start sub_80406D8
-sub_80406D8: @ 80406D8
+	thumb_func_start SpeciesToPokedexNum
+SpeciesToPokedexNum: @ 80406D8
 	push {r4,lr}
 	lsls r0, 16
 	lsrs r4, r0, 16
-	bl sub_806912C
+	bl IsNationalPokedex
 	cmp r0, 0
 	beq _080406F2
 	adds r0, r4, 0
@@ -4951,7 +4951,7 @@ _0804070A:
 	pop {r4}
 	pop {r1}
 	bx r1
-	thumb_func_end sub_80406D8
+	thumb_func_end SpeciesToPokedexNum
 
 	thumb_func_start sub_8040710
 sub_8040710: @ 8040710

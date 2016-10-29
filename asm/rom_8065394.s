@@ -1,5 +1,5 @@
-	.include "constants/gba_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -558,7 +558,7 @@ _08068314: .4byte gUnknown_0821664C
 _08068318: .4byte gMapObjects
 _0806831C:
 	movs r4, 0
-	ldr r1, _08068354 @ =gUnknown_02029818
+	ldr r1, _08068354 @ =gLinkPlayerMapObjects
 _08068320:
 	ldrb r0, [r1]
 	cmp r0, 0x1
@@ -588,7 +588,7 @@ _0806834E:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08068354: .4byte gUnknown_02029818
+_08068354: .4byte gLinkPlayerMapObjects
 _08068358: .4byte gSelectedMapObject
 _0806835C: .4byte gUnknown_0202E8DE
 _08068360: .4byte gUnknown_0202E8E0
@@ -1332,7 +1332,7 @@ happiness_algorithm_step: @ 806890C
 _0806892A:
 	adds r0, r5, 0
 	movs r1, 0x5
-	bl sub_803FCD4
+	bl AdjustFriendship
 	adds r5, 0x64
 	subs r4, 0x1
 	cmp r4, 0
@@ -2389,8 +2389,8 @@ _08069124: .4byte 0x00000302
 _08069128: .4byte 0x00000836
 	thumb_func_end sub_80690F0
 
-	thumb_func_start sub_806912C
-sub_806912C: @ 806912C
+	thumb_func_start IsNationalPokedex
+IsNationalPokedex: @ 806912C
 	push {lr}
 	ldr r0, _08069154 @ =gSaveBlock2
 	ldrb r0, [r0, 0x1A]
@@ -2419,7 +2419,7 @@ _08069164:
 _08069166:
 	pop {r1}
 	bx r1
-	thumb_func_end sub_806912C
+	thumb_func_end IsNationalPokedex
 
 	thumb_func_start unref_sub_806916C
 unref_sub_806916C: @ 806916C

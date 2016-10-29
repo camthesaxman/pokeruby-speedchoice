@@ -1,6 +1,6 @@
-	.include "constants/gba_constants.s"
-	.include "constants/species_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "constants/species_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -6694,8 +6694,8 @@ _0813EE7A:
 _0813EEB0: .4byte gSineTable
 	thumb_func_end sub_813EDFC
 
-	thumb_func_start sub_813EEB4
-sub_813EEB4: @ 813EEB4
+	thumb_func_start FieldInitRegionMap
+FieldInitRegionMap: @ 813EEB4
 	push {r4,lr}
 	adds r4, r0, 0
 	movs r0, 0
@@ -6714,11 +6714,11 @@ sub_813EEB4: @ 813EEB4
 	.align 2, 0
 _0813EED8: .4byte 0x02000000
 _0813EEDC: .4byte 0x00000888
-_0813EEE0: .4byte sub_813EEE4
-	thumb_func_end sub_813EEB4
+_0813EEE0: .4byte CB2_FieldInitRegionMap
+	thumb_func_end FieldInitRegionMap
 
-	thumb_func_start sub_813EEE4
-sub_813EEE4: @ 813EEE4
+	thumb_func_start CB2_FieldInitRegionMap
+CB2_FieldInitRegionMap: @ 813EEE4
 	push {r4,lr}
 	sub sp, 0x4
 	movs r0, 0x80
@@ -6799,22 +6799,22 @@ _0813EF98: .4byte 0x02000008
 _0813EF9C: .4byte gWindowConfig_81E709C
 _0813EFA0: .4byte REG_BG0CNT
 _0813EFA4: .4byte gOtherText_Hoenn
-_0813EFA8: .4byte sub_813EFC4
-_0813EFAC: .4byte sub_813EFB0
-	thumb_func_end sub_813EEE4
+_0813EFA8: .4byte CB2_FieldRegionMap
+_0813EFAC: .4byte VBlankCB_FieldRegionMap
+	thumb_func_end CB2_FieldInitRegionMap
 
-	thumb_func_start sub_813EFB0
-sub_813EFB0: @ 813EFB0
+	thumb_func_start VBlankCB_FieldRegionMap
+VBlankCB_FieldRegionMap: @ 813EFB0
 	push {lr}
 	bl LoadOam
 	bl ProcessSpriteCopyRequests
 	bl TransferPlttBuffer
 	pop {r0}
 	bx r0
-	thumb_func_end sub_813EFB0
+	thumb_func_end VBlankCB_FieldRegionMap
 
-	thumb_func_start sub_813EFC4
-sub_813EFC4: @ 813EFC4
+	thumb_func_start CB2_FieldRegionMap
+CB2_FieldRegionMap: @ 813EFC4
 	push {lr}
 	bl sub_813EFDC
 	bl AnimateSprites
@@ -6822,7 +6822,7 @@ sub_813EFC4: @ 813EFC4
 	bl UpdatePaletteFade
 	pop {r0}
 	bx r0
-	thumb_func_end sub_813EFC4
+	thumb_func_end CB2_FieldRegionMap
 
 	thumb_func_start sub_813EFDC
 sub_813EFDC: @ 813EFDC
@@ -13617,7 +13617,7 @@ sub_8142570: @ 8142570
 	lsls r1, r4, 2
 	adds r0, r1, r4
 	lsls r5, r0, 3
-	ldr r0, _08142608 @ =gUnknown_03004B28
+	ldr r0, _08142608 @ =gTasks + 0x8
 	mov r12, r0
 	mov r8, r1
 	ldr r6, _0814260C @ =gSprites
@@ -13675,7 +13675,7 @@ _081425C0:
 	bx r0
 	.align 2, 0
 _08142604: .4byte 0xffff0000
-_08142608: .4byte gUnknown_03004B28
+_08142608: .4byte gTasks + 0x8
 _0814260C: .4byte gSprites
 _08142610: .4byte gTasks
 _08142614: .4byte sub_8142618
@@ -14546,7 +14546,7 @@ _08142CFE:
 	lsls r6, r4, 2
 	adds r0, r6, r4
 	lsls r5, r0, 3
-	ldr r1, _08142DD8 @ =gUnknown_03004B28
+	ldr r1, _08142DD8 @ =gTasks + 0x8
 	mov r10, r1
 	ldr r2, _08142DDC @ =gSprites
 	mov r12, r2
@@ -14648,7 +14648,7 @@ _08142DB2:
 	.align 2, 0
 _08142DD0: .4byte 0x0201e000
 _08142DD4: .4byte gTasks
-_08142DD8: .4byte gUnknown_03004B28
+_08142DD8: .4byte gTasks + 0x8
 _08142DDC: .4byte gSprites
 _08142DE0: .4byte 0xffff0000
 _08142DE4: .4byte gUnknown_0203931C
@@ -14892,7 +14892,7 @@ sub_8142FCC: @ 8142FCC
 	beq _08142FE6
 	adds r0, r4, 0
 	bl DestroyTask
-	bl sub_810D62C
+	bl ReturnFromHallOfFamePC
 _08142FE6:
 	pop {r4}
 	pop {r0}
@@ -15014,7 +15014,7 @@ sub_8143088: @ 8143088
 	beq _081430EA
 	lsls r0, r2, 23
 	lsrs r0, 23
-	bl sub_80406D8
+	bl SpeciesToPokedexNum
 	lsls r0, 16
 	lsrs r6, r0, 16
 	ldr r0, _08143190 @ =0x0000ffff
@@ -15324,7 +15324,7 @@ sub_8143300: @ 8143300
 	mov r8, r2
 	mov r1, r8
 	adds r2, r4, 0
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 	ldr r0, _081433D4 @ =gOtherText_IDNumber2
 	adds r4, r6, 0x3
 	lsls r4, 24
@@ -15346,7 +15346,7 @@ sub_8143300: @ 8143300
 	mov r0, r9
 	mov r1, r8
 	adds r2, r4, 0
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 	ldr r0, _081433DC @ =gMainMenuString_Time
 	adds r6, 0x5
 	lsls r6, 24
@@ -15377,7 +15377,7 @@ sub_8143300: @ 8143300
 	mov r0, r9
 	mov r1, r8
 	adds r2, r6, 0
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 	pop {r3-r5}
 	mov r8, r3
 	mov r9, r4

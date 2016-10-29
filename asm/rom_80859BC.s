@@ -1,6 +1,6 @@
-	.include "constants/gba_constants.s"
-	.include "constants/species_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "constants/species_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -8381,7 +8381,7 @@ sub_8089A70: @ 8089A70
 	strb r1, [r0, 0x8]
 	movs r0, 0
 	movs r1, 0
-	bl sub_806AFAC
+	bl OpenPartyMenu
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -9697,7 +9697,7 @@ sub_808A520: @ 808A520
 	cmp r0, 0
 	beq _0808A542
 	movs r1, 0x1
-	bl sub_80A9538
+	bl RemoveBagItem
 _0808A542:
 	ldr r6, _0808A590 @ =gUnknown_03005CE0
 	ldrb r0, [r6]
@@ -9710,7 +9710,7 @@ _0808A542:
 	lsls r0, 16
 	lsrs r0, 16
 	movs r1, 0x1
-	bl sub_80A9424
+	bl AddBagItem
 	ldrb r0, [r6]
 	muls r0, r5
 	adds r0, r4
@@ -10230,7 +10230,7 @@ PokemonMenu_FieldMove: @ 808A984
 	lsls r0, r5, 2
 	adds r0, r5
 	lsls r6, r0, 3
-	ldr r7, _0808A9D0 @ =gUnknown_03004B28
+	ldr r7, _0808A9D0 @ =gTasks + 0x8
 	adds r4, r6, r7
 	bl sub_8072DEC
 	ldr r1, _0808A9D4 @ =gUnknown_0202FFAA
@@ -10259,7 +10259,7 @@ PokemonMenu_FieldMove: @ 808A984
 	movs r0, 0x9
 	b _0808AAB2
 	.align 2, 0
-_0808A9D0: .4byte gUnknown_03004B28
+_0808A9D0: .4byte gTasks + 0x8
 _0808A9D4: .4byte gUnknown_0202FFAA
 _0808A9D8: .4byte gUnknown_0202FFA8
 _0808A9DC:
@@ -10339,7 +10339,7 @@ _0808AA80: .4byte gTasks
 _0808AA84: .4byte sub_808AB34
 _0808AA88:
 	adds r0, r5, 0
-	bl unref_sub_8133D28
+	bl sub_8133D28
 	b _0808AADA
 _0808AA90:
 	movs r0, 0x13
@@ -10887,7 +10887,7 @@ _0808AE9A:
 	bne _0808AECE
 	adds r0, r4, 0
 	adds r1, r6, 0
-	bl sub_8040374
+	bl CanMonLearnTMHM
 	cmp r0, 0
 	bne _0808AEE0
 _0808AECE:
@@ -11550,7 +11550,7 @@ sub_808B3EC: @ 808B3EC
 	cmp r0, 0
 	beq _0808B416
 	movs r1, 0x1
-	bl sub_80A9538
+	bl RemoveBagItem
 _0808B416:
 	ldr r6, _0808B470 @ =gUnknown_03005CE0
 	ldrb r0, [r6]
@@ -11563,7 +11563,7 @@ _0808B416:
 	lsls r0, 16
 	lsrs r0, 16
 	movs r1, 0x1
-	bl sub_80A9424
+	bl AddBagItem
 	ldrb r0, [r6]
 	muls r0, r5
 	adds r0, r4

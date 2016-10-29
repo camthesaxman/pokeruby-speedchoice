@@ -1,6 +1,6 @@
-	.include "constants/gba_constants.s"
-	.include "constants/species_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "constants/species_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -35,7 +35,7 @@ sub_8093130: @ 8093130
 	bl SetMainCallback2
 	ldr r2, _08093168 @ =0x02000000
 	ldr r3, _0809316C @ =gLinkPlayers
-	ldr r0, _08093170 @ =gUnknown_02029818
+	ldr r0, _08093170 @ =gLinkPlayerMapObjects
 	lsls r4, 2
 	adds r4, r0
 	ldrb r1, [r4, 0x1]
@@ -53,7 +53,7 @@ sub_8093130: @ 8093130
 _08093164: .4byte sub_8093174
 _08093168: .4byte 0x02000000
 _0809316C: .4byte gLinkPlayers
-_08093170: .4byte gUnknown_02029818
+_08093170: .4byte gLinkPlayerMapObjects
 	thumb_func_end sub_8093130
 
 	thumb_func_start sub_8093174
@@ -1019,8 +1019,8 @@ _080938C4: .4byte gPaletteFade
 _080938C8: .4byte 0x02000000
 	thumb_func_end sub_80938A8
 
-	thumb_func_start rfu_NI_stopReceivingData
-rfu_NI_stopReceivingData: @ 80938CC
+	thumb_func_start sub_80938CC
+sub_80938CC: @ 80938CC
 	push {lr}
 	ldr r0, _080938E4 @ =gMain
 	ldrh r1, [r0, 0x2E]
@@ -1063,7 +1063,7 @@ _08093912:
 _08093914:
 	pop {r1}
 	bx r1
-	thumb_func_end rfu_NI_stopReceivingData
+	thumb_func_end sub_80938CC
 
 	thumb_func_start sub_8093918
 sub_8093918: @ 8093918
@@ -2283,7 +2283,7 @@ _08094230:
 	mov r0, sp
 	movs r1, 0x10
 	movs r2, 0xA
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _0809424A:
 	add sp, 0x10
 	pop {r0}
@@ -2390,7 +2390,7 @@ sub_80942F8: @ 80942F8
 	adds r0, r4, 0
 	movs r1, 0x1C
 	movs r2, 0x2
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 	pop {r4,r5}
 	pop {r0}
 	bx r0
@@ -2460,7 +2460,7 @@ sub_8094354: @ 8094354
 	ldr r0, _080943BC @ =gStringVar1
 	movs r1, 0x1C
 	movs r2, 0x5
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _080943B0:
 	pop {r4,r5}
 	pop {r0}
@@ -2506,7 +2506,7 @@ sub_80943E4: @ 80943E4
 	mov r0, sp
 	movs r1, 0x16
 	movs r2, 0x7
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 	adds r0, r4, 0
 	adds r0, 0x7A
 	ldrh r1, [r0]
@@ -2515,7 +2515,7 @@ sub_80943E4: @ 80943E4
 	mov r0, sp
 	movs r1, 0x1C
 	movs r2, 0x7
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _0809441C:
 	add sp, 0x10
 	pop {r4}
@@ -2563,7 +2563,7 @@ sub_8094448: @ 8094448
 	movs r1, 0x70
 	movs r2, 0x78
 	movs r3, 0
-	bl sub_80729D8
+	bl MenuPrint_PixelCoords
 	adds r0, r4, 0
 	adds r0, 0x7E
 	ldrh r1, [r0]
@@ -2575,7 +2575,7 @@ sub_8094448: @ 8094448
 	movs r1, 0x95
 	movs r2, 0x78
 	movs r3, 0
-	bl sub_80729D8
+	bl MenuPrint_PixelCoords
 _0809448C:
 	add sp, 0x10
 	pop {r4}
@@ -2622,7 +2622,7 @@ sub_80944B8: @ 80944B8
 	mov r0, sp
 	movs r1, 0x1C
 	movs r2, 0xD
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _080944DE:
 	add sp, 0x8
 	pop {r0}
@@ -2668,7 +2668,7 @@ sub_8094508: @ 8094508
 	mov r0, sp
 	movs r1, 0x1C
 	movs r2, 0xB
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _0809452E:
 	add sp, 0x8
 	pop {r0}
@@ -2714,7 +2714,7 @@ sub_8094558: @ 8094558
 	mov r0, sp
 	movs r1, 0x1C
 	movs r2, 0x9
-	bl sub_8072B4C
+	bl MenuPrint_RightAligned
 _0809457E:
 	add sp, 0x8
 	pop {r0}

@@ -1,6 +1,6 @@
-	.include "constants/gba_constants.s"
-	.include "constants/species_constants.s"
-	.include "asm/macros.s"
+	.include "constants/gba_constants.inc"
+	.include "constants/species_constants.inc"
+	.include "asm/macros.inc"
 
 	.syntax unified
 
@@ -14,7 +14,7 @@ task01_battle_start: @ 8081960
 	lsls r0, r5, 2
 	adds r0, r5
 	lsls r0, 3
-	ldr r1, _08081980 @ =gUnknown_03004B28
+	ldr r1, _08081980 @ =gTasks + 0x8
 	adds r4, r0, r1
 	movs r1, 0
 	ldrsh r0, [r4, r1]
@@ -24,9 +24,9 @@ task01_battle_start: @ 8081960
 	beq _0808199A
 	b _080819BA
 	.align 2, 0
-_08081980: .4byte gUnknown_03004B28
+_08081980: .4byte gTasks + 0x8
 _08081984:
-	bl c3_80A0DD8_is_running
+	bl FieldPoisonEffectIsRunning
 	cmp r0, 0
 	bne _080819BA
 	ldrb r0, [r4, 0x2]
@@ -594,7 +594,7 @@ _08081E4C:
 	b _08081E86
 _08081E50:
 	adds r0, r4, 0
-	bl sub_8057434
+	bl MetatileBehavior_IsBridge
 	lsls r0, 24
 	lsrs r0, 24
 	cmp r0, 0x1
@@ -1056,7 +1056,7 @@ sub_8082188: @ 8082188
 	movs r1, 0x5
 	movs r2, 0
 	movs r3, 0
-	bl sub_80C5374
+	bl ScriptGiveMon
 	bl ResetTasks
 	bl sub_80408BC
 	ldr r0, _080821D4 @ =sub_80821D8
