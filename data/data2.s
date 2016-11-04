@@ -11022,7 +11022,7 @@ gTrainerBattleSpecs_4:: @ 839AE28
 	.include "data/trainer_eye_trainers.inc"
 
 	.align 2
-gUnknown_0839B1F0:: @ 839B1F0
+gBadgeFlags:: @ 839B1F0
 	.2byte 0x0807, 0x0808, 0x0809, 0x080a, 0x080b, 0x080c, 0x080d, 0x080e
 
 TrainerCardColorName_Bronze:
@@ -14782,24 +14782,27 @@ gComboStarterLookupTable:: @ 83D016C
 	.include "data/contest_effect_funcs.inc"
 
 	.align 2
-gUnknown_083D026C:: @ 83D026C
-	.4byte 0x0202713c
+recordMixingSecretBases:: @ 83D026C
+	@ gSaveBlock1.secretBases
+	.4byte gSaveBlock1 + 0x1A08
 
 	.align 2
-gUnknown_083D0270:: @ 83D0270
-	.4byte 0x02027e6c
+recordMixingTvShows:: @ 83D0270
+	@ gSaveBlock1.tvShows
+	.4byte gSaveBlock1 + 0x2738
 
 	.align 2
 gUnknown_083D0274:: @ 83D0274
-	.4byte 0x020281f0
+	.4byte gSaveBlock1 + 0x2ABC
 
 	.align 2
 gUnknown_083D0278:: @ 83D0278
-	.4byte 0x020284c8
+	.4byte gSaveBlock1 + 0x2D94
 
 	.align 2
-gUnknown_083D027C:: @ 83D027C
-	.4byte 0x02028508
+recordMixingEasyChatPairs:: @ 83D027C
+	@ gSaveBlock1.easyChatPairs
+	.4byte gSaveBlock1 + 0x2DD4
 
 	.align 2
 gUnknown_083D0280:: @ 83D0280
@@ -31719,38 +31722,38 @@ gUnknown_0842F5BC:: @ 842F5BC
 
 	.align 2
 gSubspriteTables_842F5C0:: @ 842F5C0
-	.4byte  1, gSubspriteTable_203A380
-	.4byte  1, gSubspriteTable_203A380
-	.4byte  2, gSubspriteTable_203A380
-	.4byte  3, gSubspriteTable_203A380
-	.4byte  4, gSubspriteTable_203A380
-	.4byte  5, gSubspriteTable_203A380
-	.4byte  6, gSubspriteTable_203A380
-	.4byte  7, gSubspriteTable_203A380
-	.4byte  8, gSubspriteTable_203A380
-	.4byte  9, gSubspriteTable_203A380
-	.4byte 10, gSubspriteTable_203A380
-	.4byte 11, gSubspriteTable_203A380
-	.4byte 12, gSubspriteTable_203A380
-	.4byte 13, gSubspriteTable_203A380
-	.4byte 14, gSubspriteTable_203A380
-	.4byte 15, gSubspriteTable_203A380
-	.4byte  1, gSubspriteTable_203A380
-	.4byte 17, gSubspriteTable_203A380
-	.4byte 18, gSubspriteTable_203A380
-	.4byte 19, gSubspriteTable_203A380
-	.4byte 20, gSubspriteTable_203A380
-	.4byte 21, gSubspriteTable_203A380
-	.4byte 22, gSubspriteTable_203A380
-	.4byte 23, gSubspriteTable_203A380
-	.4byte 24, gSubspriteTable_203A380
-	.4byte 25, gSubspriteTable_203A380
-	.4byte 26, gSubspriteTable_203A380
-	.4byte 27, gSubspriteTable_203A380
-	.4byte 28, gSubspriteTable_203A380
-	.4byte 29, gSubspriteTable_203A380
-	.4byte 30, gSubspriteTable_203A380
-	.4byte 31, gSubspriteTable_203A380
+	.4byte  1, gMenuCursorSubsprites
+	.4byte  1, gMenuCursorSubsprites
+	.4byte  2, gMenuCursorSubsprites
+	.4byte  3, gMenuCursorSubsprites
+	.4byte  4, gMenuCursorSubsprites
+	.4byte  5, gMenuCursorSubsprites
+	.4byte  6, gMenuCursorSubsprites
+	.4byte  7, gMenuCursorSubsprites
+	.4byte  8, gMenuCursorSubsprites
+	.4byte  9, gMenuCursorSubsprites
+	.4byte 10, gMenuCursorSubsprites
+	.4byte 11, gMenuCursorSubsprites
+	.4byte 12, gMenuCursorSubsprites
+	.4byte 13, gMenuCursorSubsprites
+	.4byte 14, gMenuCursorSubsprites
+	.4byte 15, gMenuCursorSubsprites
+	.4byte  1, gMenuCursorSubsprites
+	.4byte 17, gMenuCursorSubsprites
+	.4byte 18, gMenuCursorSubsprites
+	.4byte 19, gMenuCursorSubsprites
+	.4byte 20, gMenuCursorSubsprites
+	.4byte 21, gMenuCursorSubsprites
+	.4byte 22, gMenuCursorSubsprites
+	.4byte 23, gMenuCursorSubsprites
+	.4byte 24, gMenuCursorSubsprites
+	.4byte 25, gMenuCursorSubsprites
+	.4byte 26, gMenuCursorSubsprites
+	.4byte 27, gMenuCursorSubsprites
+	.4byte 28, gMenuCursorSubsprites
+	.4byte 29, gMenuCursorSubsprites
+	.4byte 30, gMenuCursorSubsprites
+	.4byte 31, gMenuCursorSubsprites
 
 	.align 2
 gUnknown_0842F6C0:: @ 842F6C0
@@ -31776,7 +31779,7 @@ gUnknown_0842F6C0:: @ 842F6C0
 
 	.align 2
 gUnknown_0842F758:: @ 842F758
-	.4byte 3, gSubspriteTable_203A380
+	.4byte 3, gMenuCursorSubsprites
 	.4byte 0, 2
 	.4byte 0, 66
 	.4byte 0, 105

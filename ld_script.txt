@@ -47,7 +47,7 @@ SECTIONS {
         src/rtc.o(.text);
         src/main_menu.o(.text);
         asm/rom3.o(.text);
-        asm/decompress.o(.text);
+        src/decompress.o(.text);
         asm/rom_800D42C.o(.text);
         src/pokemon_1.o(.text);
         asm/calculate_base_damage.o(.text);
@@ -97,7 +97,7 @@ SECTIONS {
         asm/title_screen.o(.text);
         asm/weather.o(.text);
         asm/rom_8080874.o(.text);
-        asm/battle_setup.o(.text);
+        src/battle_setup.o(.text);
         asm/cable_club.o(.text);
         asm/mori_debug_menu.o(.text);
         asm/trainer_see.o(.text);
@@ -123,13 +123,14 @@ SECTIONS {
         asm/naming_screen.o(.text);
         asm/money.o(.text);
         asm/contest_effect.o(.text);
+        src/record_mixing.o(.text);
         asm/record_mixing.o(.text);
         asm/sound_check_menu.o(.text);
         asm/secret_base.o(.text);
         asm/tv.o(.text);
         asm/contest_link_80C2020.o(.text);
         asm/script_pokemon_util_80C4BF0.o(.text);
-        asm/field_poison.o(.text);
+        src/field_poison.o(.text);
         asm/big_shroomish_barboach.o(.text);
         asm/fldeff_80C5CD4.o(.text);
         src/truck_scene.o(.text);
@@ -147,7 +148,7 @@ SECTIONS {
         asm/mail.o(.text);
         asm/menu_helpers.o(.text);
         asm/script_pokemon_util_80F99CC.o(.text);
-        asm/dewford_trend.o(.text);
+        src/dewford_trend.o(.text);
         asm/heal_location.o(.text);
         asm/region_map.o(.text);
         asm/cute_sketch.o(.text);
@@ -164,7 +165,7 @@ SECTIONS {
         asm/evolution_scene.o(.text);
         asm/roulette.o(.text);
         asm/pokedex_cry_screen.o(.text);
-        asm/coins.o(.text);
+        src/coins.o(.text);
         asm/landmark.o(.text);
         asm/fldeff_strength.o(.text);
         asm/battle_transition.o(.text);
@@ -191,7 +192,7 @@ SECTIONS {
         asm/rom_81473B8.o(.text);
         src/clear_save_data_menu.o(.text);
         asm/rom_8148B8C.o(.text);
-        asm/menu_cursor.o(.text);
+        src/menu_cursor.o(.text);
     } =0
 	
 	. = 0x08150000;
@@ -680,7 +681,7 @@ SECTIONS {
         sound/songs/bgm_battle35.o(.rodata);
         sound/songs/bgm_battle38.o(.rodata);
         sound/songs/bgm_battle30.o(.rodata);
-        sound/songs/song_467.o(.rodata);
+        sound/songs/bgm_radio_tower_occupied.o(.rodata);
     } =0
 
     lib_rodata :
