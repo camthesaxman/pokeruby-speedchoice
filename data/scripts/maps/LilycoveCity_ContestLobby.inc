@@ -117,7 +117,7 @@ LilycoveCity_ContestLobby_EventScript_1589E6:: @ 81589E6
 	return
 
 LilycoveCity_ContestLobby_EventScript_1589EA:: @ 81589EA
-	switch 0x8011
+	switch CONTEST_CATEGORY
 	case 0, LilycoveCity_ContestLobby_EventScript_158A27
 	case 1, LilycoveCity_ContestLobby_EventScript_158A2B
 	case 2, LilycoveCity_ContestLobby_EventScript_158A2F
@@ -359,7 +359,7 @@ LilycoveCity_ContestLobby_EventScript_158C35:: @ 8158C35
 
 LilycoveCity_ContestLobby_EventScript_158C42:: @ 8158C42
 	msgbox LilycoveCity_ContestLobby_Text_188703, 4
-	setvar 0x8010, 0
+	setvar CONTEST_RANK, 0
 	choosecontestpkmn
 	compare 0x8004, 255
 	jumpeq LilycoveCity_ContestLobby_EventScript_158CEA
@@ -410,7 +410,7 @@ LilycoveCity_ContestLobby_EventScript_158CEA:: @ 8158CEA
 	switch RESULT
 	case 5, LilycoveCity_ContestLobby_EventScript_158C35
 	case 127, LilycoveCity_ContestLobby_EventScript_158C35
-	copyvar 0x8011, RESULT
+	copyvar CONTEST_CATEGORY, RESULT
 	jump LilycoveCity_ContestLobby_EventScript_158C42
 	end
 
@@ -484,7 +484,7 @@ LilycoveCity_ContestLobby_EventScript_158DEE:: @ 8158DEE
 	setvar 0x4086, 1
 	special 86
 	setvar 0x4088, 5
-	setvar 0x8010, 3
+	setvar CONTEST_RANK, 3
 	call LilycoveCity_ContestLobby_EventScript_158F08
 	end
 
@@ -572,7 +572,7 @@ LilycoveCity_ContestLobby_EventScript_158EB0:: @ 8158EB0
 	compare RESULT, 1
 	jumpeq LilycoveCity_ContestLobby_EventScript_158EE8
 	setvar 0x800b, 8
-	setvar 0x8010, 3
+	setvar CONTEST_RANK, 3
 	call LilycoveCity_ContestLobby_EventScript_1A4E92
 	call LilycoveCity_ContestLobby_EventScript_158F86
 	special 83
@@ -587,13 +587,13 @@ LilycoveCity_ContestLobby_EventScript_158EE8:: @ 8158EE8
 	copyvar 0x4094, 0x1
 	additem ITEM_CONTEST_PASS, 1
 	setvar 0x800b, 8
-	setvar 0x8010, 3
+	setvar CONTEST_RANK, 3
 	setvar 0x4099, 1
 	setflag 2107
 	end
 
 LilycoveCity_ContestLobby_EventScript_158F08:: @ 8158F08
-	switch 0x8011
+	switch CONTEST_CATEGORY
 	case 0, LilycoveCity_ContestLobby_EventScript_158F45
 	case 1, LilycoveCity_ContestLobby_EventScript_158F52
 	case 2, LilycoveCity_ContestLobby_EventScript_158F5F

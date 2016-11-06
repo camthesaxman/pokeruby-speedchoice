@@ -8,6 +8,7 @@
 #include "sprite.h"
 #include "string_util.h"
 #include "task.h"
+#include "flag.h"
 
 //External functions
 extern void sub_8064E2C(void);
@@ -40,7 +41,6 @@ extern void sub_80597F4(void);
 extern void player_bitmagic(void);
 extern bool32 GetSafariZoneFlag(void);
 extern u8 *sub_8072C44(u8 *, s32, u8, u8);
-extern u8 FlagGet(u16);
 extern bool32 is_c1_link_related_active(void);
 
 //Menu actions
@@ -170,12 +170,12 @@ static void AddStartMenuAction(u8 action)
 
 static void BuildStartMenuActions_Normal(void)
 {
-    if(FlagGet(0x801) == TRUE)
+    if(FlagGet(SYS_POKEDEX_GET) == TRUE)
         AddStartMenuAction(MENU_ACTION_POKEDEX);
-    if(FlagGet(0x800) == TRUE)
+    if(FlagGet(SYS_POKEMON_GET) == TRUE)
         AddStartMenuAction(MENU_ACTION_POKEMON);
     AddStartMenuAction(MENU_ACTION_BAG);
-    if(FlagGet(0x802) == TRUE)
+    if(FlagGet(SYS_POKENAV_GET) == TRUE)
         AddStartMenuAction(MENU_ACTION_POKENAV);
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
@@ -198,7 +198,7 @@ static void BuildStartMenuActions_Link(void)
 {
     AddStartMenuAction(MENU_ACTION_POKEMON);
     AddStartMenuAction(MENU_ACTION_BAG);
-    if(FlagGet(0x802) == TRUE)
+    if(FlagGet(SYS_POKENAV_GET) == TRUE)
         AddStartMenuAction(MENU_ACTION_POKENAV);
     AddStartMenuAction(MENU_ACTION_PLAYER_LINK);
     AddStartMenuAction(MENU_ACTION_OPTION);

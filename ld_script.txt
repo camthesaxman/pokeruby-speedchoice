@@ -99,7 +99,7 @@ SECTIONS {
         asm/rom_8080874.o(.text);
         src/battle_setup.o(.text);
         asm/cable_club.o(.text);
-        asm/mori_debug_menu.o(.text);
+        src/mori_debug_menu.o(.text);
         asm/trainer_see.o(.text);
         src/fldeff_emotion.o(.text);
         src/wild_encounter.o(.text);
@@ -114,7 +114,7 @@ SECTIONS {
         asm/rom_8094928.o(.text);
         asm/item_menu.o(.text);
         asm/battle_anim_80A7E7C.o(.text);
-        asm/item.o(.text);
+        src/item.o(.text);
         asm/matuda_debug_menu.o(.text);
         asm/contest.o(.text);
         asm/shop.o(.text);
@@ -131,7 +131,7 @@ SECTIONS {
         asm/contest_link_80C2020.o(.text);
         asm/script_pokemon_util_80C4BF0.o(.text);
         src/field_poison.o(.text);
-        asm/big_shroomish_barboach.o(.text);
+        src/pokemon_size_record.o(.text);
         asm/fldeff_80C5CD4.o(.text);
         src/truck_scene.o(.text);
         asm/porthole.o(.text);
@@ -149,7 +149,7 @@ SECTIONS {
         asm/menu_helpers.o(.text);
         asm/script_pokemon_util_80F99CC.o(.text);
         src/dewford_trend.o(.text);
-        asm/heal_location.o(.text);
+        src/heal_location.o(.text);
         asm/region_map.o(.text);
         asm/cute_sketch.o(.text);
         asm/decoration.o(.text);
@@ -166,7 +166,7 @@ SECTIONS {
         asm/roulette.o(.text);
         asm/pokedex_cry_screen.o(.text);
         src/coins.o(.text);
-        asm/landmark.o(.text);
+        src/landmark.o(.text);
         asm/fldeff_strength.o(.text);
         asm/battle_transition.o(.text);
         asm/battle_811DA74.o(.text);

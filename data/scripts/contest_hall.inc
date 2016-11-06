@@ -25,7 +25,7 @@ FallarborTown_ContestLobby_EventScript_1A4EDD:: @ 81A4EDD
 	return
 
 FallarborTown_ContestLobby_EventScript_1A4EE1:: @ 81A4EE1
-	compare 0x8010, 0
+	compare CONTEST_RANK, 0
 	jumpeq FallarborTown_ContestLobby_EventScript_1A4EF6
 	msgbox FallarborTown_ContestLobby_Text_1A6340, 4
 	releaseall
@@ -142,7 +142,7 @@ FallarborTown_ContestLobby_EventScript_1A5097:: @ 81A5097
 	switch RESULT
 	case 5, FallarborTown_ContestLobby_EventScript_1A503E
 	case 127, FallarborTown_ContestLobby_EventScript_1A503E
-	copyvar 0x8011, RESULT
+	copyvar CONTEST_CATEGORY, RESULT
 	jump FallarborTown_ContestLobby_EventScript_1A5048
 	end
 
@@ -207,7 +207,7 @@ LinkContestRoom1_EventScript_1A514D:: @ 81A514D
 	return
 
 LinkContestRoom1_EventScript_1A51A0:: @ 81A51A0
-	switch 0x8010
+	switch CONTEST_RANK
 	case 0, LinkContestRoom1_EventScript_1A51D2
 	case 1, LinkContestRoom1_EventScript_1A51D8
 	case 2, LinkContestRoom1_EventScript_1A51DE
@@ -231,7 +231,7 @@ LinkContestRoom1_EventScript_1A51E4:: @ 81A51E4
 	return
 
 LinkContestRoom1_EventScript_1A51EA:: @ 81A51EA
-	switch 0x8011
+	switch CONTEST_CATEGORY
 	case 0, LinkContestRoom1_EventScript_1A5227
 	case 1, LinkContestRoom1_EventScript_1A522D
 	case 2, LinkContestRoom1_EventScript_1A5233
@@ -1033,7 +1033,7 @@ LinkContestRoom1_EventScript_1A5C23:: @ 81A5C23
 	return
 
 LinkContestRoom1_EventScript_1A5C32:: @ 81A5C32
-	compare 0x8010, 3
+	compare CONTEST_RANK, 3
 	jumpeq LinkContestRoom1_EventScript_1A5C41
 	setflag 2
 	return
@@ -1123,7 +1123,7 @@ LinkContestRoom1_EventScript_1A5CFC:: @ 81A5CFC
 	specialval RESULT, 88
 	compare RESULT, 0
 	jumpeq LinkContestRoom1_EventScript_1A5D5B
-	compare 0x8010, 3
+	compare CONTEST_RANK, 3
 	jumpeq LinkContestRoom1_EventScript_1A5D3B
 	msgbox LinkContestRoom1_Text_1A6DF1, 3
 	return

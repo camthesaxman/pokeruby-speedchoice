@@ -8,6 +8,8 @@
 #include "sound.h"
 #include "string_util.h"
 #include "task.h"
+#include "flag.h"
+#include "var.h"
 
 extern void *recordMixingSecretBases;
 extern void *recordMixingTvShows;
@@ -21,7 +23,7 @@ extern u8 gUnknown_083D028A[2][3];
 extern u8 gUnknown_083D0290[9][4];
 
 extern u8 gUnknown_02038738[];  //Don't know what type this points to
-extern u16 gUnknown_0202E8CE;
+extern u16 gSpecialVar_0x8005;
 extern u32 gUnknown_03005D2C;
 extern u8 gUnknown_03000718;
 extern u8 gUnknown_0300071C[];
@@ -41,8 +43,6 @@ extern void sub_80FA4E4(void *, u32, u8);
 extern void sub_80B9C6C(void *, u32, u8, void *);
 extern void sub_80B9F3C(void *, u8);
 extern u16 sub_8126338(void);
-extern bool8 VarSet(u16, u8);
-extern u8 FlagSet(u16);
 extern u8 sub_8083664(void);
 extern void sub_80720B0(void);
 extern void CreateRecordMixingSprite(void);
@@ -247,7 +247,7 @@ void sub_80B9484(u8 taskId)
     switch(taskData[TD_STATE])
     {
     case 0:
-        sub_8007270(gUnknown_0202E8CE);
+        sub_8007270(gSpecialVar_0x8005);
         VarSet(0x4000, 1);
         gUnknown_03000718 = 0;
         sub_80B92AC();
@@ -260,7 +260,7 @@ void sub_80B9484(u8 taskId)
         if(!gTasks[taskData[10]].isActive)
         {
             taskData[TD_STATE] = 2;
-            FlagSet(0x834);
+            FlagSet(SYS_MIX_RECORD);
             DestroyRecordMixingSprite();
             DestroyTask(taskData[15]);
         }

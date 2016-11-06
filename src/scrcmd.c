@@ -11,10 +11,10 @@
 #include "field_message_box.h"
 #include "sound.h"
 #include "string_util.h"
+#include "flag.h"
+#include "var.h"
 
 extern void ClearRamScript(void);
-extern u16 *GetVarPointer(u16);
-extern u16 VarGet(u16);
 extern void sub_8126160(u8);
 extern u8 AddBagItem(u16, u16);
 extern u8 RemoveBagItem(u16, u16);
@@ -27,9 +27,6 @@ extern u8 IsThereStorageSpaceForDecoration(u8);
 extern s8 sub_81340A8(u8);
 extern u8 sub_8134074(u8);
 extern u8 sub_8133FE4(u8);
-extern void FlagSet(u16);
-extern void FlagReset(u16);
-extern u8 FlagGet(u16);
 extern void sav12_xor_increment(u8);
 extern void sub_8081594(u8);
 extern void sub_8053CE4(u32);
@@ -155,16 +152,16 @@ extern u16 gUnknown_0202E8B6;
 extern u16 gUnknown_0202E8B8;
 extern u16 gUnknown_0202E8BA;
 extern u16 gUnknown_0202E8BC;
-extern u16 gUnknown_0202E8C4;
-extern u16 gUnknown_0202E8C6;
-extern u16 gUnknown_0202E8C8;
-extern u16 gUnknown_0202E8CC;
+extern u16 gSpecialVar_0x8000;
+extern u16 gSpecialVar_0x8001;
+extern u16 gSpecialVar_0x8002;
+extern u16 gSpecialVar_0x8004;
 
 extern u16 gScriptResult;
 
 extern u32 gUnknown_0202FF84[];
 
-extern u16 gUnknown_0203869C;
+extern u16 gScriptContestCategory;
 
 extern SpecialFunc gSpecials[];
 extern u8 *gStdScripts[];
@@ -717,9 +714,9 @@ bool8 ScrCmd_checkdailyflags(struct ScriptContext *ctx)
 bool8 ScrCmd_resetvars(struct ScriptContext *ctx)
 {
     RtcCalcLocalTime();
-    gUnknown_0202E8C4 = gLocalTime.hours;
-    gUnknown_0202E8C6 = gLocalTime.minutes;
-    gUnknown_0202E8C8 = gLocalTime.seconds;
+    gSpecialVar_0x8000 = gLocalTime.hours;
+    gSpecialVar_0x8001 = gLocalTime.minutes;
+    gSpecialVar_0x8002 = gLocalTime.seconds;
     return FALSE;
 }
 
@@ -1592,7 +1589,7 @@ bool8 ScrCmd_checkattack(struct ScriptContext *ctx)
         if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && pokemon_has_move(&gPlayerParty[i], moveId) == TRUE)
         {
             gScriptResult = i;
-            gUnknown_0202E8CC = species;
+            gSpecialVar_0x8004 = species;
             break;
         }
     }
@@ -1813,7 +1810,7 @@ bool8 ScrCmd_showcontestresults(struct ScriptContext *ctx)
 
 bool8 ScrCmd_contestlinktransfer(struct ScriptContext *ctx)
 {
-    sub_80C4980(gUnknown_0203869C);
+    sub_80C4980(gScriptContestCategory);
     ScriptContext1_Stop();
     return TRUE;
 }
