@@ -314,10 +314,12 @@ static u32 CalculateCheckValue()
 	
 	// seed RNG with checkValue for more hash-like number.
 	checkValue = 0x41c64e6d * checkValue + 0x00006073;
-    checkValue = checkValue >> 1; // if I don't shift it 1 bit, it's too large.
 	
 	// xor with randomizer value.
 	checkValue = checkValue ^ gCheckValue;
+	
+	// get rid of sign extension.
+	checkValue = (checkValue << 1) >> 1;
 	
 	return checkValue;
 }

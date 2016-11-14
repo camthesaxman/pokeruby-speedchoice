@@ -1,13 +1,13 @@
-# Pokémon Ruby/Sapphire (Speedchoice BETA 4.1)
+# Pokémon Ruby/Sapphire (Speedchoice BETA 5)
 
 WARNING: This is a beta and may still crash in very specific scenarios. Play at your own peril.
 
-This is a fork of the disassembly of Pokémon Ruby. It is used in Ruby Bingo and requires the following altered version of Dabomstew's randomizer: https://mega.nz/#!ahhDUDJA!edjmY_xISyD5f1BTduLhzQiH0DGLGu9y7N00uKcjHFA as using the normal one will cause a crash at New Game due to shifted offsets.
+This is a fork of the disassembly of Pokémon Ruby. It is used in Ruby/Sapphire Bingo and requires the following altered version of Dabomstew's randomizer: https://mega.nz/#!LxpgWCxD!GiXWvk8IaUS5Kbz2icKyQxjZ4c1q7ZJsxYLzkJNLPQA as using the normal one will cause a crash at New Game due to shifted offsets.
 
 It builds the following roms:
 
-* pokeruby.gba `sha1: 0d0b813d12e5dcb266d88b0953041c3a2dd794ff`
-* pokesapphire.gba: `sha1: 152c2b237d46836309f005fc3b2e062f35a1ed02`
+* pokeruby.gba `sha1: b25cebeafd9c7efe1aad79cb9838d558f51faece`
+* pokesapphire.gba: `sha1: 89316d0c280a441fa084d47c3b4713ff4803c9ad`
 
 To set up the repository, see [INSTALL.md](INSTALL.md).
 

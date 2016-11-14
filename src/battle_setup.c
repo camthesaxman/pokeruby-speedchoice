@@ -154,6 +154,8 @@ extern u16 gScriptLastTalked;
 extern u8 gUnknown_02024D26;
 extern u16 gBadgeFlags[];
 
+extern u16 gTutorialMonID;
+
 extern struct MapObject gMapObjects[];
 
 extern u8 gUnknown_0819F818[];

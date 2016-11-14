@@ -10,6 +10,18 @@ gIntroMonID::
 	.align 2
 gCheckValue:: @ 500004
 	.4byte 0x00000000
+	
+	.align 2
+gTutorialMonID:: @ 500008
+@ doesnt work yet.
+	.2byte SPECIES_RALTS
+	
+	.align 2
+gTutorialPartyMonID:: @ 50000C
+@ doesnt work yet.
+	.2byte SPECIES_ZIGZAGOON
+	
+@ fixed addresses end here.
 
 gSpeedchoiceText_Header::
 	.string "{PALETTE 9}SPEEDCHOICE MENU$"
