@@ -306,7 +306,7 @@ gUnknown_02024E8C: @ 2024E8C
 	.space 0x18
 
 gSaveBlock2: @ 2024EA4
-	.space 0x890
+	.space 0x894
 
 gSaveBlock1: @ 2025734
 	.space 0x3AC0

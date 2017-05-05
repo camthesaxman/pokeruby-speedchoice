@@ -444,6 +444,17 @@ struct SaveBlock2_Sub
     /*0x04CC, 0x0574*/ u8 filler_4CC[0x31C];
 };
 
+struct SpeedchoiceSaveOptions
+{
+	u8 instantText:1;
+	u8 spinners:2;
+	u8 maxVision:1;
+	u8 nerfRoxanne:1;
+	u8 superbike:1;
+	u8 newwildencounters:1;
+	u8 earlyfly:1;
+};
+
 struct SaveBlock2 /* 0x02024EA4 */
 {
     /*0x00*/ u8 playerName[8];
@@ -466,6 +477,9 @@ struct SaveBlock2 /* 0x02024EA4 */
     /*0x98*/ struct Time localTimeOffset;
     /*0xA0*/ struct Time lastBerryTreeUpdate;
     /*0xA8*/ struct SaveBlock2_Sub filler_A8;
+
+	/*SPEEDCHOICE*/
+	u8 speedchoiceOptions[4];
 };
 
 struct MapPosition

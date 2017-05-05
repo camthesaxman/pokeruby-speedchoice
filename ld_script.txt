@@ -271,6 +271,7 @@ SECTIONS {
         src/unknown_debug_menu.o(.text);
         src/name_string_util.o(.text);
         src/menu_cursor.o(.text);
+        src/speedchoice.o(.text);
     } =0
 
     script_data :
@@ -468,6 +469,7 @@ SECTIONS {
         data/strings2.o(.rodata);
         data/menu_cursor.o(.rodata);
         data/mystery_event_msg.o(.rodata);
+        src/speedchoice.o(.rodata);
         src/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
     } =0
