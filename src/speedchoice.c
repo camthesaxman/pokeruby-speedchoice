@@ -629,12 +629,13 @@ static u32 CalculateCheckValue(void)
     u32 checkValue;
 
     // calculate CV.
-    checkValue = (gSaveBlock2.speedchoiceConfig.instantText ^ gSaveBlock2.speedchoiceConfig.earlyfly) << 1;
+    checkValue = gSaveBlock2.speedchoiceConfig.instantText << 1;
     checkValue += gSaveBlock2.speedchoiceConfig.spinners << 2; // takes 2 bits.
     checkValue += gSaveBlock2.speedchoiceConfig.maxVision << 4;
     checkValue += gSaveBlock2.speedchoiceConfig.nerfRoxanne << 5;
     checkValue += gSaveBlock2.speedchoiceConfig.superbike << 6;
     checkValue += gSaveBlock2.speedchoiceConfig.newwildencounters << 7;
+	checkValue += gSaveBlock2.speedchoiceConfig.earlyfly << 8;
     
     // seed RNG with checkValue for more hash-like number.
     checkValue = 0x41c64e6d * checkValue + 0x00006073;
