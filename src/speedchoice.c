@@ -635,7 +635,7 @@ static u32 CalculateCheckValue(void)
     checkValue += gSaveBlock2.speedchoiceConfig.nerfRoxanne << 5;
     checkValue += gSaveBlock2.speedchoiceConfig.superbike << 6;
     checkValue += gSaveBlock2.speedchoiceConfig.newwildencounters << 7;
-	checkValue += gSaveBlock2.speedchoiceConfig.earlyfly << 8;
+    checkValue += gSaveBlock2.speedchoiceConfig.earlyfly << 8;
     
     // seed RNG with checkValue for more hash-like number.
     checkValue = 0x41c64e6d * checkValue + 0x00006073;
