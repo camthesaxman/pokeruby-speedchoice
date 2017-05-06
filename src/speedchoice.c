@@ -6,16 +6,25 @@
 #include "sprite.h"
 #include "task.h"
 
+// global speedchoice config
 #define CURRENT_OPTIONS_NUM 7
 #define MAX_CHOICES 6
 #define OPTIONS_PER_PAGE 5
+#define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
+#define MAX_PAGES 2
+
+#define MENUOPTIONCOORDS(i) (5 + (2 * i))
 
 extern void SetPokemonCryStereo(u32 val);
 extern void remove_some_task(void);
 
+extern u8 gUnknown_0839F63C[];
+extern u8 gUnknown_0839F5FC[];  //palette
+
 enum
 {
     // PAGE 1
+	TD_TRUEMENUINDEX, // reflects true index and NOT current page index used to render highlight.
     TD_INSTANTTEXT,
     TD_SPINNERS,
     TD_MAX_VISION,
@@ -27,8 +36,61 @@ enum
     TD_EARLY_FLY,
 
     // last option for changing the current option
-    TD_PAGE_NUM = 16 // last task data is 16, so page num goes at the end.
+	TD_PAGEMENUINDEX = 14,
+    TD_PAGE_NUM = 15 // last task data is 16 (1 indexed), so page num goes at the end.
 };
+
+// true index
+enum
+{
+	// PAGE 1
+	MENUITEM_INSTANTTEXT,
+	MENUITEM_SPINNERS,
+	MENUITEM_MAXVISION,
+	MENUITEM_NERFROXANNE,
+	MENUITEM_SUPERBIKE,
+	
+	// PAGE 2
+	MENUITEM_NEWWILDENC,
+	MENUITEM_EARLYFLY,
+
+	// STATIC OPTIONS
+	MENUITEM_PAGE = 15, // to make it match task data
+	MENUITEM_START_GAME
+};
+
+// page index
+enum
+{
+	OPTION_1,
+	OPTION_2,
+	OPTION_3,
+	OPTION_4,
+	OPTION_5,
+	PAGE,
+	START_GAME
+};
+
+enum
+{
+	YES,
+	NO
+};
+
+enum
+{
+	ON,
+	OFF
+};
+
+enum
+{
+	NERF,
+	KEEP,
+	HELL
+};
+
+const u8 gSpeedchoiceTextHeader[] = _("SPEEDCHOICE MENU");
 
 // OPTION CHOICES
 const u8 gSpeedchoiceTextYes[] = _("YES");
@@ -54,16 +116,15 @@ const u8 gSpeedchoiceOptionNewWildEnc[] = _("NEW WILD ENC.");
 const u8 gSpeedchoiceOptionPage[] = _("PAGE");
 const u8 gSpeedchoiceOptionStartGame[] = _("START GAME");
 
-static const u8 gMaxPages = 2;
-EWRAM_DATA u8 gPageNumber = 1; // default is 1.
-
-struct OptionChoiceConfig {
+struct OptionChoiceConfig
+{
     s16 x, y;
     u8 *string; // can be null
 };
 
 // every 5 elements belongs to a page, page struct is unnecessary.
-struct SpeedchoiceOption {
+struct SpeedchoiceOption
+{
     u8 optionCount; // needed for process general input, im sure there's a way to avoid using this
     u8 *string;
     struct OptionChoiceConfig *options[MAX_CHOICES]; // use a NULL for non existent ones, optional things in structs were introduced in C++ and this is limited.
@@ -111,7 +172,11 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM] =
     { 2, (u8 *)&gSpeedchoiceOptionEarlyFly, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, FALSE }
 };
 
-static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
+static void Task_SpeedchoiceMenuFadeIn(u8);
+static void Task_SpeedchoiceMenuProcessInput(u8);
+
+// for selecting options. not unstubbed yet.
+/*static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
 {
     if(gMain.newKeys & DPAD_RIGHT)
     {
@@ -129,7 +194,7 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
             selection--;
     }
     return selection;
-}
+}*/
 
 static void MainCB(void)
 {
@@ -146,24 +211,69 @@ static void VBlankCB(void)
     TransferPlttBuffer();
 }
 
-void CB2_InitSpeedchoiceMenu(void)
+void RedrawSpeedchoiceWindows(void)
 {
-    // dont raise warnings so i can compile for now.
-    ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[1], 1); 
-    MainCB();
-    VBlankCB();
-
-    // todo
+    MenuDrawTextWindow(2, 0, 27, 3);
+    MenuDrawTextWindow(2, 4, 27, 19);
 }
 
-/*
-void CB2_InitOptionMenu(void)
+u8 GetPageDrawCount(u8 page)
+{
+	return (ARRAY_COUNT(SpeedchoiceOptions) - (OPTIONS_PER_PAGE * (page - 1))) < OPTIONS_PER_PAGE ? 5 : (ARRAY_COUNT(SpeedchoiceOptions) - (OPTIONS_PER_PAGE * (page - 1)));
+}
+
+void DrawPageOptionChoices(struct SpeedchoiceOption *option, u8 page)
+{
+	u8 i;
+
+	for(i = 0; option->options[i]->string != NULL && i < MAX_CHOICES; i++)
+	{
+		s16 x = option->options[i]->x;
+		s16 y = option->options[i]->y;
+		
+		MenuPrint(option->options[i]->string, x, y);
+	}
+}
+
+void DrawPageOptions(u8 page)
+{
+	u8 i;
+	u8 drawCount = GetPageDrawCount(page);
+
+	RedrawSpeedchoiceWindows();
+
+	// print page options.
+	for(i = 0; i < drawCount; i++)
+	{
+		struct SpeedchoiceOption *option = (struct SpeedchoiceOption *)&SpeedchoiceOptions[i + (OPTIONS_PER_PAGE * (page - 1))];
+		u8 *string = option->string;
+
+		MenuPrint(string, 4, MENUOPTIONCOORDS(i)); // the 5 here does not represent options_per_page, it's just a coincidence.
+		DrawPageOptionChoices(option, page);
+	}
+	
+    MenuPrint(gSpeedchoiceOptionPage, 4, MENUOPTIONCOORDS(6));
+    MenuPrint(gSpeedchoiceOptionStartGame, 4, MENUOPTIONCOORDS(7));
+}
+
+#define min(a, b) (a < b ? a : b)
+#define max(a, b) (a > b ? a : b)
+
+void SetPageIndexFromTrueIndex(u8 taskId, s16 index) // data is s16.
+{
+	if(index == MENUITEM_PAGE || index == MENUITEM_START_GAME)
+		gTasks[taskId].data[TD_PAGEMENUINDEX] = index;
+	else
+		gTasks[taskId].data[TD_PAGEMENUINDEX] = (min((index % OPTIONS_PER_PAGE), OPTIONS_PER_PAGE));
+}
+
+void CB2_InitSpeedchoiceMenu(void)
 {
     switch (gMain.state)
     {
         default:
         case 0:
-        {
+		{
             u8 *addr;
             u32 size;
 
@@ -197,36 +307,36 @@ void CB2_InitOptionMenu(void)
             break;
         }
         case 1:
-            ResetPaletteFade();
+			ResetPaletteFade();
             remove_some_task();
             ResetTasks();
             ResetSpriteData();
             gMain.state++;
             break;
         case 2:
-            SetUpWindowConfig(&gWindowConfig_81E71B4);
+			SetUpWindowConfig(&gWindowConfig_81E71B4);
             gMain.state++;
             break;
         case 3:
-            MultistepInitMenuWindowBegin(&gWindowConfig_81E71B4);
+			MultistepInitMenuWindowBegin(&gWindowConfig_81E71B4);
             gMain.state++;
             break;
         case 4:
-            if (!MultistepInitMenuWindowContinue())
+			if (!MultistepInitMenuWindowContinue())
                 return;
             gMain.state++;
             break;
         case 5:
-            LoadPalette(gUnknown_0839F5FC, 0x80, 0x40);
+			LoadPalette(gUnknown_0839F5FC, 0x80, 0x40);
             CpuCopy16(gUnknown_0839F63C, (void *)0x0600BEE0, 0x40);
             gMain.state++;
             break;
         case 6:
-            BeginNormalPaletteFade(-1, 0, 0x10, 0, 0);
-            gMain.state++;
-            break;
+			BeginNormalPaletteFade(-1, 0, 0x10, 0, 0);
+			gMain.state++;
+			break;
         case 7:
-        {
+		{
             u16 savedIme;
 
             REG_WIN0H = 0;
@@ -251,56 +361,103 @@ void CB2_InitOptionMenu(void)
         }
         case 8:
         {
-            u8 taskId = CreateTask(Task_OptionMenuFadeIn, 0);
+			u8 taskId = CreateTask(Task_SpeedchoiceMenuFadeIn, 0);
 
-			// set default options.
-            gTasks[taskId].data[TD_MENUSELECTION] = 0;
-            gTasks[taskId].data[TD_TEXTSPEED] = gSaveBlock2.optionsTextSpeed;
-            gTasks[taskId].data[TD_BATTLESCENE] = gSaveBlock2.optionsBattleSceneOff;
-            gTasks[taskId].data[TD_BATTLESTYLE] = gSaveBlock2.optionsBattleStyle;
-            gTasks[taskId].data[TD_SOUND] = gSaveBlock2.optionsSound;
-            gTasks[taskId].data[TD_BUTTONMODE] = gSaveBlock2.optionsButtonMode;
-            gTasks[taskId].data[TD_FRAMETYPE] = gSaveBlock2.optionsWindowFrameType;
-
-            MenuDrawTextWindow(2, 0, 27, 3);
-            MenuDrawTextWindow(2, 4, 27, 19);
-
-            MenuPrint(gSystemText_OptionMenu, 4, 1);
-            MenuPrint(gSystemText_TextSpeed, 4, 5);
-            MenuPrint(gSystemText_BattleScene, 4, 7);
-            MenuPrint(gSystemText_BattleStyle, 4, 9);
-            MenuPrint(gSystemText_Sound, 4, 11);
-            MenuPrint(gSystemText_ButtonMode, 4, 13);
-            MenuPrint(gSystemText_Frame, 4, 15);
-            MenuPrint(gSystemText_Cancel, 4, 17);
-
-            TextSpeed_DrawChoices(gTasks[taskId].data[TD_TEXTSPEED]);
-            BattleScene_DrawChoices(gTasks[taskId].data[TD_BATTLESCENE]);
-            BattleStyle_DrawChoices(gTasks[taskId].data[TD_BATTLESTYLE]);
-            Sound_DrawChoices(gTasks[taskId].data[TD_SOUND]);
-            ButtonMode_DrawChoices(gTasks[taskId].data[TD_BUTTONMODE]);
-            FrameType_DrawChoices(gTasks[taskId].data[TD_FRAMETYPE]);
-
-            REG_WIN0H = WIN_RANGE(17, 223);
+			// set default options and current selection.
+			gTasks[taskId].data[TD_TRUEMENUINDEX] = 0;
+			gTasks[taskId].data[TD_PAGEMENUINDEX] = 0;
+			
+			// PAGE 1
+			gTasks[taskId].data[TD_INSTANTTEXT] = OFF;
+			gTasks[taskId].data[TD_SPINNERS] = KEEP;
+			gTasks[taskId].data[TD_MAX_VISION] = OFF;
+			gTasks[taskId].data[TD_NERF_ROXANNE] = NO;
+			gTasks[taskId].data[TD_SUPER_BIKE] = OFF;
+			
+			// PAGE 2
+			gTasks[taskId].data[TD_NEW_WILD_ENC] = OFF;
+			gTasks[taskId].data[TD_EARLY_FLY] = NO;
+			gTasks[taskId].data[TD_PAGE_NUM] = 1;
+			
+			RedrawSpeedchoiceWindows();
+			DrawPageOptions(1);
+			
+			REG_WIN0H = WIN_RANGE(17, 223);
             REG_WIN0V = WIN_RANGE(1, 31);
 
-            HighlightOptionMenuItem(gTasks[taskId].data[TD_MENUSELECTION]);
+            //HighlightOptionMenuItem(gTasks[taskId].data[TD_TRUEMENUINDEX]); not yet.
             gMain.state++;
             break;
-        }
+		}
         case 9:
-            SetMainCallback2(MainCB);
-            return;
+			SetMainCallback2(MainCB);
+			return;
     }
 }
 
-static void Task_OptionMenuFadeIn(u8 taskId)
+static void Task_SpeedchoiceMenuFadeIn(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        gTasks[taskId].func = Task_OptionMenuProcessInput;
+        gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
     }
 }
+
+// lastOrFirst, TRUE means last, FALSE means first available
+u8 GetPageOptionTrueIndex(bool8 lastOrFirst, u8 page)
+{
+	(lastOrFirst) ? (OPTIONS_PER_PAGE * (page - 1)) + GetPageDrawCount(page) : (OPTIONS_PER_PAGE * (page - 1)) + 1;
+}
+
+// same as above, but return the page index.
+u8 GetPageOptionPageIndex(bool8 lastOrFirst, u8 page)
+{
+	(lastOrFirst) ? GetPageDrawCount(page) : 1;
+}
+
+enum
+{
+	FIRST,
+	LAST
+};
+
+static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
+{
+	if (gMain.newKeys & A_BUTTON)
+    {
+        if (gTasks[taskId].data[TD_PAGEMENUINDEX] == MENUITEM_START_GAME) // START_GAME
+		{// start game? WIP
+		}
+    }
+	else if (gMain.newKeys & DPAD_UP)
+    {
+		if(gTasks[taskId].data[TD_PAGEMENUINDEX] == MENUITEM_PAGE) // page index is 15, but the last index may be less than that. set it to the last of the current page's index.
+			gTasks[taskId].data[TD_TRUEMENUINDEX] = GetPageOptionTrueIndex(LAST, gTasks[taskId].data[TD_PAGE_NUM]); // set the entry to the last available option.
+		else if(gTasks[taskId].data[TD_TRUEMENUINDEX] > GetPageOptionTrueIndex(FIRST, gTasks[taskId].data[TD_PAGE_NUM]))
+			gTasks[taskId].data[TD_TRUEMENUINDEX]--; // index can be 16 and reduced to page.
+		else
+			gTasks[taskId].data[TD_TRUEMENUINDEX] = MENUITEM_START_GAME;
+
+		SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
+	}
+	else if (gMain.newKeys & DPAD_DOWN)
+    {
+		if(gTasks[taskId].data[TD_TRUEMENUINDEX] == GetPageOptionTrueIndex(LAST, gTasks[taskId].data[TD_PAGE_NUM]))
+			gTasks[taskId].data[TD_TRUEMENUINDEX] = MENUITEM_PAGE; // you are at the last option when you press down, go to page index.
+		else if(gTasks[taskId].data[TD_TRUEMENUINDEX] < MENUITEM_START_GAME)
+			gTasks[taskId].data[TD_TRUEMENUINDEX]++;
+		else
+			gTasks[taskId].data[TD_TRUEMENUINDEX] = GetPageOptionTrueIndex(FIRST, gTasks[taskId].data[TD_PAGE_NUM]);
+		
+		SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
+	}
+	else
+	{
+		// WIP
+	}
+}
+
+/*
 
 static void Task_OptionMenuProcessInput(u8 taskId)
 {
