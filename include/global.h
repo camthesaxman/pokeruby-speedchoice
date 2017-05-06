@@ -479,7 +479,7 @@ struct SaveBlock2 /* 0x02024EA4 */
     /*0xA8*/ struct SaveBlock2_Sub filler_A8;
 
 	/*SPEEDCHOICE*/
-	u8 speedchoiceOptions[4];
+	struct SpeedchoiceSaveOptions speedchoiceConfig;
 };
 
 struct MapPosition
