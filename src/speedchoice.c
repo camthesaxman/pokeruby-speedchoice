@@ -28,7 +28,6 @@ extern u8 gSystemText_Terminator[];
 enum
 {
     // PAGE 1
-    TD_TRUEMENUINDEX, // reflects true index and NOT current page index used to render highlight.
     TD_INSTANTTEXT,
     TD_SPINNERS,
     TD_MAX_VISION,
@@ -40,6 +39,7 @@ enum
     TD_EARLY_FLY,
 
     // last option for changing the current option
+	TD_TRUEMENUINDEX = 13, // reflects true index and NOT current page index used to render highlight.
     TD_PAGEMENUINDEX = 14,
     TD_PAGE_NUM = 15 // last task data is 16 (1 indexed), so page num goes at the end.
 };
@@ -100,34 +100,34 @@ enum
     LAST
 };
 
-const u8 gSpeedchoiceTextHeader[] = _("SPEEDCHOICE MENU");
+const u8 gSpeedchoiceTextHeader[] = _("{PALETTE 9}SPEEDCHOICE MENU");
 
 // OPTION CHOICES
-const u8 gSpeedchoiceTextYes[] = _("YES");
-const u8 gSpeedchoiceTextNo[] = _("NO");
-const u8 gSpeedchoiceTextOn[] = _("ON");
-const u8 gSpeedchoiceTextOff[] = _("OFF");
-const u8 gSpeedchoiceTextNerf[] = _("NERF");
-const u8 gSpeedchoiceTextKeep[] = _("KEEP");
-const u8 gSpeedchoiceTextHell[] = _("HELL");
+const u8 gSpeedchoiceTextYes[] = _("{PALETTE 15}YES");
+const u8 gSpeedchoiceTextNo[] = _("{PALETTE 15}NO");
+const u8 gSpeedchoiceTextOn[] = _("{PALETTE 15}ON");
+const u8 gSpeedchoiceTextOff[] = _("{PALETTE 15}OFF");
+const u8 gSpeedchoiceTextNerf[] = _("{PALETTE 15}NERF");
+const u8 gSpeedchoiceTextKeep[] = _("{PALETTE 15}KEEP");
+const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
 
 // PAGE 1
-const u8 gSpeedchoiceOptionInstantText[] = _("INSTANT TEXT");
-const u8 gSpeedchoiceOptionSpinners[] = _("SPINNERS");
-const u8 gSpeedchoiceOptionMaxVision[] = _("MAX VISION");
-const u8 gSpeedchoiceOptionNerfRoxanne[] = _("NERF ROXANNE");
-const u8 gSpeedchoiceOptionSuperBike[] = _("SUPER BIKE");
+const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 15}INSTANT TEXT");
+const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 15}SPINNERS");
+const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 15}MAX VISION");
+const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
+const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 
 // PAGE 2
-const u8 gSpeedchoiceOptionNewWildEnc[] = _("NEW WILD ENC.");
-const u8 gSpeedchoiceOptionEarlyFly[] = _("EARLY FLY");
+const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 15}NEW WILD ENC.");
+const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 15}EARLY FLY");
 
 // CONSTANT OPTIONS
-const u8 gSpeedchoiceOptionPage[] = _("PAGE");
-const u8 gSpeedchoiceOptionStartGame[] = _("START GAME");
+const u8 gSpeedchoiceOptionPage[] = _("{PALETTE 15}PAGE");
+const u8 gSpeedchoiceOptionStartGame[] = _("{PALETTE 15}START GAME");
 
 // MISC
-const u8 gSpeedchoiceOptionPageNum[] = _("NUM");
+const u8 gSpeedchoiceOptionPageNum[] = _("{PALETTE 15}NUM");
 
 struct OptionChoiceConfig
 {
@@ -200,7 +200,7 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
 static void Task_SpeedchoiceMenuFadeIn(u8);
 static void Task_SpeedchoiceMenuProcessInput(u8);
 static void HighlightOptionMenuItem(u8);
-static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection);
+static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u8 row);
 
 static void DrawOptionMenuChoice(u8 *text, u8 x, u8 y, u8 style)
 {
@@ -230,6 +230,26 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
     {
         if(selection == 0)
             selection = (option->optionCount - 1); // indexed by 0.
+        else
+            selection--;
+    }
+    return selection;
+}
+
+static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 selection)
+{
+    if(gMain.newKeys & DPAD_RIGHT)
+    {
+        if(selection == (option->optionCount - 1)) // pages are indexed by 1.
+            selection = 1;
+        else
+            selection++;
+    }
+    // i dont return immediately because emulators could hold both right and left down.
+    if(gMain.newKeys & DPAD_LEFT)
+    {
+        if(selection == 1)
+            selection = (option->optionCount - 1); // indexed by 1.
         else
             selection--;
     }
@@ -281,7 +301,7 @@ void DrawPageOptions(u8 taskId, u8 page)
         u8 *string = option->string;
 
         MenuPrint(string, 4, MENUOPTIONCOORDS(i)); // the 5 here does not represent options_per_page, it's just a coincidence.
-        DrawGeneralChoices(option, gTasks[taskId].data[i + ((page-1) * 5)] + 1);
+        DrawGeneralChoices(option, gTasks[taskId].data[i + ((page-1) * 5)] + 1, i);
     }
     
     MenuPrint(gSpeedchoiceOptionPage, 4, MENUOPTIONCOORDS(5));
@@ -294,7 +314,7 @@ void DrawPageOptions(u8 taskId, u8 page)
 void SetPageIndexFromTrueIndex(u8 taskId, s16 index) // data is s16.
 {
     if(index == MENUITEM_PAGE || index == MENUITEM_START_GAME)
-        gTasks[taskId].data[TD_PAGEMENUINDEX] = index - 9; // your visual row is 6 or 7.
+        gTasks[taskId].data[TD_PAGEMENUINDEX] = index - 10; // your visual row is 6 or 7.
     else
         gTasks[taskId].data[TD_PAGEMENUINDEX] = (min((index % OPTIONS_PER_PAGE), OPTIONS_PER_PAGE));
 }
@@ -458,7 +478,7 @@ static void HighlightOptionMenuItem(u8 index)
 	u8 newIndex;
 
 	if(index == 15 || index == 16)
-		newIndex = index - 10;
+		newIndex = index - 12;
 	else
 		newIndex = index;
 
@@ -467,7 +487,7 @@ static void HighlightOptionMenuItem(u8 index)
 }
 
 // used for all but page.
-static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection)
+static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u8 row)
 {
 	u8 styles[MAX_CHOICES];
 	u8 numChoices = option->optionCount;
@@ -484,7 +504,7 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection)
 	for(i = 0; i < numChoices; i++)
 	{
 		s16 x = option->options[i].x;
-        s16 y = option->options[i].y;
+        s16 y = 40 + (row * 16);
 		u8 *string = option->options[i].string;
 
 		DrawOptionMenuChoice(string, x, y, styles[i]);
@@ -495,32 +515,17 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection)
 
 static void DrawPageChoice(u8 selection)
 {
-	u8 text[8];
-	u16 i;
-	// copied from frame handling in options_menu.c, but the + 1 to selection is handled in passing and doesn't need to be done here.
+	u8 text[5];
+	u8 newSelection = selection + 1;
 	
-    for (i = 0; gSystemText_Terminator[i] != EOS && i < 6; i++)
-        text[i] = gSystemText_Terminator[i];	
-	
-	//Convert number to decimal string
-    if (selection / 10 != 0)
-    {
-        text[i] = selection / 10 + CHAR_0;
-        i++;
-        text[i] = selection % 10 + CHAR_0;
-        i++;
-    }
-    else
-    {
-        text[i] = selection % 10 + CHAR_0;
-        i++;
-        text[i] = CHAR_SPACE;
-        i++;
-    }
+	memcpy(text, gSystemText_Terminator, 3); // copy the palette control code.
 
-    text[i] = EOS;
-    MenuPrint(gSpeedchoiceOptionPageNum, 15, 15);
-    MenuPrint(text, 17, 15);
+	// there are no more than 10 pages, so format it as a single digit.
+	text[4] = newSelection + CHAR_0;
+    text[5] = EOS;
+
+    MenuPrint(gSpeedchoiceOptionPageNum, 8, MENUOPTIONCOORDS(5));
+    //MenuPrint(text, 17, MENUOPTIONCOORDS(5));
 }
 
 // jump to new game.
@@ -566,35 +571,35 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 		switch (gTasks[taskId].data[TD_TRUEMENUINDEX])
         {
 			case TD_INSTANTTEXT:
-				gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT - 1], gTasks[taskId].data[TD_INSTANTTEXT]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT - 1], gTasks[taskId].data[TD_INSTANTTEXT]);
+				gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_SPINNERS:
-				gTasks[taskId].data[TD_SPINNERS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS - 1], gTasks[taskId].data[TD_SPINNERS]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS - 1], gTasks[taskId].data[TD_SPINNERS]);
+				gTasks[taskId].data[TD_SPINNERS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_MAX_VISION:
-				gTasks[taskId].data[TD_MAX_VISION] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION - 1], gTasks[taskId].data[TD_MAX_VISION]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION - 1], gTasks[taskId].data[TD_MAX_VISION]);
+				gTasks[taskId].data[TD_MAX_VISION] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_NERF_ROXANNE:
-				gTasks[taskId].data[TD_NERF_ROXANNE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE - 1], gTasks[taskId].data[TD_NERF_ROXANNE]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE - 1], gTasks[taskId].data[TD_NERF_ROXANNE]);
+				gTasks[taskId].data[TD_NERF_ROXANNE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_SUPER_BIKE:
-				gTasks[taskId].data[TD_SUPER_BIKE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE - 1], gTasks[taskId].data[TD_SUPER_BIKE]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE - 1], gTasks[taskId].data[TD_SUPER_BIKE]);
+				gTasks[taskId].data[TD_SUPER_BIKE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_NEW_WILD_ENC:
-				gTasks[taskId].data[TD_NEW_WILD_ENC] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC - 1], gTasks[taskId].data[TD_NEW_WILD_ENC]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC - 1], gTasks[taskId].data[TD_NEW_WILD_ENC]);
+				gTasks[taskId].data[TD_NEW_WILD_ENC] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_EARLY_FLY:
-				gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY - 1], gTasks[taskId].data[TD_EARLY_FLY]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY - 1], gTasks[taskId].data[TD_EARLY_FLY]);
+				gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY]);
+				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY], gTasks[taskId].data[TD_PAGEMENUINDEX]);
 				break;
 			case TD_PAGE_NUM:
-				gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM /*0 indexed, so use current options num*/], gTasks[taskId].data[TD_PAGE_NUM]); 
+				gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1], gTasks[taskId].data[TD_PAGE_NUM]);
 				DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
 				DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
 				break;
