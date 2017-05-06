@@ -39,7 +39,7 @@ enum
     TD_EARLY_FLY,
 
     // last option for changing the current option
-	TD_TRUEMENUINDEX = 13, // reflects true index and NOT current page index used to render highlight.
+    TD_TRUEMENUINDEX = 13, // reflects true index and NOT current page index used to render highlight.
     TD_PAGEMENUINDEX = 14,
     TD_PAGE_NUM = 15 // last task data is 16 (1 indexed), so page num goes at the end.
 };
@@ -194,8 +194,10 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { 2, (u8 *)&gSpeedchoiceOptionSuperBike, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
     { 2, (u8 *)&gSpeedchoiceOptionNewWildEnc, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
     { 2, (u8 *)&gSpeedchoiceOptionEarlyFly, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, FALSE },
-	{ MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, FALSE } // see above comment.
+    { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, FALSE } // see above comment.
 };
+
+EWRAM_DATA u8 gStoredPageNum = 0; // default is 0, only renders options again if it's different than the task data's page number.
 
 static void Task_SpeedchoiceMenuFadeIn(u8);
 static void Task_SpeedchoiceMenuProcessInput(u8);
@@ -240,7 +242,7 @@ static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 s
 {
     if(gMain.newKeys & DPAD_RIGHT)
     {
-        if(selection == (option->optionCount - 1)) // pages are indexed by 1.
+        if(selection == (option->optionCount)) // pages are indexed by 1.
             selection = 1;
         else
             selection++;
@@ -249,10 +251,17 @@ static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 s
     if(gMain.newKeys & DPAD_LEFT)
     {
         if(selection == 1)
-            selection = (option->optionCount - 1); // indexed by 1.
+            selection = (option->optionCount); // indexed by 1.
         else
             selection--;
     }
+
+    // safety code. do NOT let page escape the allowed number of pages!
+    if(selection < 1)
+        selection = 1;
+    if(selection > (option->optionCount))
+        selection = option->optionCount;
+
     return selection;
 }
 
@@ -273,24 +282,21 @@ static void VBlankCB(void)
 
 void RedrawSpeedchoiceWindows(void)
 {
-    MenuDrawTextWindow(2, 0, 27, 3);
-    MenuDrawTextWindow(2, 4, 27, 19);
+    MenuDrawTextWindow(2, 4, 27, 19); // only the lower menu needs to be redrawn.
 }
 
 u8 GetPageDrawCount(u8 page)
 {
-	if ((page * OPTIONS_PER_PAGE) > CURRENT_OPTIONS_NUM)
-		return CURRENT_OPTIONS_NUM % OPTIONS_PER_PAGE;
+    if ((page * OPTIONS_PER_PAGE) > CURRENT_OPTIONS_NUM)
+        return CURRENT_OPTIONS_NUM % OPTIONS_PER_PAGE;
 
-	return OPTIONS_PER_PAGE;
+    return OPTIONS_PER_PAGE;
 }
 
 void DrawPageOptions(u8 taskId, u8 page)
 {
     u8 i;
     u8 drawCount = GetPageDrawCount(page);
-	
-	MenuPrint(gSpeedchoiceTextHeader, 4, 1); // draw header.
 
     RedrawSpeedchoiceWindows();
 
@@ -301,9 +307,9 @@ void DrawPageOptions(u8 taskId, u8 page)
         u8 *string = option->string;
 
         MenuPrint(string, 4, MENUOPTIONCOORDS(i)); // the 5 here does not represent options_per_page, it's just a coincidence.
-        DrawGeneralChoices(option, gTasks[taskId].data[i + ((page-1) * 5)] + 1, i);
+        DrawGeneralChoices(option, gTasks[taskId].data[i + ((page-1) * 5)], i);
     }
-    
+
     MenuPrint(gSpeedchoiceOptionPage, 4, MENUOPTIONCOORDS(5));
     MenuPrint(gSpeedchoiceOptionStartGame, 4, MENUOPTIONCOORDS(6));
 }
@@ -414,6 +420,8 @@ void CB2_InitSpeedchoiceMenu(void)
         case 8:
         {
             u8 taskId = CreateTask(Task_SpeedchoiceMenuFadeIn, 0);
+            
+            gStoredPageNum = 1;
 
             // set default options and current selection.
             gTasks[taskId].data[TD_TRUEMENUINDEX] = 0;
@@ -424,12 +432,15 @@ void CB2_InitSpeedchoiceMenu(void)
             gTasks[taskId].data[TD_SPINNERS] = KEEP;
             gTasks[taskId].data[TD_MAX_VISION] = OFF;
             gTasks[taskId].data[TD_NERF_ROXANNE] = NO;
-            gTasks[taskId].data[TD_SUPER_BIKE] = OFF;			
+            gTasks[taskId].data[TD_SUPER_BIKE] = OFF;            
             
             // PAGE 2
             gTasks[taskId].data[TD_NEW_WILD_ENC] = OFF;
             gTasks[taskId].data[TD_EARLY_FLY] = NO;
             gTasks[taskId].data[TD_PAGE_NUM] = 1; // pages are indexed by 1.
+
+            MenuDrawTextWindow(2, 0, 27, 3);
+            MenuPrint(gSpeedchoiceTextHeader, 4, 1); // draw header.
 
             DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
             
@@ -437,7 +448,7 @@ void CB2_InitSpeedchoiceMenu(void)
             REG_WIN0V = WIN_RANGE(1, 31);
 
             HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
-			PlayBGM(BGM_CONLOBBY);
+            PlayBGM(BGM_CONLOBBY);
             gMain.state++;
             break;
         }
@@ -458,10 +469,10 @@ static void Task_SpeedchoiceMenuFadeIn(u8 taskId)
 // lastOrFirst, TRUE means last, FALSE means first available
 u8 GetPageOptionTrueIndex(bool8 lastOrFirst, u8 page)
 {
-	if(lastOrFirst == LAST)
-		return (OPTIONS_PER_PAGE * (page - 1)) + GetPageDrawCount(page) - 1;
-	else
-		return (OPTIONS_PER_PAGE * (page - 1));
+    if(lastOrFirst == LAST)
+        return (OPTIONS_PER_PAGE * (page - 1)) + GetPageDrawCount(page) - 1;
+    else
+        return (OPTIONS_PER_PAGE * (page - 1));
 }
 
 // same as above, but return the page index.
@@ -475,12 +486,12 @@ u8 GetPageOptionPageIndex(bool8 lastOrFirst, u8 page)
 
 static void HighlightOptionMenuItem(u8 index)
 {
-	u8 newIndex;
+    u8 newIndex;
 
-	if(index == 15 || index == 16)
-		newIndex = index - 12;
-	else
-		newIndex = index;
+    if(index == 15 || index == 16)
+        newIndex = index - 12;
+    else
+        newIndex = index;
 
     REG_WIN1H = WIN_RANGE(24, 215);
     REG_WIN1V = WIN_RANGE_(newIndex * 16 + 40, newIndex * 16 + 56);
@@ -489,39 +500,39 @@ static void HighlightOptionMenuItem(u8 index)
 // used for all but page.
 static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u8 row)
 {
-	u8 styles[MAX_CHOICES];
-	u8 numChoices = option->optionCount;
-	u8 i;
-	
-	styles[0] = 0xF;
-	styles[1] = 0xF;
-	styles[2] = 0xF;
-	styles[3] = 0xF;
-	styles[4] = 0xF;
-	styles[5] = 0xF;
-	styles[selection] = 0x8;
-	
-	for(i = 0; i < numChoices; i++)
-	{
-		s16 x = option->options[i].x;
+    u8 styles[MAX_CHOICES];
+    u8 numChoices = option->optionCount;
+    u8 i;
+    
+    styles[0] = 0xF;
+    styles[1] = 0xF;
+    styles[2] = 0xF;
+    styles[3] = 0xF;
+    styles[4] = 0xF;
+    styles[5] = 0xF;
+    styles[selection] = 0x8;
+    
+    for(i = 0; i < numChoices; i++)
+    {
+        s16 x = option->options[i].x;
         s16 y = 40 + (row * 16);
-		u8 *string = option->options[i].string;
+        u8 *string = option->options[i].string;
 
-		DrawOptionMenuChoice(string, x, y, styles[i]);
-	}
+        DrawOptionMenuChoice(string, x, y, styles[i]);
+    }
 }
 
 #define CHAR_0 0xA1 //Character code of '0' character
 
 static void DrawPageChoice(u8 selection)
 {
-	u8 text[5];
-	u8 newSelection = selection + 1;
-	
-	memcpy(text, gSystemText_Terminator, 3); // copy the palette control code.
+    u8 text[5];
+    u8 newSelection = selection + 1;
+    
+    memcpy(text, gSystemText_Terminator, 3); // copy the palette control code.
 
-	// there are no more than 10 pages, so format it as a single digit.
-	text[4] = newSelection + CHAR_0;
+    // there are no more than 10 pages, so format it as a single digit.
+    text[4] = newSelection + CHAR_0;
     text[5] = EOS;
 
     MenuPrint(gSpeedchoiceOptionPageNum, 8, MENUOPTIONCOORDS(5));
@@ -537,9 +548,9 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
     {
         if (gTasks[taskId].data[TD_TRUEMENUINDEX] == MENUITEM_START_GAME) // START_GAME
         {
-			gPlttBufferUnfaded[0] = 0;
-			gPlttBufferFaded[0] = 0;
-			gTasks[taskId].func = Task_NewGameSpeech1; // start the game immediately.
+            gPlttBufferUnfaded[0] = 0;
+            gPlttBufferFaded[0] = 0;
+            gTasks[taskId].func = Task_NewGameSpeech1; // start the game immediately.
         }
     }
     else if (gMain.newKeys & DPAD_UP)
@@ -552,7 +563,7 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
             gTasks[taskId].data[TD_TRUEMENUINDEX] = MENUITEM_START_GAME;
 
         SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
-		HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+        HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
     }
     else if (gMain.newKeys & DPAD_DOWN)
     {
@@ -564,45 +575,49 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
             gTasks[taskId].data[TD_TRUEMENUINDEX]++;
         
         SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
-		HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+        HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
     }
     else
     {
-		switch (gTasks[taskId].data[TD_TRUEMENUINDEX])
+        switch (gTasks[taskId].data[TD_TRUEMENUINDEX])
         {
-			case TD_INSTANTTEXT:
-				gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_SPINNERS:
-				gTasks[taskId].data[TD_SPINNERS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_MAX_VISION:
-				gTasks[taskId].data[TD_MAX_VISION] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_NERF_ROXANNE:
-				gTasks[taskId].data[TD_NERF_ROXANNE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_SUPER_BIKE:
-				gTasks[taskId].data[TD_SUPER_BIKE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_NEW_WILD_ENC:
-				gTasks[taskId].data[TD_NEW_WILD_ENC] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_EARLY_FLY:
-				gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY]);
-				DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-				break;
-			case TD_PAGE_NUM:
-				gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1], gTasks[taskId].data[TD_PAGE_NUM]);
-				DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
-				DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
-				break;
-		}
+            case TD_INSTANTTEXT:
+                gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_SPINNERS:
+                gTasks[taskId].data[TD_SPINNERS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_MAX_VISION:
+                gTasks[taskId].data[TD_MAX_VISION] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_NERF_ROXANNE:
+                gTasks[taskId].data[TD_NERF_ROXANNE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_SUPER_BIKE:
+                gTasks[taskId].data[TD_SUPER_BIKE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_NEW_WILD_ENC:
+                gTasks[taskId].data[TD_NEW_WILD_ENC] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_EARLY_FLY:
+                gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_PAGE_NUM:
+                gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gTasks[taskId].data[TD_PAGE_NUM]);
+                DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
+                if(gTasks[taskId].data[TD_PAGE_NUM] != gStoredPageNum) // only redraw if the page updates!
+                {
+                    DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
+                    gStoredPageNum = gTasks[taskId].data[TD_PAGE_NUM]; // update the page.
+                }
+                break;
+        }
     }
 }

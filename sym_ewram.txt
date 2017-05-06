@@ -1063,3 +1063,6 @@ gUnknown_0203A3D3: @ 203A3D3
 	.space 0x1
 
 gUnknown_0203A3D4: @ 203A3D4
+	.space 0x4
+	
+	.include "src/speedchoice.o"
