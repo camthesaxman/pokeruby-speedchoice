@@ -121,7 +121,7 @@ static void PrintPlayerName(void);
 static void PrintPlayTime(void);
 static void PrintPokedexCount(void);
 static void PrintBadgeCount(void);
-static void Task_NewGameSpeech1(u8 taskId);
+void Task_NewGameSpeech1(u8 taskId);
 static void Task_NewGameSpeech2(u8 taskId);
 static void Task_NewGameSpeech3(u8 taskId);
 static void Task_NewGameSpeech4(u8 taskId);
@@ -503,6 +503,8 @@ void Task_MainMenuProcessKeyInput(u8 taskId)
         gTasks[taskId].func = Task_MainMenuHighlight;
 }
 
+extern void CB2_InitSpeedchoiceMenu(void);
+
 void Task_MainMenuPressedA(u8 taskId)
 {
     enum
@@ -572,7 +574,9 @@ void Task_MainMenuPressedA(u8 taskId)
     default:
         gPlttBufferUnfaded[0] = 0;
         gPlttBufferFaded[0] = 0;
-        gTasks[taskId].func = Task_NewGameSpeech1;
+		SetMainCallback2(CB2_InitSpeedchoiceMenu);
+		DestroyTask(taskId);
+        //gTasks[taskId].func = Task_NewGameSpeech1;
         break;
     case CONTINUE:
         gPlttBufferUnfaded[0] = 0;
@@ -716,7 +720,7 @@ void PrintBadgeCount(void)
     MenuPrint_PixelCoords(buffer, 205, 40, 1);
 }
 
-static void Task_NewGameSpeech1(u8 taskId)
+void Task_NewGameSpeech1(u8 taskId)
 {
     SetUpWindowConfig(&gWindowConfig_81E6C3C);
     InitMenuWindow((struct WindowConfig *)&gWindowConfig_81E6CE4);
