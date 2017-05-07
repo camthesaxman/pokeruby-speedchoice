@@ -1,11 +1,15 @@
-# Pokémon Ruby and Sapphire [![Build Status](https://travis-ci.org/pret/pokeruby.svg?branch=master)](https://travis-ci.org/pret/pokeruby)
+# Pokémon Ruby and Sapphire Speedchoice (BETA 6)
 
-This is a disassembly of Pokémon Ruby and Sapphire.
+This is a fork of the Ruby/Sapphire dissassembly that adds speedrunner oriented options for casual racing between runners.
 
 It builds the following roms:
 
-* pokeruby.gba `sha1: f28b6ffc97847e94a6c21a63cacf633ee5c8df1e`
-* pokesapphire.gba `sha1: 3ccbbd45f8553c36463f13b938e833f652b793e4`
+* pokeruby.gba `sha1: b3f2b40e8fb215b712d95db923fc96252128906f`
+* pokesapphire.gba `sha1: 985eb969e874b772070d7f239d0cafffc6b7a602`
+
+Currently, the following options do not work yet:
+
+* Spinners (Nerf/Keep/Hell)
 
 To set up the repository, see [INSTALL.md](INSTALL.md).
 
