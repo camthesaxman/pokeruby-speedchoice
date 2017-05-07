@@ -11,6 +11,7 @@
 #include "safari_zone.h"
 #include "script.h"
 #include "species.h"
+#include "speedchoice.h"
 
 struct WildPokemon
 {
@@ -3033,7 +3034,49 @@ static void FeebasSeedRng(u16 seed)
 static u8 ChooseWildMonIndex_Land(void)
 {
     u8 rand = Random() % 100;
-
+    
+    // 20/20/20/15/15/20 for new wild encounter table
+    
+    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    {
+        // COMMONS
+        // slot 1 (20%)
+        if(rand < 10)
+            return 0;
+        if(rand >= 10 && rand < 20)
+            return 1;
+        // slot 2 (20%)
+        if(rand >= 20 && rand < 30)
+            return 2;
+        if(rand >= 30 && rand < 40)
+            return 3;
+        // slot 3 (20%)
+        if(rand >= 40 && rand < 50)
+            return 4;
+        if(rand >= 50 && rand < 60)
+            return 5;
+        
+        // UNCOMMONS
+        // slot 4 (15%)
+        if(rand >= 60 && rand < 67)
+            return 6;
+        if(rand >= 67 && rand < 75)
+            return 7;
+        
+        // slot 5 (15%)
+        if(rand >= 75 && rand < 82)
+            return 8;
+        if(rand >= 82 && rand < 90)
+            return 9;
+        
+        // RARE (10%)
+        // slot 6
+        if(rand >= 90 && rand < 95)
+            return 10;
+        return 11;
+    }
+    else
+    {
     if (rand < 20)                  //20% chance
         return 0;
     if (rand >= 20 && rand < 40)    //20% chance
@@ -3058,12 +3101,30 @@ static u8 ChooseWildMonIndex_Land(void)
         return 10;
     else                            //1% chance
         return 11;
+    }
 }
 
 static u8 ChooseWildMonIndex_Water(void)
 {
     u8 rand = Random() % 100;
 
+    //35/25/15/15/10
+
+    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    {
+        if(rand < 35) // 35%
+            return 0;
+        if(rand >= 35 && rand < 60) // 25%
+            return 1;
+        if(rand >= 60 && rand < 75) // 15%
+            return 2;
+        if(rand >= 75 && rand < 90) // 15%
+            return 3;
+
+        return 4; // 10%
+    }
+    else
+    {
     if (rand < 60)                  //60% chance
         return 0;
     if (rand >= 60 && rand < 90)    //30% chance
@@ -3073,7 +3134,8 @@ static u8 ChooseWildMonIndex_Water(void)
     if (rand >= 95 && rand < 99)    //4% chance
         return 3;
     else                            //1% chance
-        return 4;
+        return 4;    
+    }
 }
 
 enum
@@ -3088,6 +3150,34 @@ static u8 ChooseWildMonIndex_Fishing(u8 rod)
     u8 wildMonIndex = 0;
     u8 rand = Random() % 100;
 
+    // no fishing memes allowed
+    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    {
+        // slot 1, 60%
+        if(rand < 12)
+            return 0;
+        if(rand >= 12 && rand < 24)
+            return 1;
+        if(rand >= 24 && rand < 36)
+            return 2;
+        if(rand >= 36 && rand < 48)
+            return 3;
+        if(rand >= 48 && rand < 60)
+            return 4;
+        
+        // slot 2, 40%
+        if(rand >= 60 && rand < 70)
+            return 5;
+        if(rand >= 70 && rand < 80)
+            return 6;
+        if(rand >= 80 && rand < 90)
+            return 7;
+        if(rand >= 90 && rand < 95)
+            return 8;
+        return 9;
+    }
+    else
+    {
     switch (rod)
     {
     case OLD_ROD:
@@ -3116,6 +3206,7 @@ static u8 ChooseWildMonIndex_Fishing(u8 rod)
         if (rand == 99)                 //1% chance
             wildMonIndex = 9;
         break;
+    }    
     }
     return wildMonIndex;
 }

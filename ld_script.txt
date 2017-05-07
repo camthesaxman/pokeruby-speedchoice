@@ -135,6 +135,8 @@ SECTIONS {
         asm/field_effect.o(.text);
         asm/unknown_task.o(.text);
         asm/pokemon_menu.o(.text);
+        src/pokemon_menu.o(.text);
+        asm/pokemon_menu2.o(.text);
         src/option_menu.o(.text);
         src/pokedex.o(.text);
         asm/pokedex.o(.text);

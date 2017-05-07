@@ -41,12 +41,12 @@ const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
 // PAGE 1
 const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 15}INSTANT TEXT");
 const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 8}SPINNERS");
-const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 8}MAX VISION");
+const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 15}MAX VISION");
 const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
-const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 8}SUPER BIKE");
+const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 
 // PAGE 2
-const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 8}NEW WILD ENC.");
+const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 15}NEW WILD ENC.");
 const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 8}EARLY FLY");
 
 // CONSTANT OPTIONS

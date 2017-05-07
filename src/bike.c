@@ -9,6 +9,7 @@
 #include "rom4.h"
 #include "songs.h"
 #include "sound.h"
+#include "speedchoice.h"
 
 extern u8 sub_80608A4(u8);
 
@@ -115,6 +116,18 @@ static const struct UnknownStruct1 gUnknown_083DB608[] =
 
 void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys)
 {
+    if(CheckSpeedchoiceOption(TD_SUPER_BIKE, ON) == TRUE)
+    {
+        if(gMain.newKeys & R_BUTTON)
+        {
+            PlaySE(SE_JITENSYA);
+            if(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
+                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
+            else
+                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE);
+        }
+    }
+
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
         MovePlayerOnMachBike(direction, newKeys, heldKeys);
     else

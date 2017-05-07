@@ -9,6 +9,9 @@
 #include "script.h"
 #include "sprite.h"
 #include "task.h"
+#include "speedchoice.h"
+
+#define MAX_VISION 8
 
 extern bool8 (*gIsTrainerInRange[])(struct MapObject *, u16, s16, s16);
 extern bool8 (*gTrainerSeeFuncList[])(u8, struct Task *, struct MapObject *);
@@ -26,7 +29,7 @@ bool8 CheckTrainers(void)
     for (i = 0; i < 16; i++)
     {
         if ( gMapObjects[i].active )
-            if ( gMapObjects[i].trainerType == 1 ||  gMapObjects[i].trainerType == 3 )
+            if ( gMapObjects[i].trainerType == 1 || gMapObjects[i].trainerType == 3 )
                 if ( CheckTrainer(i) )
                     return TRUE;
     }
@@ -37,7 +40,7 @@ bool8 CheckTrainer(u8 trainer)
 {
    u8 *scriptPtr = GetFieldObjectScriptPointerByFieldObjectId(trainer);
 
-   if (GetTrainerFlagFromScriptPointer(scriptPtr))
+   if (GetTrainerFlagFromScriptPointer(scriptPtr)) // already battled.
        return FALSE;
    else
    {
@@ -83,6 +86,9 @@ bool8 TrainerCanApproachPlayer(struct MapObject *trainerObj)
 
 bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
+	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+		vision = MAX_VISION;
+
     if ( trainerObj->coords2.x == x
         && y > trainerObj->coords2.y
         && y <= trainerObj->coords2.y + vision )
@@ -93,6 +99,9 @@ bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
+	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+		vision = MAX_VISION;
+
     if ( trainerObj->coords2.x == x
         && y < trainerObj->coords2.y
         && y >= trainerObj->coords2.y - vision )
@@ -103,6 +112,9 @@ bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
+	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+		vision = MAX_VISION;
+
     if ( trainerObj->coords2.y == y
         && x < trainerObj->coords2.x
         && x >= trainerObj->coords2.x - vision )
@@ -113,6 +125,9 @@ bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 
 
 bool8 IsTrainerInRangeEast(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
+	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+		vision = MAX_VISION;
+
     if ( trainerObj->coords2.y == y
         && x > trainerObj->coords2.x
         && x <= trainerObj->coords2.x + vision )
