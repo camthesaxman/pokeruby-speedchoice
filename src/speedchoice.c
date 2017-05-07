@@ -39,7 +39,7 @@ const u8 gSpeedchoiceTextKeep[] = _("{PALETTE 15}KEEP");
 const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
 
 // PAGE 1
-const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 8}INSTANT TEXT");
+const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 15}INSTANT TEXT");
 const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 8}SPINNERS");
 const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 8}MAX VISION");
 const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");

@@ -1180,6 +1180,15 @@ bool8 ScrCmd_closebutton(struct ScriptContext *ctx)
 
 bool8 WaitForAorBPress(void)
 {
+    u8 instantText = gSaveBlock2.speedchoiceConfig.instantText;
+
+    if(instantText == ON)
+    {
+        if(gMain.heldKeys & A_BUTTON)
+            return TRUE;
+        if(gMain.heldKeys & B_BUTTON)
+            return TRUE;
+    }
     if (gMain.newKeys & A_BUTTON)
         return TRUE;
     if (gMain.newKeys & B_BUTTON)
