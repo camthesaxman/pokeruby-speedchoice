@@ -9,6 +9,7 @@
 #include "songs.h"
 #include "string_util.h"
 #include "text.h"
+#include "speedchoice.h"
 
 // global speedchoice config
 #define CURRENT_OPTIONS_NUM 7
@@ -19,88 +20,12 @@
 
 #define MENUOPTIONCOORDS(i) (5 + (2 * i))
 
-extern void SetPokemonCryStereo(u32 val);
 extern void remove_some_task(void);
 
 extern u8 gUnknown_0839F63C[];
 extern u8 gUnknown_0839F5FC[];  //palette
 
 extern u8 gSystemText_Terminator[];
-
-enum
-{
-    // PAGE 1
-    TD_INSTANTTEXT,
-    TD_SPINNERS,
-    TD_MAX_VISION,
-    TD_NERF_ROXANNE,
-    TD_SUPER_BIKE,
-
-    // PAGE 2
-    TD_NEW_WILD_ENC,
-    TD_EARLY_FLY,
-
-    // last option for changing the current option
-    TD_TRUEMENUINDEX = 13, // reflects true index and NOT current page index used to render highlight.
-    TD_PAGEMENUINDEX = 14,
-    TD_PAGE_NUM = 15 // last task data is 16 (1 indexed), so page num goes at the end.
-};
-
-// true index
-enum
-{
-    // PAGE 1
-    MENUITEM_INSTANTTEXT,
-    MENUITEM_SPINNERS,
-    MENUITEM_MAXVISION,
-    MENUITEM_NERFROXANNE,
-    MENUITEM_SUPERBIKE,
-    
-    // PAGE 2
-    MENUITEM_NEWWILDENC,
-    MENUITEM_EARLYFLY,
-
-    // STATIC OPTIONS
-    MENUITEM_PAGE = 15, // to make it match task data
-    MENUITEM_START_GAME
-};
-
-// page index
-enum
-{
-    OPTION_1,
-    OPTION_2,
-    OPTION_3,
-    OPTION_4,
-    OPTION_5,
-    PAGE,
-    START_GAME
-};
-
-enum
-{
-    YES,
-    NO
-};
-
-enum
-{
-    ON,
-    OFF
-};
-
-enum
-{
-    NERF,
-    KEEP,
-    HELL
-};
-
-enum
-{
-    FIRST,
-    LAST
-};
 
 const u8 gSpeedchoiceTextHeader[] = _("{PALETTE 9}SPEEDCHOICE MENU");
 
@@ -117,7 +42,7 @@ const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
 const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 8}INSTANT TEXT");
 const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 8}SPINNERS");
 const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 8}MAX VISION");
-const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 8}NERF ROXANNE");
+const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
 const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 8}SUPER BIKE");
 
 // PAGE 2
@@ -130,21 +55,6 @@ const u8 gSpeedchoiceOptionStartGame[] = _("{PALETTE 15}START GAME");
 
 // START GAME
 const u8 gSpeedchoiceStartGameText[] = _("CV: {STR_VAR_1}\nStart the game?");
-
-struct OptionChoiceConfig
-{
-    s16 x, y;
-    u8 *string; // can be null
-};
-
-// every 5 elements belongs to a page, page struct is unnecessary.
-struct SpeedchoiceOption
-{
-    u8 optionCount; // needed for process general input, im sure there's a way to avoid using this
-    u8 *string;
-    struct OptionChoiceConfig *options; // use a NULL for non existent ones, optional things in structs were introduced in C++ and this is limited.
-    bool8 enabled;
-}; 
 
 const struct OptionChoiceConfig OptionChoiceConfigYesNo[MAX_CHOICES] = 
 {
@@ -211,6 +121,29 @@ static void DrawPageChoice(u8);
 static void Task_SpeedchoiceMenuSave(u8);
 static void Task_DrawYesNoText(u8);
 
+bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
+{
+    switch(option)
+    {
+        case TD_INSTANTTEXT:
+            return gSaveBlock2.speedchoiceConfig.instantText == selection;
+        case TD_SPINNERS:
+            return gSaveBlock2.speedchoiceConfig.spinners == selection;
+        case TD_MAX_VISION:
+            return gSaveBlock2.speedchoiceConfig.maxVision == selection;
+        case TD_NERF_ROXANNE:
+            return gSaveBlock2.speedchoiceConfig.nerfRoxanne == selection;
+        case TD_SUPER_BIKE:
+            return gSaveBlock2.speedchoiceConfig.superbike == selection;
+        case TD_NEW_WILD_ENC:
+            return gSaveBlock2.speedchoiceConfig.newwildencounters == selection;
+        case TD_EARLY_FLY:
+            return gSaveBlock2.speedchoiceConfig.earlyfly == selection;
+        default:
+            return FALSE;
+    }
+}
+
 static void DrawOptionMenuChoice(u8 *text, u8 x, u8 y, u8 style)
 {
     u8 dst[16];
@@ -245,6 +178,7 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
     return selection;
 }
 
+// todo: combine with above function
 static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 selection)
 {
     if(gMain.newKeys & DPAD_RIGHT)
@@ -263,7 +197,7 @@ static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 s
             selection--;
     }
 
-    // safety code. do NOT let page escape the allowed number of pages!
+    // sanity check, but im unsure if it matters. do NOT let page escape the allowed number of pages!
     if(selection < 1)
         selection = 1;
     if(selection > (option->optionCount))

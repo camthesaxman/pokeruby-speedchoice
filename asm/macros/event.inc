@@ -1304,12 +1304,19 @@
 	.byte 0xc5
 	.endm
 
-	@ Writes the name of the specified (box) PC box to the specified buffer.
-	.macro bufferboxname out, box
+	@ since bufferboxname is FR/LG only, i opt to overwrite the command.
+	.macro checkspeedchoice option, selection
 	.byte 0xc6
-	.byte \out
-	.2byte \box
+	.byte \option
+	.byte \selection
 	.endm
+
+	@ Writes the name of the specified (box) PC box to the specified buffer.
+	@.macro bufferboxname out, box
+	@.byte 0xc6
+	@.byte \out
+	@.2byte \box
+	@.endm
 
 	@ Sets the color of the text in standard message boxes. 0x00 produces blue (male) text, 0x01 produces red (female) text, 0xFF resets the color to the default for the current OW's gender, and all other values produce black text.
 	.macro textcolor color

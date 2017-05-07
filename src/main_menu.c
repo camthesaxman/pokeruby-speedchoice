@@ -18,6 +18,7 @@
 #include "task.h"
 #include "text.h"
 #include "title_screen.h"
+#include "speedchoice.h"
 
 #define BirchSpeechUpdateWindowText() ((u8)MenuUpdateWindowText_OverrideLineLength(24))
 
@@ -502,8 +503,6 @@ void Task_MainMenuProcessKeyInput(u8 taskId)
     if (currentMenuItemChanged)
         gTasks[taskId].func = Task_MainMenuHighlight;
 }
-
-extern void CB2_InitSpeedchoiceMenu(void);
 
 void Task_MainMenuPressedA(u8 taskId)
 {

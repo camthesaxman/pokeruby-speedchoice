@@ -9727,3 +9727,18 @@ gTrainerParty_Eugene: @ 81F01E8
 	.2byte 24 @ level
 	.2byte SPECIES_CARVANHA
 	.2byte 0 @ padding
+	
+	.align 2
+	
+gTrainerParty_Roxanne_Nerfed: @ 81EDF30
+	.2byte 150 @ IV (0-255)
+	.2byte 12 @ level
+	.2byte SPECIES_GEODUDE
+	.2byte MOVE_TACKLE, MOVE_DEFENSE_CURL, MOVE_ROCK_THROW, MOVE_ROCK_TOMB
+	.2byte 0 @ padding
+
+	.2byte 200 @ IV (0-255)
+	.2byte 13 @ level
+	.2byte SPECIES_NOSEPASS
+	.2byte MOVE_TACKLE, MOVE_HARDEN, MOVE_ROCK_THROW, MOVE_ROCK_TOMB
+	.2byte 0 @ padding

@@ -43,3 +43,21 @@
 	.equiv LESS_THAN, 0
 	.equiv GREATER_THAN, 1
 	.equiv EQUAL, 2
+	
+	.equiv INSTANTTEXT, 0
+	.equiv SPINNERS, 1
+	.equiv MAX_VISION, 2
+	.equiv NERFROXANNE, 3
+	.equiv SUPER_BIKE, 4
+	.equiv NEWWILDENC, 5
+	.equiv EARLYFLY, 6
+	
+	.equiv YES, 0
+	.equiv NO, 1
+	
+	.equiv ON, 0
+	.equiv OFF, 1
+	
+	.equiv NERF, 0
+	.equiv KEEP, 1
+	.equiv HELL, 2

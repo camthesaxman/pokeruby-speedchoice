@@ -2,12 +2,24 @@ RustboroCity_Gym_MapScripts:: @ 81578D8
 	.byte 0
 
 RustboroCity_Gym_EventScript_1578D9:: @ 81578D9
-	trainerbattle 1, OPPONENT_ROXANNE, 0, RustboroCity_Gym_Text_183EE5, RustboroCity_Gym_Text_183FC4, RustboroCity_Gym_EventScript_1578FE
+	checkspeedchoice NERFROXANNE, YES
+	jumpif TRUE, RustboroCity_Gym_NerfedRoxanne
+	jump RustboroCity_Gym_NormalRoxanne
+
+RustboroCity_Gym_AfterRoxanne::
 	checkflag 165
 	jumpif 0, RustboroCity_Gym_EventScript_15793C
 	msgbox RustboroCity_Gym_Text_184252, 4
 	release
 	end
+	
+RustboroCity_Gym_NerfedRoxanne:: @ 81578D9
+	trainerbattle 1, OPPONENT_ROXANNE_NERFED, 0, RustboroCity_Gym_Text_183EE5, RustboroCity_Gym_Text_183FC4, RustboroCity_Gym_EventScript_1578FE
+	jump RustboroCity_Gym_AfterRoxanne
+
+RustboroCity_Gym_NormalRoxanne:: @ 81578D9
+	trainerbattle 1, OPPONENT_ROXANNE, 0, RustboroCity_Gym_Text_183EE5, RustboroCity_Gym_Text_183FC4, RustboroCity_Gym_EventScript_1578FE
+	jump RustboroCity_Gym_AfterRoxanne
 
 RustboroCity_Gym_EventScript_1578FE:: @ 81578FE
 	message RustboroCity_Gym_Text_1840AB

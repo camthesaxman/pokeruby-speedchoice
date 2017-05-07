@@ -30,6 +30,7 @@
 #include "script_pokemon_80F9.h"
 #include "sound.h"
 #include "string_util.h"
+#include "speedchoice.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(void);
@@ -1878,6 +1879,16 @@ bool8 ScrCmd_removecoins(struct ScriptContext *ctx)
         gScriptResult = 0;
     else
         gScriptResult = 1;
+
+    return FALSE;
+}
+
+bool8 ScrCmd_checkspeedchoice(struct ScriptContext *ctx)
+{
+    u8 speedchoiceType = ScriptReadByte(ctx);
+    u8 selection = ScriptReadByte(ctx);
+
+    ctx->comparisonResult = CheckSpeedchoiceOption(speedchoiceType, selection);
 
     return FALSE;
 }
