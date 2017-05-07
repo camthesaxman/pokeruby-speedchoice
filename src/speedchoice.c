@@ -47,7 +47,7 @@ const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 
 // PAGE 2
 const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 15}NEW WILD ENC.");
-const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 8}EARLY FLY");
+const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 15}EARLY FLY");
 
 // CONSTANT OPTIONS
 const u8 gSpeedchoiceOptionPage[] = _("{PALETTE 15}PAGE");

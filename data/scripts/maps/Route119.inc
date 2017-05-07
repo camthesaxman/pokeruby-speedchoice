@@ -112,7 +112,10 @@ Route119_EventScript_1512AD:: @ 81512AD
 
 Route119_EventScript_1512BD:: @ 81512BD
 	msgbox Route119_Text_1711B1, 4
-	call Route119_EventScript_151352
+	checkspeedchoice EARLYFLY, YES
+	callif TRUE, Route119_GiveItemFinderInstead
+	checkspeedchoice EARLYFLY, NO
+	callif TRUE, Route119_EventScript_151352 @ im sure there's a better way to do this than a double check. i cannot be sure that the callif instructions don't modify callif conditional.
 	msgbox Route119_Text_171214, 4
 	jump Route119_EventScript_151362
 	end
@@ -142,13 +145,21 @@ Route119_EventScript_151327:: @ 8151327
 
 Route119_EventScript_151337:: @ 8151337
 	msgbox Route119_Text_17140B, 4
-	call Route119_EventScript_151352
+	checkspeedchoice EARLYFLY, YES
+	callif TRUE, Route119_GiveItemFinderInstead
+	checkspeedchoice EARLYFLY, NO
+	callif TRUE, Route119_EventScript_151352 @ im sure there's a better way to do this than a double check. i cannot be sure that the callif instructions don't modify callif conditional.
 	msgbox Route119_Text_171475, 4
 	jump Route119_EventScript_151362
 	end
 
 Route119_EventScript_151352:: @ 8151352
 	giveitem ITEM_HM02
+	setflag 110
+	return
+
+Route119_GiveItemFinderInstead::
+	giveitem ITEM_ITEMFINDER
 	setflag 110
 	return
 

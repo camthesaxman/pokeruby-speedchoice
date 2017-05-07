@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "palette.h"
 #include "field_player_avatar.h"
+#include "speedchoice.h"
 
 struct FieldMoveFuncStruct
 {
@@ -53,7 +54,7 @@ void PokemonMenu_FieldMove(u8 taskId)
             goto gotoLabel;
         }
     }
-    else if(data[11] <= 7 && FlagGet(data[11] + BADGE01_GET) != TRUE)
+    else if(data[11] <= 7 && FlagGet(data[11] + BADGE01_GET) != TRUE && (data[11] != 5 || CheckSpeedchoiceOption(TD_EARLY_FLY, YES) == FALSE)) // EARLY FLY
     {
         MenuZeroFillWindowRect(0x13, 0, 0x1D, 0x13);
         sub_806D5A4();

@@ -384,7 +384,10 @@ Route110_EventScript_14FE00:: @ 814FE00
 
 Route110_EventScript_14FE10:: @ 814FE10
 	msgbox Route110_Text_16E84C, 4
-	call Route110_EventScript_14FEA5
+	checkspeedchoice EARLYFLY, YES
+	callif TRUE, Route110_GiveHM02Instead
+	checkspeedchoice EARLYFLY, NO
+	callif TRUE, Route110_EventScript_14FEA5 @ im sure there's a better way to do this than a double check. i cannot be sure that the callif instructions don't modify callif conditional.
 	msgbox Route110_Text_16E8B3, 4
 	jump Route110_EventScript_14FEB2
 	end
@@ -414,13 +417,20 @@ Route110_EventScript_14FE7A:: @ 814FE7A
 
 Route110_EventScript_14FE8A:: @ 814FE8A
 	msgbox Route110_Text_16EA2A, 4
-	call Route110_EventScript_14FEA5
+	checkspeedchoice EARLYFLY, YES
+	callif TRUE, Route110_GiveHM02Instead
+	checkspeedchoice EARLYFLY, NO
+	callif TRUE, Route110_EventScript_14FEA5 @ im sure there's a better way to do this than a double check. i cannot be sure that the callif instructions don't modify callif conditional.
 	msgbox Route110_Text_16EA7B, 4
 	jump Route110_EventScript_14FEB2
 	end
 
 Route110_EventScript_14FEA5:: @ 814FEA5
 	giveitem ITEM_ITEMFINDER
+	return
+
+Route110_GiveHM02Instead::
+	giveitem ITEM_HM02
 	return
 
 Route110_EventScript_14FEB2:: @ 814FEB2
