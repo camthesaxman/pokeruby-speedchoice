@@ -166,6 +166,7 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
             selection = 0;
         else
             selection++;
+        PlaySE(SE_SELECT);
     }
     // i dont return immediately because emulators could hold both right and left down.
     if(gMain.newKeys & DPAD_LEFT)
@@ -174,6 +175,7 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
             selection = (option->optionCount - 1); // indexed by 0.
         else
             selection--;
+        PlaySE(SE_SELECT);
     }
     return selection;
 }
@@ -509,7 +511,7 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
             gTasks[taskId].data[TD_TRUEMENUINDEX] = GetPageOptionTrueIndex(FIRST, gTasks[taskId].data[TD_PAGE_NUM]);
         else
             gTasks[taskId].data[TD_TRUEMENUINDEX]++;
-        
+
         SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
         HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
     }
@@ -550,6 +552,7 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
                 DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
                 if(gTasks[taskId].data[TD_PAGE_NUM] != gStoredPageNum) // only redraw if the page updates!
                 {
+                    PlaySE(SE_WIN_OPEN);
                     DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
                     gStoredPageNum = gTasks[taskId].data[TD_PAGE_NUM]; // update the page.
                 }
