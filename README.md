@@ -4,8 +4,8 @@ This is a fork of the Ruby/Sapphire dissassembly that adds speedrunner oriented 
 
 It builds the following roms:
 
-* pokeruby.gba `sha1: b3f2b40e8fb215b712d95db923fc96252128906f`
-* pokesapphire.gba `sha1: 985eb969e874b772070d7f239d0cafffc6b7a602`
+* pokeruby.gba `sha1: 363310b491e4479c8988ecd178b7eff672e2e491`
+* pokesapphire.gba `sha1: 8691aeeebf6465fd20d1bca9ca7a15994b78142d`
 
 Currently, the following options do not work yet:
 
