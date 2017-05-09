@@ -128,7 +128,7 @@ static void Task_NewGameSpeech3(u8 taskId);
 static void Task_NewGameSpeech4(u8 taskId);
 static void Task_NewGameSpeech5(u8 taskId);
 static void Task_NewGameSpeech6(u8 taskId);
-static void Task_NewGameSpeech7(u8 taskId);
+void Task_NewGameSpeech7(u8 taskId);
 static void Task_NewGameSpeech8(u8 taskId);
 static void Task_NewGameSpeech9(u8 taskId);
 static void Task_NewGameSpeech10(u8 taskId);
@@ -158,7 +158,7 @@ static void Task_NewGameSpeech33(u8 taskId);
 static void CB_ContinueNewGameSpeechPart2();
 static void nullsub_34(struct Sprite *sprite);
 static void ShrinkPlayerSprite(struct Sprite *sprite);
-static u8 CreateAzurillSprite(u8 x, u8 y);
+u8 CreateAzurillSprite(u8 x, u8 y);
 static void AddBirchSpeechObjects(u8 taskId);
 static void Task_SpriteFadeOut(u8 taskId);
 static void StartSpriteFadeOut(u8 taskId, u8 interval);
@@ -821,7 +821,7 @@ static void Task_NewGameSpeech6(u8 taskId)
     gTasks[taskId].data[TD_COUNTER] = 0;
 }
 
-static void Task_NewGameSpeech7(u8 taskId)
+void Task_NewGameSpeech7(u8 taskId)
 {
     if (IsCryFinished())
     {

@@ -3044,35 +3044,35 @@ static u8 ChooseWildMonIndex_Land(void)
         if(rand < 10)
             return 0;
         if(rand >= 10 && rand < 20)
-            return 1;
+            return 6;
         // slot 2 (20%)
         if(rand >= 20 && rand < 30)
-            return 2;
+            return 1;
         if(rand >= 30 && rand < 40)
-            return 3;
+            return 7;
         // slot 3 (20%)
         if(rand >= 40 && rand < 50)
-            return 4;
+            return 2;
         if(rand >= 50 && rand < 60)
-            return 5;
+            return 8;
         
         // UNCOMMONS
         // slot 4 (15%)
         if(rand >= 60 && rand < 67)
-            return 6;
+            return 3;
         if(rand >= 67 && rand < 75)
-            return 7;
+            return 9;
         
         // slot 5 (15%)
         if(rand >= 75 && rand < 82)
-            return 8;
+            return 4;
         if(rand >= 82 && rand < 90)
-            return 9;
+            return 10;
         
         // RARE (10%)
         // slot 6
         if(rand >= 90 && rand < 95)
-            return 10;
+            return 5;
         return 11;
     }
     else
@@ -3157,23 +3157,23 @@ static u8 ChooseWildMonIndex_Fishing(u8 rod)
         if(rand < 12)
             return 0;
         if(rand >= 12 && rand < 24)
-            return 1;
-        if(rand >= 24 && rand < 36)
             return 2;
-        if(rand >= 36 && rand < 48)
-            return 3;
-        if(rand >= 48 && rand < 60)
+        if(rand >= 24 && rand < 36)
             return 4;
+        if(rand >= 36 && rand < 48)
+            return 6;
+        if(rand >= 48 && rand < 60)
+            return 8;
         
         // slot 2, 40%
         if(rand >= 60 && rand < 70)
-            return 5;
+            return 1;
         if(rand >= 70 && rand < 80)
-            return 6;
+            return 3;
         if(rand >= 80 && rand < 90)
-            return 7;
+            return 5;
         if(rand >= 90 && rand < 95)
-            return 8;
+            return 7;
         return 9;
     }
     else
