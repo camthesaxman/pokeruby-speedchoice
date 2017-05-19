@@ -1,5 +1,6 @@
 #include "global.h"
 #include "metatile_behaviors.h"
+#include "speedchoice.h"
 
 #define TILE_ATTRIBUTES(three, two, one) (((one) ? 1 : 0) | ((two) ? 2 : 0) | ((three) ? 4 : 0))
 
@@ -1230,6 +1231,8 @@ bool8 MetatileBehavior_IsSeaweed(u8 var)
 
 bool8 MetatileBehavior_IsRunningDisallowed(u8 var)
 {
+    if(CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, YES) == TRUE)
+        return FALSE;
     if (var == MB_NO_RUNNING || var == MB_LONG_GRASS || var == MB_HOT_SPRINGS || MetatileBehavior_IsPacifidlogLog(var) != FALSE)
         return TRUE;
     else

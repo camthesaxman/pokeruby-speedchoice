@@ -446,13 +446,18 @@ struct SaveBlock2_Sub
 
 struct SpeedchoiceSaveOptions
 {
-	u8 instantText:1;
-	u8 spinners:2;
-	u8 maxVision:1;
-	u8 nerfRoxanne:1;
-	u8 superbike:1;
-	u8 newwildencounters:1;
-	u8 earlyfly:1;
+    u8 bwexp:1;
+    u8 aqualess:2;
+    u8 instantText:1;
+    u8 spinners:2;
+    u8 maxVision:1;
+    u8 nerfRoxanne:1;
+    u8 superbike:1;
+    u8 newwildencounters:1;
+    u8 earlyfly:1;
+    u8 runEverywhere:1;
+    u8 memeIsland:1;
+    u8 emeraldDoubles:1;
 };
 
 struct SaveBlock2 /* 0x02024EA4 */
@@ -478,8 +483,8 @@ struct SaveBlock2 /* 0x02024EA4 */
     /*0xA0*/ struct Time lastBerryTreeUpdate;
     /*0xA8*/ struct SaveBlock2_Sub filler_A8;
 
-	/*SPEEDCHOICE*/
-	struct SpeedchoiceSaveOptions speedchoiceConfig;
+    /*SPEEDCHOICE*/
+    struct SpeedchoiceSaveOptions speedchoiceConfig;
 };
 
 struct MapPosition
@@ -502,7 +507,7 @@ struct UnkStruct_8054FF8
 // wasnt defined so I had to define it
 struct HallOfFame
 {
-	u8 filler[0x1F00];
+    u8 filler[0x1F00];
 };
 
 extern struct HallOfFame gHallOfFame;

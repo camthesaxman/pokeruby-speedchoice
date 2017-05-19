@@ -6,6 +6,7 @@
 #include "rtc.h"
 #include "script.h"
 #include "task.h"
+#include "speedchoice.h"
 
 extern bool8 sub_807DDFC(void);
 
@@ -41,14 +42,19 @@ void UpdateMirageRnd(u16 days)
 
 bool8 IsMirageIslandPresent(void)
 {
-    u16 rnd = GetMirageRnd() >> 16;
-    int i;
+    if(CheckSpeedchoiceOption(TD_MEME_ISLAND, ON) == TRUE)
+        return TRUE; // always present.
+    else
+    {
+        u16 rnd = GetMirageRnd() >> 16;
+        int i;
 
-    for (i = 0; i < PARTY_SIZE; i++)
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && (GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY) & 0xFFFF) == rnd)
-            return TRUE;
+        for (i = 0; i < PARTY_SIZE; i++)
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && (GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY) & 0xFFFF) == rnd)
+                return TRUE;
 
-    return FALSE;
+        return FALSE;
+    }
 }
 
 void UpdateShoalTideFlag(void)

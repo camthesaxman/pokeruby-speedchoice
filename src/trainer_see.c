@@ -10,8 +10,13 @@
 #include "sprite.h"
 #include "task.h"
 #include "speedchoice.h"
+#include "battle.h"
+#include "pokemon.h"
+#include "species.h"
 
 #define MAX_VISION 8
+
+extern u16 TrainerBattleLoadArg16(u8 *ptr);
 
 extern bool8 (*gIsTrainerInRange[])(struct MapObject *, u16, s16, s16);
 extern bool8 (*gTrainerSeeFuncList[])(u8, struct Task *, struct MapObject *);
@@ -21,6 +26,7 @@ extern u32 gUnknown_0202FF84[];
 
 extern struct SpriteTemplate gSpriteTemplate_839B510;
 extern struct SpriteTemplate gSpriteTemplate_839B528;
+extern struct Trainer gTrainers[];
 
 bool8 CheckTrainers(void)
 {
@@ -36,6 +42,22 @@ bool8 CheckTrainers(void)
     return FALSE;
 }
 
+u8 CountAlivePartyMons(void)
+{
+    u8 i;
+    u8 count = 0;
+    
+    for(i = 0; i < 6; i++)
+    {
+        if(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) != 0 &&
+        GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) != SPECIES_EGG &&
+        GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE &&
+        GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
+            count++;
+    }
+    return count;
+}
+
 bool8 CheckTrainer(u8 trainer)
 {
    u8 *scriptPtr = GetFieldObjectScriptPointerByFieldObjectId(trainer);
@@ -47,11 +69,26 @@ bool8 CheckTrainer(u8 trainer)
        struct MapObject *trainerObj = &gMapObjects[trainer];
        u8 canApproach = TrainerCanApproachPlayer(trainerObj);
 
-       if (canApproach != 0)
+        if (canApproach != 0)
         {
-           TrainerWantsBattle(trainer, scriptPtr);
-           sub_80842C8(trainerObj, (canApproach - 1));
-           return TRUE;
+            // Emerald handling
+            if(CheckSpeedchoiceOption(TD_EMERALD_DOUBLES, ON) == TRUE)
+            {
+                if(CountAlivePartyMons() < 2 && gTrainers[TrainerBattleLoadArg16(scriptPtr + 2)].doubleBattle == TRUE)
+                    return FALSE;
+
+                TrainerWantsBattle(trainer, scriptPtr);
+                sub_80842C8(trainerObj, (canApproach - 1));
+                return TRUE;
+            }
+            else if(gTrainers[TrainerBattleLoadArg16(scriptPtr + 2)].doubleBattle == TRUE) // emerald doubles is off, so treat it R/S wise and ignore double vision entirely.
+                return FALSE;
+            else
+            {
+                TrainerWantsBattle(trainer, scriptPtr);
+                sub_80842C8(trainerObj, (canApproach - 1));
+                return TRUE;
+            }
         }
        else
        {
@@ -86,8 +123,8 @@ bool8 TrainerCanApproachPlayer(struct MapObject *trainerObj)
 
 bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-		vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+        vision = MAX_VISION;
 
     if ( trainerObj->coords2.x == x
         && y > trainerObj->coords2.y
@@ -99,8 +136,8 @@ bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-		vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+        vision = MAX_VISION;
 
     if ( trainerObj->coords2.x == x
         && y < trainerObj->coords2.y
@@ -112,8 +149,8 @@ bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-		vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+        vision = MAX_VISION;
 
     if ( trainerObj->coords2.y == y
         && x < trainerObj->coords2.x
@@ -125,8 +162,8 @@ bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 
 
 bool8 IsTrainerInRangeEast(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-	if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-		vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
+        vision = MAX_VISION;
 
     if ( trainerObj->coords2.y == y
         && x > trainerObj->coords2.x

@@ -59,6 +59,8 @@ EverGrandeCity_PokemonLeague_EventScript_15BAD2:: @ 815BAD2
 	pause 75
 	checkflag 2060
 	jumpif 0, EverGrandeCity_PokemonLeague_EventScript_15BB4A
+	checkflag 2061 @ check badge 7 too
+	jumpif 0, EverGrandeCity_PokemonLeague_EventScript_15BB4A
 	closebutton
 	move 3, EverGrandeCity_PokemonLeague_Movement_15BB7E
 	move 4, EverGrandeCity_PokemonLeague_Movement_15BB81

@@ -3320,7 +3320,22 @@ static bool8 GenerateWildMon(struct WildPokemonInfo *wildMonInfo, u8 area, bool8
 static u16 GenerateFishingWildMon(struct WildPokemonInfo *wildMonInfo, u8 rod)
 {
     u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod);
-    u8 level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[wildMonIndex]);
+    u8 wildMonIndexOffset = wildMonIndex % 2;
+    u8 level;
+
+    // rod fix.
+    switch(rod)
+    {
+        case OLD_ROD:
+            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[0 + wildMonIndexOffset]);
+            break;
+        case GOOD_ROD:
+            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[2 + wildMonIndexOffset]);
+            break;
+        case SUPER_ROD:
+            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[8 + wildMonIndexOffset]);
+            break;
+    }
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
     return wildMonInfo->wildPokemon[wildMonIndex].species;

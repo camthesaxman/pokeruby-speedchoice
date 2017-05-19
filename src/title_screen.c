@@ -673,8 +673,7 @@ static void Task_TitleScreenPhase3(u8 taskId)
     {
         if ((gMain.heldKeys & CLEAR_SAVE_BUTTON_COMBO) == CLEAR_SAVE_BUTTON_COMBO)
             SetMainCallback2(CB2_GoToClearSaveDataScreen);
-        if ((gMain.heldKeys & RESET_RTC_BUTTON_COMBO) == RESET_RTC_BUTTON_COMBO
-          && CanResetRTC() == 1)
+        if ((gMain.heldKeys & RESET_RTC_BUTTON_COMBO) == RESET_RTC_BUTTON_COMBO)
         {
             FadeOutBGM(4);
             BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);

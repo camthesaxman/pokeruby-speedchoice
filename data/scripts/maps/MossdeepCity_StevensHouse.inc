@@ -48,6 +48,31 @@ MossdeepCity_StevensHouse_EventScript_15AA0B:: @ 815AA0B
 	move 1, MossdeepCity_StevensHouse_Movement_15AA76
 	waitmove 0
 	setvar 0x40c6, 1
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, AfterStevenDive
+	clearflag 855
+	clearflag 856
+	clearflag 816
+	clearflag 973
+	setvar 0x405e, 1
+	clearflag 944
+	clearflag 945
+	setflag 2090
+	setflag 854
+	setflag 129
+	setflag 967
+	setvar 0x40c6, 1
+	setvar 0x40a2, 1
+	setflag 828
+	setflag 829
+	setflag 831
+	setflag 859
+	setflag 946
+	setflag 859
+	setflag 944
+	setflag 945
+	setvar 0x407b, 2
+AfterStevenDive::
 	releaseall
 	end
 

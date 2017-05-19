@@ -29,6 +29,8 @@ void ResetTasks()
     gTasks[ACTIVE_SENTINEL - 1].next = TAIL_SENTINEL;
 }
 
+extern void Crash(void);
+
 u8 CreateTask(TaskFunc func, u8 priority)
 {
     u8 taskId;
@@ -45,6 +47,8 @@ u8 CreateTask(TaskFunc func, u8 priority)
             return taskId;
         }
     }
+	
+	Crash(); // no tasks are available, meaning task system will overflow if we don't call the crash handler.
 
     return 0;
 }

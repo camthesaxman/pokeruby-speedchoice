@@ -867,6 +867,8 @@ static u8 sub_80E5DA0(struct MapObject *mapObject, s16 x, s16 y, u8 direction, u
 
 bool8 IsRunningDisallowed(u8 tile)
 {
+    if(CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, ON) == TRUE)
+        return FALSE;
     if (IsRunningDisallowedByMetatile(tile) != FALSE || gMapHeader.mapType == MAP_TYPE_INDOOR)
         return TRUE;
     else
@@ -877,7 +879,7 @@ static bool8 IsRunningDisallowedByMetatile(u8 tile)
 {
     if (MetatileBehavior_IsRunningDisallowed(tile))
         return TRUE;
-    if (MetatileBehavior_IsFortreeBridge(tile) && (PlayerGetZCoord() & 1) == 0)
+    if (MetatileBehavior_IsFortreeBridge(tile) && (PlayerGetZCoord() & 1) == 0 && CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, OFF) == TRUE)
         return TRUE;
     return FALSE;
 }
@@ -931,7 +933,7 @@ bool8 IsBikingDisallowedByPlayer(void)
     {
         PlayerGetDestCoords(&x, &y);
         tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-        if (!IsRunningDisallowedByMetatile(tileBehavior))
+        if (IsRunningDisallowedByMetatile(tileBehavior) == FALSE)
             return FALSE;
     }
     return TRUE;

@@ -78,6 +78,20 @@ MauvilleCity_Gym_EventScript_1565AB:: @ 81565AB
 	end
 
 MauvilleCity_Gym_EventScript_1565DB:: @ 81565DB
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, WattsonAfter
+	checkspeedchoice AQUALESS, SEMI
+	jumpif TRUE, WattsonAfter
+	setflag 819
+	setvar 0x40bf, 1
+	setflag 938
+	setflag 244
+	setflag 926
+	setflag 927
+	setflag 139
+	clearflag 928
+	setflag 942
+WattsonAfter::
 	message MauvilleCity_Gym_Text_180DAF
 	waittext
 	call MauvilleCity_Gym_EventScript_1A02C5

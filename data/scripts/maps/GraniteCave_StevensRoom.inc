@@ -24,6 +24,19 @@ GraniteCave_StevensRoom_EventScript_15CBFA:: @ 815CBFA
 	callif 1, GraniteCave_StevensRoom_EventScript_15CC6D
 	playsfx 9
 	disappear 1
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, StevenRoomEventEnd
+	checkspeedchoice AQUALESS, SEMI
+	jumpif TRUE, StevenRoomEventEnd
+	setflag 148
+	setflag 882
+	setflag 883
+	setflag 887
+	setflag 900
+	setflag 149
+	clearflag 947
+	setflag 949
+StevenRoomEventEnd::
 	release
 	end
 

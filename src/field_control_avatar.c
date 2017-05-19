@@ -15,6 +15,7 @@
 #include "trainer_see.h"
 #include "vars.h"
 #include "wild_encounter.h"
+#include "speedchoice.h"
 
 struct Coords32
 {
@@ -446,7 +447,7 @@ static u8 *TryGetFieldMoveScript(struct MapPosition *unused1, u8 b, u8 unused2)
 
 static bool32 sub_8068770(void)
 {
-    if (FlagGet(BADGE07_GET) && sub_8068F18() == 2)
+    if ((FlagGet(BADGE07_GET) || CheckSpeedchoiceOption(TD_AQUALESS, KEEP) == FALSE) && sub_8068F18() == 2)
     {
         ScriptContext1_SetupScript(UseDiveScript);
         return TRUE;
@@ -456,7 +457,7 @@ static bool32 sub_8068770(void)
 
 static bool32 sub_80687A4(void)
 {
-    if (FlagGet(BADGE07_GET) && gMapHeader.mapType == 5 && sub_8068F18() == 1)
+    if ((FlagGet(BADGE07_GET) || CheckSpeedchoiceOption(TD_AQUALESS, KEEP) == FALSE) && gMapHeader.mapType == 5 && sub_8068F18() == 1)
     {
         ScriptContext1_SetupScript(UnderwaterUseDiveScript);
         return TRUE;

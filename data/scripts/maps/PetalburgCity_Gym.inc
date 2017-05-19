@@ -92,6 +92,14 @@ PetalburgCity_Gym_EventScript_15456C:: @ 815456C
 	waitmove 0
 	msgbox PetalburgCity_Gym_Text_17A2A4, 4
 	setvar 0x4085, 2
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, EndOfWallyTutorial
+	checkspeedchoice AQUALESS, SEMI
+	jumpif TRUE, EndOfWallyTutorial
+	setvar 0x4098, 1
+	setflag 724
+	setflag 725
+EndOfWallyTutorial::
 	releaseall
 	end
 
@@ -393,6 +401,13 @@ PetalburgCity_Gym_EventScript_1549B8:: @ 81549B8
 PetalburgCity_Gym_EventScript_1549D6:: @ 81549D6
 	msgbox PetalburgCity_Gym_Text_17A653, 4
 	trainerbattle 3, OPPONENT_NORMAN, 0, PetalburgCity_Gym_Text_17A77A
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, AfterNorman
+	setvar 0x40b3, 2
+	setflag 890
+	clearflag 892
+	setflag 893
+AfterNorman::
 	message PetalburgCity_Gym_Text_17A7DD
 	waittext
 	call PetalburgCity_Gym_EventScript_1A02C5

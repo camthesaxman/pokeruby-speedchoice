@@ -34,6 +34,7 @@
 #include "task.h"
 #include "tileset_anim.h"
 #include "wild_encounter.h"
+#include "speedchoice.h"
 
 #ifdef SAPPHIRE
 #define LEGENDARY_MUSIC BGM_OOAME  // Heavy Rain
@@ -658,7 +659,7 @@ bool32 IsBikingAllowedByMap(void)
         return TRUE;
 
     // is player indoor, in a secret base, or underwater?
-    if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && (CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, OFF) == TRUE || (gSaveBlock1.location.mapGroup == 15 && gSaveBlock1.location.mapNum == 0))) // ignore allowing bike indoors if in sootopolis gym.
         return FALSE;
     if (gMapHeader.mapType == MAP_TYPE_SECRET_BASE)
         return FALSE;

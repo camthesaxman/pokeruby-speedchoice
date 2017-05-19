@@ -1066,3 +1066,4 @@ gUnknown_0203A3D4: @ 203A3D4
 	.space 0x4
 	
 	.include "src/speedchoice.o"
+	.include "src/crash.o"

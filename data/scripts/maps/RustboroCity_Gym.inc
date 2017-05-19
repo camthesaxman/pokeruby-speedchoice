@@ -38,6 +38,28 @@ RustboroCity_Gym_EventScript_1578FE:: @ 81578FE
 	end
 
 RustboroCity_Gym_EventScript_15793C:: @ 815793C
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, RoxanneNoAqualess
+	checkspeedchoice AQUALESS, SEMI
+	jumpif TRUE, RoxanneNoAqualess
+	giveitem ITEM_LETTER
+	setflag 144
+	setflag 732
+	setvar 0x405a, 5
+	setflag 2050
+	setflag 188
+	clearflag 142
+	setflag 143
+	setvar 0x4090, 1
+	setflag 894
+	clearflag 807
+	clearflag 983
+	clearflag 739	
+	clearflag 881
+	setvar 0x4096, 1
+	clearflag 814
+	setvar 0x408f, 1
+RoxanneNoAqualess::
 	giveitem ITEM_TM39
 	compare RESULT, 0
 	jumpeq RustboroCity_Gym_EventScript_1A029B

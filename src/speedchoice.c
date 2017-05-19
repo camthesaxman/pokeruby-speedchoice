@@ -12,14 +12,15 @@
 #include "speedchoice.h"
 
 // global speedchoice config
-#define CURRENT_OPTIONS_NUM 7
+#define CURRENT_OPTIONS_NUM 12
 #define MAX_CHOICES 6
 #define OPTIONS_PER_PAGE 5
 #define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
-#define MAX_PAGES 2
+#define MAX_PAGES 3
 
 #define MENUOPTIONCOORDS(i) (5 + (2 * i))
 
+extern void Task_NewGameSpeech1(u8);
 extern void remove_some_task(void);
 
 extern u8 gUnknown_0839F63C[];
@@ -37,21 +38,44 @@ const u8 gSpeedchoiceTextOff[] = _("{PALETTE 15}OFF");
 const u8 gSpeedchoiceTextNerf[] = _("{PALETTE 15}NERF");
 const u8 gSpeedchoiceTextKeep[] = _("{PALETTE 15}KEEP");
 const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
+const u8 gSpeedchoiceTextSemi[] = _("{PALETTE 15}SEMI");
+const u8 gSpeedchoiceTextFull[] = _("{PALETTE 15}FULL");
 
 // PAGE 1
+const u8 gSpeedchoiceOptionBWExp[] = _("{PALETTE 8}B/W EXP");
+const u8 gSpeedchoiceOptionAqualess[] = _("{PALETTE 15}AQUALESS");
 const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 15}INSTANT TEXT");
 const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 8}SPINNERS");
 const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 15}MAX VISION");
-const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
-const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 
 // PAGE 2
+const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
+const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 15}NEW WILD ENC.");
 const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 15}EARLY FLY");
+const u8 gSpeedchoiceOptionRunEverywhere[] = _("{PALETTE 15}RUN EVERYWHERE");
+
+// PAGE 3
+const u8 gSpeedchoiceOptionMemeIsland[] = _("{PALETTE 15}MEME ISLAND");
+const u8 gSpeedchoiceOptionEmeraldDoubles[] = _("{PALETTE 15}EMERALD DOUBLES");
 
 // CONSTANT OPTIONS
 const u8 gSpeedchoiceOptionPage[] = _("{PALETTE 15}PAGE");
 const u8 gSpeedchoiceOptionStartGame[] = _("{PALETTE 15}START GAME");
+
+// TOOLTIPS
+const u8 gSpeedchoiceTooltipBWEXP[] = _("(WIP) Will replace the\ncurrent experience system\pin favor of Black/White’s\nimplementation.");
+const u8 gSpeedchoiceTooltipAqualess[] = _("SEMI: Stops villian team events\nafter Mt. Chimney.\pFULL: Skips all the villian team\nevents. Also allows Dive to be used\pwithout Gym 7’s badge.");
+const u8 gSpeedchoiceTooltipInstantText[] = _("Self-explanatory.\nHold A or B to mash.");
+const u8 gSpeedchoiceTooltipSpinners[] = _("(WIP)\nNERF: Will prevent\pspinners from noticing\nthe player while running.\pHELL: Rapidly spins\nevery spinner every frame.");
+const u8 gSpeedchoiceTooltipMaxVision[] = _("Extends trainer vision to 8.");
+const u8 gSpeedchoiceTooltipNerfRoxanne[] = _("Reduces Gym Leader Roxanne’s\nteam levels by 2 and\premoves 1 of her potions.");
+const u8 gSpeedchoiceTooltipSuperBike[] = _("While riding the bicycle, you\ncan switch between bikes with\pthe R button.");
+const u8 gSpeedchoiceTooltipNewWildEnc[] = _("Intended to be used with\nthe randomizer.\pTreats grass and fishing slots\nas 6 and 2 slots respectively.");
+const u8 gSpeedchoiceTooltipEarlyFly[] = _("Recieve HM02 instead of\nItemfinder at Rival 2.\pAllows use of Fly without use of\nGym 6’s badge.");
+const u8 gSpeedchoiceTooltipRunEverywhere[] = _("Allows the Running Shoes to\nbe used anywhere, including\pinside of houses.\pAlso allows bike in most places.");
+const u8 gSpeedchoiceTooltipMemeIsland[] = _("Mirage Island always appears.");
+const u8 gSpeedchoiceTooltipEmeraldDoubles[] = _("Treat double battle trainers\n(such as twins) as having either\p0 vision or greater than 1 vision.");
 
 // START GAME
 const u8 gSpeedchoiceStartGameText[] = _("CV: {STR_VAR_1}\nStart the game?");
@@ -86,6 +110,16 @@ const struct OptionChoiceConfig OptionChoiceConfigNerfKeep[MAX_CHOICES] =
     { -1, -1, NULL }
 };
 
+const struct OptionChoiceConfig OptionChoiceConfigSemiFull[MAX_CHOICES] = 
+{
+    { 124, 40, (u8 *)&gSpeedchoiceTextSemi },
+    { 154, 40, (u8 *)&gSpeedchoiceTextKeep },
+    { 184, 40, (u8 *)&gSpeedchoiceTextFull },
+    { -1, -1, NULL },
+    { -1, -1, NULL },
+    { -1, -1, NULL }
+};
+
 // this is totally weird, but in order to use ProcessGeneralInput, a struct is needed for page, so, I opt to have a dummy struct which only has the number of choices relevent to the calculation of the selection.
 const struct OptionChoiceConfig OptionChoiceConfigPage[MAX_CHOICES] = 
 {
@@ -99,14 +133,19 @@ const struct OptionChoiceConfig OptionChoiceConfigPage[MAX_CHOICES] =
 
 const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // plus one for page.
 {
-    { 2, (u8 *)&gSpeedchoiceOptionInstantText, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
-    { 3, (u8 *)&gSpeedchoiceOptionSpinners, (struct OptionChoiceConfig *)OptionChoiceConfigNerfKeep, FALSE },
-    { 2, (u8 *)&gSpeedchoiceOptionMaxVision, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
-    { 2, (u8 *)&gSpeedchoiceOptionNerfRoxanne, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, FALSE },
-    { 2, (u8 *)&gSpeedchoiceOptionSuperBike, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
-    { 2, (u8 *)&gSpeedchoiceOptionNewWildEnc, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, FALSE },
-    { 2, (u8 *)&gSpeedchoiceOptionEarlyFly, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, FALSE },
-    { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, FALSE } // see above comment.
+    { 2, (u8 *)&gSpeedchoiceOptionBWExp, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipBWEXP, OFF, FALSE },
+    { 3, (u8 *)&gSpeedchoiceOptionAqualess, (struct OptionChoiceConfig *)OptionChoiceConfigSemiFull, (u8 *)&gSpeedchoiceTooltipAqualess, KEEP, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionInstantText, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipInstantText, OFF, TRUE },
+    { 3, (u8 *)&gSpeedchoiceOptionSpinners, (struct OptionChoiceConfig *)OptionChoiceConfigNerfKeep, (u8 *)&gSpeedchoiceTooltipSpinners, KEEP, FALSE },
+    { 2, (u8 *)&gSpeedchoiceOptionMaxVision, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipMaxVision, OFF, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionNerfRoxanne, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipNerfRoxanne, NO, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionSuperBike, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipSuperBike, OFF, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionNewWildEnc, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipNewWildEnc, OFF, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionEarlyFly, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipEarlyFly, NO, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionRunEverywhere, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipRunEverywhere, OFF, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionMemeIsland, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipMemeIsland, NO, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionEmeraldDoubles, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipEmeraldDoubles, OFF, TRUE },
+    { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, NULL, 1, TRUE } // see above comment.
 };
 
 const u32 gRandomizerCheckValue = 0; // this value is modified by a randomizer. this value is not static because the address needs to be visible in the map file.
@@ -120,11 +159,37 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u
 static void DrawPageChoice(u8);
 static void Task_SpeedchoiceMenuSave(u8);
 static void Task_DrawYesNoText(u8);
+static void HighlightTextBox(void);
+
+void InitializeOptionChoicesAndConfig(u8 taskId)
+{
+    u8 i;
+
+    for(i = 0; i < CURRENT_OPTIONS_NUM; i++)
+        gTasks[taskId].data[i] = SpeedchoiceOptions[i].defaultOption;
+
+    gSaveBlock2.speedchoiceConfig.bwexp = SpeedchoiceOptions[0].defaultOption;
+    gSaveBlock2.speedchoiceConfig.aqualess = SpeedchoiceOptions[1].defaultOption;
+    gSaveBlock2.speedchoiceConfig.instantText = SpeedchoiceOptions[2].defaultOption;
+    gSaveBlock2.speedchoiceConfig.spinners = SpeedchoiceOptions[3].defaultOption;
+    gSaveBlock2.speedchoiceConfig.maxVision = SpeedchoiceOptions[4].defaultOption;
+    gSaveBlock2.speedchoiceConfig.nerfRoxanne = SpeedchoiceOptions[5].defaultOption;
+    gSaveBlock2.speedchoiceConfig.superbike = SpeedchoiceOptions[6].defaultOption;
+    gSaveBlock2.speedchoiceConfig.newwildencounters = SpeedchoiceOptions[7].defaultOption;
+    gSaveBlock2.speedchoiceConfig.earlyfly = SpeedchoiceOptions[8].defaultOption;
+    gSaveBlock2.speedchoiceConfig.runEverywhere = SpeedchoiceOptions[9].defaultOption;
+    gSaveBlock2.speedchoiceConfig.memeIsland = SpeedchoiceOptions[10].defaultOption;
+    gSaveBlock2.speedchoiceConfig.emeraldDoubles = SpeedchoiceOptions[11].defaultOption;
+}
 
 bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
 {
     switch(option)
     {
+        case TD_BWEXP:
+            return gSaveBlock2.speedchoiceConfig.bwexp == selection;
+        case TD_AQUALESS:
+            return gSaveBlock2.speedchoiceConfig.aqualess == selection;
         case TD_INSTANTTEXT:
             return gSaveBlock2.speedchoiceConfig.instantText == selection;
         case TD_SPINNERS:
@@ -139,6 +204,12 @@ bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
             return gSaveBlock2.speedchoiceConfig.newwildencounters == selection;
         case TD_EARLY_FLY:
             return gSaveBlock2.speedchoiceConfig.earlyfly == selection;
+        case TD_RUN_EVERYWHERE:
+            return gSaveBlock2.speedchoiceConfig.runEverywhere == selection;
+        case TD_MEME_ISLAND:
+            return gSaveBlock2.speedchoiceConfig.memeIsland == selection;
+        case TD_EMERALD_DOUBLES:
+            return gSaveBlock2.speedchoiceConfig.emeraldDoubles == selection;
         default:
             return FALSE;
     }
@@ -162,6 +233,11 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
 {
     if(gMain.newKeys & DPAD_RIGHT)
     {
+        if(option->enabled == FALSE)
+        {
+            PlaySE(SE_HAZURE);
+            return selection;
+        }
         if(selection == (option->optionCount - 1)) // options are indexed by 0.
             selection = 0;
         else
@@ -171,6 +247,11 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
     // i dont return immediately because emulators could hold both right and left down.
     if(gMain.newKeys & DPAD_LEFT)
     {
+        if(option->enabled == FALSE)
+        {
+            PlaySE(SE_HAZURE);
+            return selection;
+        }
         if(selection == 0)
             selection = (option->optionCount - 1); // indexed by 0.
         else
@@ -369,23 +450,15 @@ void CB2_InitSpeedchoiceMenu(void)
         case 8:
         {
             u8 taskId = CreateTask(Task_SpeedchoiceMenuFadeIn, 0);
-            
+
             gStoredPageNum = 1;
 
             // set default options and current selection.
             gTasks[taskId].data[TD_TRUEMENUINDEX] = 0;
             gTasks[taskId].data[TD_PAGEMENUINDEX] = 0;
-            
-            // PAGE 1
-            gTasks[taskId].data[TD_INSTANTTEXT] = OFF;
-            gTasks[taskId].data[TD_SPINNERS] = KEEP;
-            gTasks[taskId].data[TD_MAX_VISION] = OFF;
-            gTasks[taskId].data[TD_NERF_ROXANNE] = NO;
-            gTasks[taskId].data[TD_SUPER_BIKE] = OFF;            
-            
-            // PAGE 2
-            gTasks[taskId].data[TD_NEW_WILD_ENC] = OFF;
-            gTasks[taskId].data[TD_EARLY_FLY] = NO;
+
+            InitializeOptionChoicesAndConfig(taskId);
+
             gTasks[taskId].data[TD_PAGE_NUM] = 1; // pages are indexed by 1.
 
             MenuDrawTextWindow(2, 0, 27, 3);
@@ -393,7 +466,7 @@ void CB2_InitSpeedchoiceMenu(void)
 
             DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
             DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
-            
+
             HighlightHeaderBox();
 
             HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
@@ -479,8 +552,29 @@ static void DrawPageChoice(u8 selection)
     MenuPrint(text, 8, MENUOPTIONCOORDS(5));
 }
 
-// jump to new game.
-extern void Task_NewGameSpeech1(u8);
+void Task_WaitForTooltip(u8 taskId)
+{
+    if (MenuUpdateWindowText())
+    {
+        if (gMain.newKeys & A_BUTTON)
+        {
+            MenuZeroFillWindowRect(2, 14, 27, 19);
+            HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+            DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
+            DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
+            gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
+        }
+    }
+}
+
+static void DrawTooltip(u8 taskId, struct SpeedchoiceOption *option)
+{
+    REG_WIN1H = WIN_RANGE(1, 241);
+    REG_WIN1V = WIN_RANGE_(114, 160);
+    MenuDrawTextWindow(2, 14, 27, 19);
+    MenuPrintMessage(option->tooltip, 3, 15);    
+    gTasks[taskId].func = Task_WaitForTooltip;
+}
 
 static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 {
@@ -490,6 +584,11 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
         {
             gTasks[taskId].func = Task_SpeedchoiceMenuSave;
         }
+    }
+    else if (gMain.newKeys & SELECT_BUTTON) // do tooltip.
+    {
+        if(gTasks[taskId].data[TD_TRUEMENUINDEX] <= CURRENT_OPTIONS_NUM)
+            DrawTooltip(taskId, (struct SpeedchoiceOption *)&SpeedchoiceOptions[gTasks[taskId].data[TD_TRUEMENUINDEX]]);
     }
     else if (gMain.newKeys & DPAD_UP)
     {
@@ -519,6 +618,14 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
     {
         switch (gTasks[taskId].data[TD_TRUEMENUINDEX])
         {
+            case TD_BWEXP:
+                gTasks[taskId].data[TD_BWEXP] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_BWEXP], gTasks[taskId].data[TD_BWEXP]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_BWEXP], gTasks[taskId].data[TD_BWEXP], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_AQUALESS:
+                gTasks[taskId].data[TD_AQUALESS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_AQUALESS], gTasks[taskId].data[TD_AQUALESS]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_AQUALESS], gTasks[taskId].data[TD_AQUALESS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
             case TD_INSTANTTEXT:
                 gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT]);
                 DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT], gTasks[taskId].data[TD_PAGEMENUINDEX]);
@@ -547,6 +654,18 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
                 gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY]);
                 DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY], gTasks[taskId].data[TD_PAGEMENUINDEX]);
                 break;
+            case TD_RUN_EVERYWHERE:
+                gTasks[taskId].data[TD_RUN_EVERYWHERE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_RUN_EVERYWHERE]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_MEME_ISLAND:
+                gTasks[taskId].data[TD_MEME_ISLAND] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MEME_ISLAND], gTasks[taskId].data[TD_MEME_ISLAND]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MEME_ISLAND], gTasks[taskId].data[TD_MEME_ISLAND], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
+            case TD_EMERALD_DOUBLES:
+                gTasks[taskId].data[TD_EMERALD_DOUBLES] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_EMERALD_DOUBLES]);
+                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+                break;
             case TD_PAGE_NUM:
                 gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gTasks[taskId].data[TD_PAGE_NUM]);
                 DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
@@ -561,43 +680,46 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
     }
 }
 
-static u32 CalculateCheckValue(void)
+static u32 CalculateCheckValue(u8 taskId)
 {
     u32 checkValue;
+    u8 i;
 
-    // calculate CV.
-    checkValue = gSaveBlock2.speedchoiceConfig.instantText << 1;
-    checkValue += gSaveBlock2.speedchoiceConfig.spinners << 2; // takes 2 bits.
-    checkValue += gSaveBlock2.speedchoiceConfig.maxVision << 4;
-    checkValue += gSaveBlock2.speedchoiceConfig.nerfRoxanne << 5;
-    checkValue += gSaveBlock2.speedchoiceConfig.superbike << 6;
-    checkValue += gSaveBlock2.speedchoiceConfig.newwildencounters << 7;
-    checkValue += gSaveBlock2.speedchoiceConfig.earlyfly << 8;
-    
+    for(checkValue = 0, i = 0; i < CURRENT_OPTIONS_NUM; i++)
+        checkValue += gTasks[taskId].data[i] << (i + (SpeedchoiceOptions[i].optionCount - 2));
+
     // seed RNG with checkValue for more hash-like number.
     checkValue = 0x41c64e6d * checkValue + 0x00006073;
-    
+
     // xor with randomizer value, if one is present.
     checkValue = checkValue ^ gRandomizerCheckValue;
-    
+
     // get rid of sign extension.
     checkValue = (checkValue << 1) >> 1;
-    
+
     return checkValue;
 }
 
-static void Task_SpeedchoiceMenuSave(u8 taskId)
+static void SaveSpeedchoiceOptions(u8 taskId)
 {
-    gSaveBlock2.speedchoiceConfig.instantText = gTasks[taskId].data[TD_INSTANTTEXT];
+    gSaveBlock2.speedchoiceConfig.bwexp = gTasks[taskId].data[TD_BWEXP];
+    gSaveBlock2.speedchoiceConfig.aqualess = gTasks[taskId].data[TD_AQUALESS];
+    gSaveBlock2.speedchoiceConfig.instantText = gTasks[taskId].data[TD_INSTANTTEXT]; // don't update instant text until its time to start the game!
     gSaveBlock2.speedchoiceConfig.spinners = gTasks[taskId].data[TD_SPINNERS];
     gSaveBlock2.speedchoiceConfig.maxVision = gTasks[taskId].data[TD_MAX_VISION];
     gSaveBlock2.speedchoiceConfig.nerfRoxanne = gTasks[taskId].data[TD_NERF_ROXANNE];
     gSaveBlock2.speedchoiceConfig.superbike = gTasks[taskId].data[TD_SUPER_BIKE];
     gSaveBlock2.speedchoiceConfig.newwildencounters = gTasks[taskId].data[TD_NEW_WILD_ENC];
     gSaveBlock2.speedchoiceConfig.earlyfly = gTasks[taskId].data[TD_EARLY_FLY];
-    
+    gSaveBlock2.speedchoiceConfig.runEverywhere = gTasks[taskId].data[TD_RUN_EVERYWHERE];
+    gSaveBlock2.speedchoiceConfig.memeIsland = gTasks[taskId].data[TD_MEME_ISLAND];
+    gSaveBlock2.speedchoiceConfig.emeraldDoubles = gTasks[taskId].data[TD_EMERALD_DOUBLES];
+}
+
+static void Task_SpeedchoiceMenuSave(u8 taskId)
+{
     // calculate check Value. a pass into a local variable is required for ConvertIntToHexStringN to not raise a warning, even though the local variable is unused.
-    ConvertIntToHexStringN(gStringVar1, CalculateCheckValue(), STR_CONV_MODE_LEADING_ZEROS, 8);
+    ConvertIntToHexStringN(gStringVar1, CalculateCheckValue(taskId), STR_CONV_MODE_LEADING_ZEROS, 8);
 
     gTasks[taskId].func = Task_DrawYesNoText;
 }
@@ -629,6 +751,7 @@ static void Task_HandleYesNoStartGame(u8 taskId)
         case 0: // YES
             PlayBGM(BGM_STOP);
             PlaySE(SE_SELECT);
+            SaveSpeedchoiceOptions(taskId);
             BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
             gTasks[taskId].func = Task_SpeedchoiceMenuFadeOut;
             break;
@@ -641,8 +764,8 @@ static void Task_HandleYesNoStartGame(u8 taskId)
             REG_WIN0V = WIN_RANGE_(0, 0);
             DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
             DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
-			HighlightOptionMenuItem(6);
-			HighlightHeaderBox();
+            HighlightOptionMenuItem(6);
+            HighlightHeaderBox();
             gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
             break;
     }

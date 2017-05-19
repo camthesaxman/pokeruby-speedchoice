@@ -255,6 +255,29 @@ Route120_EventScript_151908:: @ 8151908
 	setmaptile 12, 17, 161, 0
 	setmaptile 13, 17, 161, 0
 	special 142
+	checkspeedchoice AQUALESS, KEEP
+	jumpif TRUE, AfterKekleon
+	setflag 916
+	setflag 917
+	setflag 212
+	clearflag 841
+	clearflag 848
+	clearflag 845
+	clearflag 846
+	setflag 914
+	setvar 0x40b9, 1
+	setvar 0x4074, 1
+	setvar 0x4058, 2
+	setvar 0x40a0, 2
+	setflag 845
+	setflag 848
+	setflag 821
+	setflag 822
+	setflag 112
+	setflag 852
+	setflag 924
+	setflag 943
+AfterKekleon::
 	release
 	end
 
