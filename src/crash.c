@@ -13,6 +13,8 @@ extern void WaitForVBlank(void);
 extern u8 gUnknown_0839F63C[];
 extern u8 gUnknown_0839F5FC[];  //palette
 
+u32 const gRandomizerCheckValue = 0;
+
 enum
 {
     TASK_OVERFLOW

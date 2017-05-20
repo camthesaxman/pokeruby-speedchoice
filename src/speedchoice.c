@@ -148,7 +148,7 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, NULL, 1, TRUE } // see above comment.
 };
 
-const u32 gRandomizerCheckValue = 0; // this value is modified by a randomizer. this value is not static because the address needs to be visible in the map file.
+extern u32 gRandomizerCheckValue;
 
 EWRAM_DATA u8 gStoredPageNum = 0; // default is 0, only renders options again if it's different than the task data's page number.
 
@@ -680,8 +680,9 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
     }
 }
 
-static u32 CalculateCheckValue(u8 taskId)
+u32 CalculateCheckValue(u8 taskId)
 {
+    volatile u32 randomizerValue = gRandomizerCheckValue; // this doesnt work without having the value externally anyway but whatever.
     u32 checkValue;
     u8 i;
 
@@ -692,7 +693,7 @@ static u32 CalculateCheckValue(u8 taskId)
     checkValue = 0x41c64e6d * checkValue + 0x00006073;
 
     // xor with randomizer value, if one is present.
-    checkValue = checkValue ^ gRandomizerCheckValue;
+    checkValue = checkValue ^ randomizerValue;
 
     // get rid of sign extension.
     checkValue = (checkValue << 1) >> 1;

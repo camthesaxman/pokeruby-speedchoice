@@ -354,7 +354,7 @@ struct SaveBlock1 /* 0x02025734 */
     /*0x9E0*/ struct MapObject mapObjects[16];
     /*0xC20*/ struct MapObjectTemplate mapObjectTemplates[64];
     /*0x1220*/ u8 flags[0x120];
-    /*0x1340*/ u16 vars[0x100];
+    /*0x1340*/ u16 vars[0x100]; // 0x2026A74
     /*0x1540*/ u32 gameStats[NUM_GAME_STATS];
     /*0x1608*/ struct BerryTree berryTrees[128];
     /*0x1A08*/ struct SecretBaseRecord secretBases[20];
