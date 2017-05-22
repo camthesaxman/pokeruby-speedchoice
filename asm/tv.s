@@ -1655,7 +1655,6 @@ _080BE470: .4byte gMapHeader
 _080BE474: .4byte gSaveBlock2
 	thumb_func_end sub_80BE3BC
 
-
     .section .text_80BE8EC
 
 	thumb_func_start sub_80BE8EC

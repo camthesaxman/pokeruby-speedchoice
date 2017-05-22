@@ -1,68 +1,36 @@
 #ifndef GUARD_SPEEDCHOICE_H
 #define GUARD_SPEEDCHOICE_H
 
+// global speedchoice config
+#define CURRENT_OPTIONS_NUM 12
+#define MAX_CHOICES 6
+#define OPTIONS_PER_PAGE 5
+#define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
+#define MAX_PAGES 3
+
+#define MENUOPTIONCOORDS(i) (5 + (2 * i))
+
+#define min(a, b) (a < b ? a : b)
+#define max(a, b) (a > b ? a : b)
+
+// options
 enum
 {
-    // PAGE 1
-    TD_BWEXP,
-    TD_AQUALESS,
-    TD_INSTANTTEXT,
-    TD_SPINNERS,
-    TD_MAX_VISION,
-
-    // PAGE 2
-    TD_NERF_ROXANNE,
-    TD_SUPER_BIKE,
-    TD_NEW_WILD_ENC,
-    TD_EARLY_FLY,
-    TD_RUN_EVERYWHERE,
-
-    // PAGE 3
-    TD_MEME_ISLAND,
-    TD_EMERALD_DOUBLES,
-
-    // last option for changing the current option
-    TD_TRUEMENUINDEX = 13, // reflects true index and NOT current page index used to render highlight.
-    TD_PAGEMENUINDEX = 14,
-    TD_PAGE_NUM = 15 // last task data is 16 (1 indexed), so page num goes at the end.
-    // start game does not have data associated with it, so its entry is empty here.
-};
-
-// true index
-enum
-{
-    // PAGE 1
-    MENUITEM_BWEXP,
-    MENUITEM_AQUALESS,
-    MENUITEM_INSTANTTEXT,
-    MENUITEM_SPINNERS,
-    MENUITEM_MAXVISION,
-
-    // PAGE 2
-    MENUITEM_NERFROXANNE,
-    MENUITEM_SUPERBIKE,
-    MENUITEM_NEWWILDENC,
-    MENUITEM_EARLYFLY,
-    MENUITEM_RUN_EVERYWHERE,
-
-    // PAGE 3
-    MENUITEM_MEME_ISLAND,
-    MENUITEM_EMERALD_DOUBLES,
+    BWEXP,
+    AQUALESS,
+    INSTANTTEXT,
+    SPINNERS,
+    MAXVISION,
+    NERFROXANNE,
+    SUPERBIKE,
+    NEWWILDENC,
+    EARLYFLY,
+    RUN_EVERYWHERE,
+    MEME_ISLAND,
+    EMERALD_DOUBLES,
 
     // STATIC OPTIONS
-    MENUITEM_PAGE = 15, // to make it match task data
-    MENUITEM_START_GAME
-};
-
-// page index
-enum
-{
-    OPTION_1,
-    OPTION_2,
-    OPTION_3,
-    OPTION_4,
-    OPTION_5,
-    PAGE,
+    PAGE, // to make it match task data
     START_GAME
 };
 
@@ -114,6 +82,14 @@ struct SpeedchoiceOption
     u8 defaultOption;
     bool8 enabled;
 }; 
+
+struct SpeedchoiceConfigStruct
+{
+    u8 optionConfig[CURRENT_OPTIONS_NUM];
+    u8 trueIndex;
+    u8 pageIndex;
+    u8 pageNum;
+};
 
 void CB2_InitSpeedchoiceMenu(void);
 bool8 CheckSpeedchoiceOption(u8, u8);

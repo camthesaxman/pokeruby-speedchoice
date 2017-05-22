@@ -11,15 +11,6 @@
 #include "text.h"
 #include "speedchoice.h"
 
-// global speedchoice config
-#define CURRENT_OPTIONS_NUM 12
-#define MAX_CHOICES 6
-#define OPTIONS_PER_PAGE 5
-#define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
-#define MAX_PAGES 3
-
-#define MENUOPTIONCOORDS(i) (5 + (2 * i))
-
 extern void Task_NewGameSpeech1(u8);
 extern void remove_some_task(void);
 
@@ -151,6 +142,7 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
 extern u32 gRandomizerCheckValue;
 
 EWRAM_DATA u8 gStoredPageNum = 0; // default is 0, only renders options again if it's different than the task data's page number.
+EWRAM_DATA struct SpeedchoiceConfigStruct gLocalSpeedchoiceConfig = {0};
 
 static void Task_SpeedchoiceMenuFadeIn(u8);
 static void Task_SpeedchoiceMenuProcessInput(u8);
@@ -165,50 +157,51 @@ void InitializeOptionChoicesAndConfig(u8 taskId)
 {
     u8 i;
 
+    // set the local config for the current menu.
     for(i = 0; i < CURRENT_OPTIONS_NUM; i++)
-        gTasks[taskId].data[i] = SpeedchoiceOptions[i].defaultOption;
+        gLocalSpeedchoiceConfig.optionConfig[i] = SpeedchoiceOptions[i].defaultOption;
 
-    gSaveBlock2.speedchoiceConfig.bwexp = SpeedchoiceOptions[0].defaultOption;
-    gSaveBlock2.speedchoiceConfig.aqualess = SpeedchoiceOptions[1].defaultOption;
-    gSaveBlock2.speedchoiceConfig.instantText = SpeedchoiceOptions[2].defaultOption;
-    gSaveBlock2.speedchoiceConfig.spinners = SpeedchoiceOptions[3].defaultOption;
-    gSaveBlock2.speedchoiceConfig.maxVision = SpeedchoiceOptions[4].defaultOption;
-    gSaveBlock2.speedchoiceConfig.nerfRoxanne = SpeedchoiceOptions[5].defaultOption;
-    gSaveBlock2.speedchoiceConfig.superbike = SpeedchoiceOptions[6].defaultOption;
-    gSaveBlock2.speedchoiceConfig.newwildencounters = SpeedchoiceOptions[7].defaultOption;
-    gSaveBlock2.speedchoiceConfig.earlyfly = SpeedchoiceOptions[8].defaultOption;
-    gSaveBlock2.speedchoiceConfig.runEverywhere = SpeedchoiceOptions[9].defaultOption;
-    gSaveBlock2.speedchoiceConfig.memeIsland = SpeedchoiceOptions[10].defaultOption;
-    gSaveBlock2.speedchoiceConfig.emeraldDoubles = SpeedchoiceOptions[11].defaultOption;
+    gSaveBlock2.speedchoiceConfig.bwexp = SpeedchoiceOptions[BWEXP].defaultOption;
+    gSaveBlock2.speedchoiceConfig.aqualess = SpeedchoiceOptions[AQUALESS].defaultOption;
+    gSaveBlock2.speedchoiceConfig.instantText = SpeedchoiceOptions[INSTANTTEXT].defaultOption;
+    gSaveBlock2.speedchoiceConfig.spinners = SpeedchoiceOptions[SPINNERS].defaultOption;
+    gSaveBlock2.speedchoiceConfig.maxVision = SpeedchoiceOptions[MAXVISION].defaultOption;
+    gSaveBlock2.speedchoiceConfig.nerfRoxanne = SpeedchoiceOptions[NERFROXANNE].defaultOption;
+    gSaveBlock2.speedchoiceConfig.superbike = SpeedchoiceOptions[SUPERBIKE].defaultOption;
+    gSaveBlock2.speedchoiceConfig.newwildencounters = SpeedchoiceOptions[NEWWILDENC].defaultOption;
+    gSaveBlock2.speedchoiceConfig.earlyfly = SpeedchoiceOptions[EARLYFLY].defaultOption;
+    gSaveBlock2.speedchoiceConfig.runEverywhere = SpeedchoiceOptions[RUN_EVERYWHERE].defaultOption;
+    gSaveBlock2.speedchoiceConfig.memeIsland = SpeedchoiceOptions[MEME_ISLAND].defaultOption;
+    gSaveBlock2.speedchoiceConfig.emeraldDoubles = SpeedchoiceOptions[EMERALD_DOUBLES].defaultOption;
 }
 
 bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
 {
     switch(option)
     {
-        case TD_BWEXP:
+        case BWEXP:
             return gSaveBlock2.speedchoiceConfig.bwexp == selection;
-        case TD_AQUALESS:
+        case AQUALESS:
             return gSaveBlock2.speedchoiceConfig.aqualess == selection;
-        case TD_INSTANTTEXT:
+        case INSTANTTEXT:
             return gSaveBlock2.speedchoiceConfig.instantText == selection;
-        case TD_SPINNERS:
+        case SPINNERS:
             return gSaveBlock2.speedchoiceConfig.spinners == selection;
-        case TD_MAX_VISION:
+        case MAXVISION:
             return gSaveBlock2.speedchoiceConfig.maxVision == selection;
-        case TD_NERF_ROXANNE:
+        case NERFROXANNE:
             return gSaveBlock2.speedchoiceConfig.nerfRoxanne == selection;
-        case TD_SUPER_BIKE:
+        case SUPERBIKE:
             return gSaveBlock2.speedchoiceConfig.superbike == selection;
-        case TD_NEW_WILD_ENC:
+        case NEWWILDENC:
             return gSaveBlock2.speedchoiceConfig.newwildencounters == selection;
-        case TD_EARLY_FLY:
+        case EARLYFLY:
             return gSaveBlock2.speedchoiceConfig.earlyfly == selection;
-        case TD_RUN_EVERYWHERE:
+        case RUN_EVERYWHERE:
             return gSaveBlock2.speedchoiceConfig.runEverywhere == selection;
-        case TD_MEME_ISLAND:
+        case MEME_ISLAND:
             return gSaveBlock2.speedchoiceConfig.memeIsland == selection;
-        case TD_EMERALD_DOUBLES:
+        case EMERALD_DOUBLES:
             return gSaveBlock2.speedchoiceConfig.emeraldDoubles == selection;
         default:
             return FALSE;
@@ -219,10 +212,10 @@ static void DrawOptionMenuChoice(u8 *text, u8 x, u8 y, u8 style)
 {
     u8 dst[16];
     u16 i;
-    
+
     for(i = 0; *text != EOS && i <= 14; i++)
         dst[i] = *(text++);
-    
+
     dst[2] = style;
     dst[i] = EOS;
     MenuPrint_PixelCoords(dst, x, y, 1);
@@ -331,22 +324,21 @@ void DrawPageOptions(u8 taskId, u8 page)
         u8 *string = option->string;
 
         MenuPrint(string, 4, MENUOPTIONCOORDS(i)); // the 5 here does not represent options_per_page, it's just a coincidence.
-        DrawGeneralChoices(option, gTasks[taskId].data[i + ((page-1) * 5)], i);
+        DrawGeneralChoices(option, gLocalSpeedchoiceConfig.optionConfig[i + ((page-1) * 5)], i);
     }
 
     MenuPrint(gSpeedchoiceOptionPage, 4, MENUOPTIONCOORDS(5));
     MenuPrint(gSpeedchoiceOptionStartGame, 4, MENUOPTIONCOORDS(6));
 }
 
-#define min(a, b) (a < b ? a : b)
-#define max(a, b) (a > b ? a : b)
-
 void SetPageIndexFromTrueIndex(u8 taskId, s16 index) // data is s16.
 {
-    if(index == MENUITEM_PAGE || index == MENUITEM_START_GAME)
-        gTasks[taskId].data[TD_PAGEMENUINDEX] = index - 10; // your visual row is 6 or 7.
+    if(index == PAGE)
+        gLocalSpeedchoiceConfig.pageIndex = 5;
+    else if(index == START_GAME)
+        gLocalSpeedchoiceConfig.pageIndex = 6;
     else
-        gTasks[taskId].data[TD_PAGEMENUINDEX] = (min((index % OPTIONS_PER_PAGE), OPTIONS_PER_PAGE));
+        gLocalSpeedchoiceConfig.pageIndex = (min((index % OPTIONS_PER_PAGE), OPTIONS_PER_PAGE));
 }
 
 void HighlightHeaderBox(void)
@@ -454,22 +446,22 @@ void CB2_InitSpeedchoiceMenu(void)
             gStoredPageNum = 1;
 
             // set default options and current selection.
-            gTasks[taskId].data[TD_TRUEMENUINDEX] = 0;
-            gTasks[taskId].data[TD_PAGEMENUINDEX] = 0;
+            gLocalSpeedchoiceConfig.trueIndex = 0;
+            gLocalSpeedchoiceConfig.pageIndex = 0;
 
             InitializeOptionChoicesAndConfig(taskId);
 
-            gTasks[taskId].data[TD_PAGE_NUM] = 1; // pages are indexed by 1.
+            gLocalSpeedchoiceConfig.pageNum = 1; // pages are indexed by 1.
 
             MenuDrawTextWindow(2, 0, 27, 3);
             MenuPrint(gSpeedchoiceTextHeader, 4, 1); // draw header.
 
-            DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
-            DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
+            DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
+            DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
 
             HighlightHeaderBox();
 
-            HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+            HighlightOptionMenuItem(gLocalSpeedchoiceConfig.pageIndex);
             PlayBGM(BGM_CONLOBBY);
             gMain.state++;
             break;
@@ -518,7 +510,7 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u
     u8 styles[MAX_CHOICES];
     u8 numChoices = option->optionCount;
     u8 i;
-    
+
     styles[0] = 0xF;
     styles[1] = 0xF;
     styles[2] = 0xF;
@@ -526,7 +518,7 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u
     styles[4] = 0xF;
     styles[5] = 0xF;
     styles[selection] = 0x8;
-    
+
     for(i = 0; i < numChoices; i++)
     {
         s16 x = option->options[i].x;
@@ -542,7 +534,7 @@ static void DrawGeneralChoices(struct SpeedchoiceOption *option, u8 selection, u
 static void DrawPageChoice(u8 selection)
 {
     u8 text[5];
-    
+
     memcpy(text, gSystemText_Terminator, 3); // copy the palette control code.
 
     // there are no more than 10 pages, so format it as a single digit.
@@ -559,9 +551,9 @@ void Task_WaitForTooltip(u8 taskId)
         if (gMain.newKeys & A_BUTTON)
         {
             MenuZeroFillWindowRect(2, 14, 27, 19);
-            HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
-            DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
-            DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
+            HighlightOptionMenuItem(gLocalSpeedchoiceConfig.pageIndex);
+            DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
+            DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
             gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
         }
     }
@@ -580,101 +572,64 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 {
     if (gMain.newKeys & A_BUTTON)
     {
-        if (gTasks[taskId].data[TD_TRUEMENUINDEX] == MENUITEM_START_GAME) // START_GAME
+        if (gLocalSpeedchoiceConfig.trueIndex == START_GAME) // START_GAME
         {
             gTasks[taskId].func = Task_SpeedchoiceMenuSave;
         }
     }
     else if (gMain.newKeys & SELECT_BUTTON) // do tooltip.
     {
-        if(gTasks[taskId].data[TD_TRUEMENUINDEX] <= CURRENT_OPTIONS_NUM)
-            DrawTooltip(taskId, (struct SpeedchoiceOption *)&SpeedchoiceOptions[gTasks[taskId].data[TD_TRUEMENUINDEX]]);
+        if(gLocalSpeedchoiceConfig.trueIndex <= CURRENT_OPTIONS_NUM)
+            DrawTooltip(taskId, (struct SpeedchoiceOption *)&SpeedchoiceOptions[gLocalSpeedchoiceConfig.trueIndex]);
     }
     else if (gMain.newKeys & DPAD_UP)
     {
-        if(gTasks[taskId].data[TD_TRUEMENUINDEX] == MENUITEM_PAGE) // page index is 15, but the last index may be less than that. set it to the last of the current page's index.
-            gTasks[taskId].data[TD_TRUEMENUINDEX] = GetPageOptionTrueIndex(LAST, gTasks[taskId].data[TD_PAGE_NUM]); // set the entry to the last available option.
-        else if(gTasks[taskId].data[TD_TRUEMENUINDEX] > GetPageOptionTrueIndex(FIRST, gTasks[taskId].data[TD_PAGE_NUM]))
-            gTasks[taskId].data[TD_TRUEMENUINDEX]--; // index can be 16 and reduced to page.
+        if(gLocalSpeedchoiceConfig.trueIndex == PAGE)
+            gLocalSpeedchoiceConfig.trueIndex = GetPageOptionTrueIndex(LAST, gLocalSpeedchoiceConfig.pageNum); // set the entry to the last available option.
+        else if(gLocalSpeedchoiceConfig.trueIndex > GetPageOptionTrueIndex(FIRST, gLocalSpeedchoiceConfig.pageNum))
+            gLocalSpeedchoiceConfig.trueIndex--;
         else
-            gTasks[taskId].data[TD_TRUEMENUINDEX] = MENUITEM_START_GAME;
+            gLocalSpeedchoiceConfig.trueIndex = START_GAME;
 
-        SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
-        HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+        SetPageIndexFromTrueIndex(taskId, gLocalSpeedchoiceConfig.trueIndex);
+        HighlightOptionMenuItem(gLocalSpeedchoiceConfig.pageIndex);
     }
     else if (gMain.newKeys & DPAD_DOWN)
     {
-        if(gTasks[taskId].data[TD_TRUEMENUINDEX] == GetPageOptionTrueIndex(LAST, gTasks[taskId].data[TD_PAGE_NUM]))
-            gTasks[taskId].data[TD_TRUEMENUINDEX] = MENUITEM_PAGE; // you are at the last option when you press down, go to page index.
-        else if(gTasks[taskId].data[TD_TRUEMENUINDEX] == MENUITEM_START_GAME)
-            gTasks[taskId].data[TD_TRUEMENUINDEX] = GetPageOptionTrueIndex(FIRST, gTasks[taskId].data[TD_PAGE_NUM]);
+        if(gLocalSpeedchoiceConfig.trueIndex == GetPageOptionTrueIndex(LAST, gLocalSpeedchoiceConfig.pageNum))
+            gLocalSpeedchoiceConfig.trueIndex = PAGE; // you are at the last option when you press down, go to page index.
+        else if(gLocalSpeedchoiceConfig.trueIndex == START_GAME)
+            gLocalSpeedchoiceConfig.trueIndex = GetPageOptionTrueIndex(FIRST, gLocalSpeedchoiceConfig.pageNum);
         else
-            gTasks[taskId].data[TD_TRUEMENUINDEX]++;
+            gLocalSpeedchoiceConfig.trueIndex++;
 
-        SetPageIndexFromTrueIndex(taskId, gTasks[taskId].data[TD_TRUEMENUINDEX]);
-        HighlightOptionMenuItem(gTasks[taskId].data[TD_PAGEMENUINDEX]);
+        SetPageIndexFromTrueIndex(taskId, gLocalSpeedchoiceConfig.trueIndex);
+        HighlightOptionMenuItem(gLocalSpeedchoiceConfig.pageIndex);
     }
     else
     {
-        switch (gTasks[taskId].data[TD_TRUEMENUINDEX])
+        u8 trueIndex = gLocalSpeedchoiceConfig.trueIndex;
+        u8 selection = gLocalSpeedchoiceConfig.optionConfig[trueIndex];
+        switch (trueIndex)
         {
-            case TD_BWEXP:
-                gTasks[taskId].data[TD_BWEXP] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_BWEXP], gTasks[taskId].data[TD_BWEXP]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_BWEXP], gTasks[taskId].data[TD_BWEXP], gTasks[taskId].data[TD_PAGEMENUINDEX]);
+            default:
+                if(trueIndex < CURRENT_OPTIONS_NUM)
+                {
+                    gLocalSpeedchoiceConfig.optionConfig[trueIndex] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[trueIndex], selection);
+                    DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[trueIndex], selection, gLocalSpeedchoiceConfig.pageIndex);
+                }
                 break;
-            case TD_AQUALESS:
-                gTasks[taskId].data[TD_AQUALESS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_AQUALESS], gTasks[taskId].data[TD_AQUALESS]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_AQUALESS], gTasks[taskId].data[TD_AQUALESS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_INSTANTTEXT:
-                gTasks[taskId].data[TD_INSTANTTEXT] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_INSTANTTEXT], gTasks[taskId].data[TD_INSTANTTEXT], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_SPINNERS:
-                gTasks[taskId].data[TD_SPINNERS] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SPINNERS], gTasks[taskId].data[TD_SPINNERS], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_MAX_VISION:
-                gTasks[taskId].data[TD_MAX_VISION] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MAX_VISION], gTasks[taskId].data[TD_MAX_VISION], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_NERF_ROXANNE:
-                gTasks[taskId].data[TD_NERF_ROXANNE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NERF_ROXANNE], gTasks[taskId].data[TD_NERF_ROXANNE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_SUPER_BIKE:
-                gTasks[taskId].data[TD_SUPER_BIKE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_SUPER_BIKE], gTasks[taskId].data[TD_SUPER_BIKE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_NEW_WILD_ENC:
-                gTasks[taskId].data[TD_NEW_WILD_ENC] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_NEW_WILD_ENC], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_EARLY_FLY:
-                gTasks[taskId].data[TD_EARLY_FLY] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EARLY_FLY], gTasks[taskId].data[TD_EARLY_FLY], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_RUN_EVERYWHERE:
-                gTasks[taskId].data[TD_RUN_EVERYWHERE] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_RUN_EVERYWHERE]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_RUN_EVERYWHERE], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_MEME_ISLAND:
-                gTasks[taskId].data[TD_MEME_ISLAND] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MEME_ISLAND], gTasks[taskId].data[TD_MEME_ISLAND]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_MEME_ISLAND], gTasks[taskId].data[TD_MEME_ISLAND], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_EMERALD_DOUBLES:
-                gTasks[taskId].data[TD_EMERALD_DOUBLES] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_EMERALD_DOUBLES]);
-                DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_EMERALD_DOUBLES], gTasks[taskId].data[TD_PAGEMENUINDEX]);
-                break;
-            case TD_PAGE_NUM:
-                gTasks[taskId].data[TD_PAGE_NUM] = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gTasks[taskId].data[TD_PAGE_NUM]);
-                DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
-                if(gTasks[taskId].data[TD_PAGE_NUM] != gStoredPageNum) // only redraw if the page updates!
+            case PAGE:
+                gLocalSpeedchoiceConfig.pageNum = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gLocalSpeedchoiceConfig.pageNum);
+                DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
+                if(gLocalSpeedchoiceConfig.pageNum != gStoredPageNum) // only redraw if the page updates!
                 {
                     PlaySE(SE_WIN_OPEN);
-                    DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
-                    gStoredPageNum = gTasks[taskId].data[TD_PAGE_NUM]; // update the page.
+                    DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
+                    gStoredPageNum = gLocalSpeedchoiceConfig.pageNum; // update the page.
                 }
+                break;
+            case START_GAME:
                 break;
         }
     }
@@ -682,18 +637,17 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
 
 u32 CalculateCheckValue(u8 taskId)
 {
-    volatile u32 randomizerValue = gRandomizerCheckValue; // this doesnt work without having the value externally anyway but whatever.
     u32 checkValue;
     u8 i;
 
     for(checkValue = 0, i = 0; i < CURRENT_OPTIONS_NUM; i++)
-        checkValue += gTasks[taskId].data[i] << (i + (SpeedchoiceOptions[i].optionCount - 2));
+        checkValue += gLocalSpeedchoiceConfig.optionConfig[i] << (i + (SpeedchoiceOptions[i].optionCount - 2));
 
     // seed RNG with checkValue for more hash-like number.
     checkValue = 0x41c64e6d * checkValue + 0x00006073;
 
     // xor with randomizer value, if one is present.
-    checkValue = checkValue ^ randomizerValue;
+    checkValue = checkValue ^ gRandomizerCheckValue;
 
     // get rid of sign extension.
     checkValue = (checkValue << 1) >> 1;
@@ -703,18 +657,18 @@ u32 CalculateCheckValue(u8 taskId)
 
 static void SaveSpeedchoiceOptions(u8 taskId)
 {
-    gSaveBlock2.speedchoiceConfig.bwexp = gTasks[taskId].data[TD_BWEXP];
-    gSaveBlock2.speedchoiceConfig.aqualess = gTasks[taskId].data[TD_AQUALESS];
-    gSaveBlock2.speedchoiceConfig.instantText = gTasks[taskId].data[TD_INSTANTTEXT]; // don't update instant text until its time to start the game!
-    gSaveBlock2.speedchoiceConfig.spinners = gTasks[taskId].data[TD_SPINNERS];
-    gSaveBlock2.speedchoiceConfig.maxVision = gTasks[taskId].data[TD_MAX_VISION];
-    gSaveBlock2.speedchoiceConfig.nerfRoxanne = gTasks[taskId].data[TD_NERF_ROXANNE];
-    gSaveBlock2.speedchoiceConfig.superbike = gTasks[taskId].data[TD_SUPER_BIKE];
-    gSaveBlock2.speedchoiceConfig.newwildencounters = gTasks[taskId].data[TD_NEW_WILD_ENC];
-    gSaveBlock2.speedchoiceConfig.earlyfly = gTasks[taskId].data[TD_EARLY_FLY];
-    gSaveBlock2.speedchoiceConfig.runEverywhere = gTasks[taskId].data[TD_RUN_EVERYWHERE];
-    gSaveBlock2.speedchoiceConfig.memeIsland = gTasks[taskId].data[TD_MEME_ISLAND];
-    gSaveBlock2.speedchoiceConfig.emeraldDoubles = gTasks[taskId].data[TD_EMERALD_DOUBLES];
+    gSaveBlock2.speedchoiceConfig.bwexp = gLocalSpeedchoiceConfig.optionConfig[BWEXP];
+    gSaveBlock2.speedchoiceConfig.aqualess = gLocalSpeedchoiceConfig.optionConfig[AQUALESS];
+    gSaveBlock2.speedchoiceConfig.instantText = gLocalSpeedchoiceConfig.optionConfig[INSTANTTEXT];
+    gSaveBlock2.speedchoiceConfig.spinners = gLocalSpeedchoiceConfig.optionConfig[SPINNERS];
+    gSaveBlock2.speedchoiceConfig.maxVision = gLocalSpeedchoiceConfig.optionConfig[MAXVISION];
+    gSaveBlock2.speedchoiceConfig.nerfRoxanne = gLocalSpeedchoiceConfig.optionConfig[NERFROXANNE];
+    gSaveBlock2.speedchoiceConfig.superbike = gLocalSpeedchoiceConfig.optionConfig[SUPERBIKE];
+    gSaveBlock2.speedchoiceConfig.newwildencounters = gLocalSpeedchoiceConfig.optionConfig[NEWWILDENC];
+    gSaveBlock2.speedchoiceConfig.earlyfly = gLocalSpeedchoiceConfig.optionConfig[EARLYFLY];
+    gSaveBlock2.speedchoiceConfig.runEverywhere = gLocalSpeedchoiceConfig.optionConfig[RUN_EVERYWHERE];
+    gSaveBlock2.speedchoiceConfig.memeIsland = gLocalSpeedchoiceConfig.optionConfig[MEME_ISLAND];
+    gSaveBlock2.speedchoiceConfig.emeraldDoubles = gLocalSpeedchoiceConfig.optionConfig[EMERALD_DOUBLES];
 }
 
 static void Task_SpeedchoiceMenuSave(u8 taskId)
@@ -763,8 +717,8 @@ static void Task_HandleYesNoStartGame(u8 taskId)
             REG_WIN1V = WIN_RANGE(0, 0);
             REG_WIN0H = WIN_RANGE(0, 0);
             REG_WIN0V = WIN_RANGE_(0, 0);
-            DrawPageOptions(taskId, gTasks[taskId].data[TD_PAGE_NUM]);
-            DrawPageChoice(gTasks[taskId].data[TD_PAGE_NUM]);
+            DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
+            DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
             HighlightOptionMenuItem(6);
             HighlightHeaderBox();
             gTasks[taskId].func = Task_SpeedchoiceMenuProcessInput;
