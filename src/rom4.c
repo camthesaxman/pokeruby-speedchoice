@@ -659,7 +659,7 @@ bool32 IsBikingAllowedByMap(void)
         return TRUE;
 
     // is player indoor, in a secret base, or underwater?
-    if (gMapHeader.mapType == MAP_TYPE_INDOOR && (CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, OFF) == TRUE || (gSaveBlock1.location.mapGroup == 15 && gSaveBlock1.location.mapNum == 0))) // ignore allowing bike indoors if in sootopolis gym.
+    if (gMapHeader.mapType == MAP_TYPE_INDOOR && (CheckSpeedchoiceOption(RUN_EVERYWHERE, OFF) == TRUE || (gSaveBlock1.location.mapGroup == 15 && gSaveBlock1.location.mapNum == 0))) // ignore allowing bike indoors if in sootopolis gym.
         return FALSE;
     if (gMapHeader.mapType == MAP_TYPE_SECRET_BASE)
         return FALSE;
@@ -1254,6 +1254,7 @@ void sub_805470C(void)
 {
     if (gMapHeader.flags == 1 && sub_80BBB24() == 1)
         ShowMapNamePopup();
+
     sub_8080B60();
 }
 

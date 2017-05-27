@@ -1231,7 +1231,7 @@ bool8 MetatileBehavior_IsSeaweed(u8 var)
 
 bool8 MetatileBehavior_IsRunningDisallowed(u8 var)
 {
-    if(CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, YES) == TRUE)
+    if(CheckSpeedchoiceOption(RUN_EVERYWHERE, YES) == TRUE)
         return FALSE;
     if (var == MB_NO_RUNNING || var == MB_LONG_GRASS || var == MB_HOT_SPRINGS || MetatileBehavior_IsPacifidlogLog(var) != FALSE)
         return TRUE;

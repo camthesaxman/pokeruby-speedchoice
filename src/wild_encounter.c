@@ -3037,7 +3037,7 @@ static u8 ChooseWildMonIndex_Land(void)
     
     // 20/20/20/15/15/20 for new wild encounter table
     
-    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    if(CheckSpeedchoiceOption(NEWWILDENC, ON) == TRUE)
     {
         // COMMONS
         // slot 1 (20%)
@@ -3110,7 +3110,7 @@ static u8 ChooseWildMonIndex_Water(void)
 
     //35/25/15/15/10
 
-    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    if(CheckSpeedchoiceOption(NEWWILDENC, ON) == TRUE)
     {
         if(rand < 35) // 35%
             return 0;
@@ -3151,7 +3151,7 @@ static u8 ChooseWildMonIndex_Fishing(u8 rod)
     u8 rand = Random() % 100;
 
     // no fishing memes allowed
-    if(CheckSpeedchoiceOption(TD_NEW_WILD_ENC, ON) == TRUE)
+    if(CheckSpeedchoiceOption(NEWWILDENC, ON) == TRUE)
     {
         // slot 1, 60%
         if(rand < 12)
@@ -3323,18 +3323,25 @@ static u16 GenerateFishingWildMon(struct WildPokemonInfo *wildMonInfo, u8 rod)
     u8 wildMonIndexOffset = wildMonIndex % 2;
     u8 level;
 
-    // rod fix.
-    switch(rod)
+    // rod fix, but only if glitch rod is not enabled.
+    if(CheckSpeedchoiceOption(GLITCH_ROD, NO) == TRUE)
     {
-        case OLD_ROD:
-            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[0 + wildMonIndexOffset]);
-            break;
-        case GOOD_ROD:
-            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[2 + wildMonIndexOffset]);
-            break;
-        case SUPER_ROD:
-            level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[8 + wildMonIndexOffset]);
-            break;
+        switch(rod)
+        {
+            case OLD_ROD:
+                level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[0 + wildMonIndexOffset]);
+                break;
+            case GOOD_ROD:
+                level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[2 + wildMonIndexOffset]);
+                break;
+            case SUPER_ROD:
+                level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[8 + wildMonIndexOffset]);
+                break;
+        }
+    }
+    else
+    {
+        level = ChooseWildMonLevel(&wildMonInfo->wildPokemon[wildMonIndex]);
     }
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);

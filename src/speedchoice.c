@@ -19,6 +19,8 @@ extern u8 gUnknown_0839F5FC[];  //palette
 
 extern u8 gSystemText_Terminator[];
 
+const u8 gSpeedchoiceCurrentVersion[] = _("{PALETTE 9}BETA8");
+
 const u8 gSpeedchoiceTextHeader[] = _("{PALETTE 9}SPEEDCHOICE MENU");
 
 // OPTION CHOICES
@@ -36,7 +38,7 @@ const u8 gSpeedchoiceTextFull[] = _("{PALETTE 15}FULL");
 const u8 gSpeedchoiceOptionBWExp[] = _("{PALETTE 8}B/W EXP");
 const u8 gSpeedchoiceOptionAqualess[] = _("{PALETTE 15}AQUALESS");
 const u8 gSpeedchoiceOptionInstantText[] = _("{PALETTE 15}INSTANT TEXT");
-const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 8}SPINNERS");
+const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 15}SPINNERS");
 const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 15}MAX VISION");
 
 // PAGE 2
@@ -49,6 +51,8 @@ const u8 gSpeedchoiceOptionRunEverywhere[] = _("{PALETTE 15}RUN EVERYWHERE");
 // PAGE 3
 const u8 gSpeedchoiceOptionMemeIsland[] = _("{PALETTE 15}MEME ISLAND");
 const u8 gSpeedchoiceOptionEmeraldDoubles[] = _("{PALETTE 15}EMERALD DOUBLES");
+const u8 gSpeedchoiceOptionGlitchRod[] = _("{PALETTE 15}GLITCH ROD");
+const u8 gSpeedchoiceOptionBetterMarts[] = _("{PALETTE 15}BETTER MARTS");
 
 // CONSTANT OPTIONS
 const u8 gSpeedchoiceOptionPage[] = _("{PALETTE 15}PAGE");
@@ -58,7 +62,7 @@ const u8 gSpeedchoiceOptionStartGame[] = _("{PALETTE 15}START GAME");
 const u8 gSpeedchoiceTooltipBWEXP[] = _("(WIP) Will replace the\ncurrent experience system\pin favor of Black/White’s\nimplementation.");
 const u8 gSpeedchoiceTooltipAqualess[] = _("SEMI: Stops villian team events\nafter Mt. Chimney.\pFULL: Skips all the villian team\nevents. Also allows Dive to be used\pwithout Gym 7’s badge.");
 const u8 gSpeedchoiceTooltipInstantText[] = _("Self-explanatory.\nHold A or B to mash.");
-const u8 gSpeedchoiceTooltipSpinners[] = _("(WIP)\nNERF: Will prevent\pspinners from noticing\nthe player while running.\pHELL: Rapidly spins\nevery spinner every frame.");
+const u8 gSpeedchoiceTooltipSpinners[] = _("NERF: Will prevent\nspinners from noticing\pthe player while running.\pHELL: Rapidly spins\nevery spinner every frame.\pAlso fixes bag manip.");
 const u8 gSpeedchoiceTooltipMaxVision[] = _("Extends trainer vision to 8.");
 const u8 gSpeedchoiceTooltipNerfRoxanne[] = _("Reduces Gym Leader Roxanne’s\nteam levels by 2 and\premoves 1 of her potions.");
 const u8 gSpeedchoiceTooltipSuperBike[] = _("While riding the bicycle, you\ncan switch between bikes with\pthe R button.");
@@ -67,6 +71,8 @@ const u8 gSpeedchoiceTooltipEarlyFly[] = _("Recieve HM02 instead of\nItemfinder 
 const u8 gSpeedchoiceTooltipRunEverywhere[] = _("Allows the Running Shoes to\nbe used anywhere, including\pinside of houses.\pAlso allows bike in most places.");
 const u8 gSpeedchoiceTooltipMemeIsland[] = _("Mirage Island always appears.");
 const u8 gSpeedchoiceTooltipEmeraldDoubles[] = _("Treat double battle trainers\n(such as twins) as having either\p0 vision or greater than 1 vision.");
+const u8 gSpeedchoiceTooltipGlitchRod[] = _("Restores the old behavior\nof fishing from BETA 7 where\plevel is not accounted for\nby the rod type.");
+const u8 gSpeedchoiceTooltipBetterMarts[] = _("Improves the item selections\nof many Pokemon marts.\pAdds repels to Oldale Mart.\pAdds repels and super repels to\nMauville Mart.\pAdds X Specials to Rustboro\nMart.");
 
 // START GAME
 const u8 gSpeedchoiceStartGameText[] = _("CV: {STR_VAR_1}\nStart the game?");
@@ -127,7 +133,7 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { 2, (u8 *)&gSpeedchoiceOptionBWExp, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipBWEXP, OFF, FALSE },
     { 3, (u8 *)&gSpeedchoiceOptionAqualess, (struct OptionChoiceConfig *)OptionChoiceConfigSemiFull, (u8 *)&gSpeedchoiceTooltipAqualess, KEEP, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionInstantText, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipInstantText, OFF, TRUE },
-    { 3, (u8 *)&gSpeedchoiceOptionSpinners, (struct OptionChoiceConfig *)OptionChoiceConfigNerfKeep, (u8 *)&gSpeedchoiceTooltipSpinners, KEEP, FALSE },
+    { 3, (u8 *)&gSpeedchoiceOptionSpinners, (struct OptionChoiceConfig *)OptionChoiceConfigNerfKeep, (u8 *)&gSpeedchoiceTooltipSpinners, KEEP, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionMaxVision, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipMaxVision, OFF, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionNerfRoxanne, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipNerfRoxanne, NO, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionSuperBike, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipSuperBike, OFF, TRUE },
@@ -136,6 +142,8 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { 2, (u8 *)&gSpeedchoiceOptionRunEverywhere, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipRunEverywhere, OFF, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionMemeIsland, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipMemeIsland, NO, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionEmeraldDoubles, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipEmeraldDoubles, OFF, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionGlitchRod, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipGlitchRod, NO, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionBetterMarts, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipBetterMarts, OFF, TRUE },
     { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, NULL, 1, TRUE } // see above comment.
 };
 
@@ -143,6 +151,8 @@ extern u32 gRandomizerCheckValue;
 
 EWRAM_DATA u8 gStoredPageNum = 0; // default is 0, only renders options again if it's different than the task data's page number.
 EWRAM_DATA struct SpeedchoiceConfigStruct gLocalSpeedchoiceConfig = {0};
+EWRAM_DATA struct MapObjectTimerBackup gMapObjectTimerBackup[MAX_SPRITES] = {0};
+EWRAM_DATA bool8 gLastMenuWasSubmenu = {0};
 
 static void Task_SpeedchoiceMenuFadeIn(u8);
 static void Task_SpeedchoiceMenuProcessInput(u8);
@@ -173,6 +183,8 @@ void InitializeOptionChoicesAndConfig(u8 taskId)
     gSaveBlock2.speedchoiceConfig.runEverywhere = SpeedchoiceOptions[RUN_EVERYWHERE].defaultOption;
     gSaveBlock2.speedchoiceConfig.memeIsland = SpeedchoiceOptions[MEME_ISLAND].defaultOption;
     gSaveBlock2.speedchoiceConfig.emeraldDoubles = SpeedchoiceOptions[EMERALD_DOUBLES].defaultOption;
+    gSaveBlock2.speedchoiceConfig.glitchRod = SpeedchoiceOptions[GLITCH_ROD].defaultOption;
+    gSaveBlock2.speedchoiceConfig.betterMarts = SpeedchoiceOptions[BETTER_MARTS].defaultOption;
 }
 
 bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
@@ -203,6 +215,10 @@ bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
             return gSaveBlock2.speedchoiceConfig.memeIsland == selection;
         case EMERALD_DOUBLES:
             return gSaveBlock2.speedchoiceConfig.emeraldDoubles == selection;
+        case GLITCH_ROD:
+            return gSaveBlock2.speedchoiceConfig.glitchRod == selection;
+        case BETTER_MARTS:
+            return gSaveBlock2.speedchoiceConfig.betterMarts == selection;
         default:
             return FALSE;
     }
@@ -448,19 +464,18 @@ void CB2_InitSpeedchoiceMenu(void)
             // set default options and current selection.
             gLocalSpeedchoiceConfig.trueIndex = 0;
             gLocalSpeedchoiceConfig.pageIndex = 0;
+            gLocalSpeedchoiceConfig.pageNum = 1; // pages are indexed by 1.
 
             InitializeOptionChoicesAndConfig(taskId);
 
-            gLocalSpeedchoiceConfig.pageNum = 1; // pages are indexed by 1.
-
             MenuDrawTextWindow(2, 0, 27, 3);
             MenuPrint(gSpeedchoiceTextHeader, 4, 1); // draw header.
+            MenuPrint(gSpeedchoiceCurrentVersion, 22, 1);
 
             DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
             DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
 
             HighlightHeaderBox();
-
             HighlightOptionMenuItem(gLocalSpeedchoiceConfig.pageIndex);
             PlayBGM(BGM_CONLOBBY);
             gMain.state++;
@@ -669,6 +684,8 @@ static void SaveSpeedchoiceOptions(u8 taskId)
     gSaveBlock2.speedchoiceConfig.runEverywhere = gLocalSpeedchoiceConfig.optionConfig[RUN_EVERYWHERE];
     gSaveBlock2.speedchoiceConfig.memeIsland = gLocalSpeedchoiceConfig.optionConfig[MEME_ISLAND];
     gSaveBlock2.speedchoiceConfig.emeraldDoubles = gLocalSpeedchoiceConfig.optionConfig[EMERALD_DOUBLES];
+    gSaveBlock2.speedchoiceConfig.glitchRod = gLocalSpeedchoiceConfig.optionConfig[GLITCH_ROD];
+    gSaveBlock2.speedchoiceConfig.betterMarts = gLocalSpeedchoiceConfig.optionConfig[BETTER_MARTS];
 }
 
 static void Task_SpeedchoiceMenuSave(u8 taskId)

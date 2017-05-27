@@ -116,7 +116,7 @@ static const struct UnknownStruct1 gUnknown_083DB608[] =
 
 void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys)
 {
-    if(CheckSpeedchoiceOption(TD_SUPER_BIKE, ON) == TRUE)
+    if(CheckSpeedchoiceOption(SUPERBIKE, ON) == TRUE)
     {
         if(gMain.newKeys & R_BUTTON)
         {
@@ -867,7 +867,7 @@ static u8 sub_80E5DA0(struct MapObject *mapObject, s16 x, s16 y, u8 direction, u
 
 bool8 IsRunningDisallowed(u8 tile)
 {
-    if(CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, ON) == TRUE)
+    if(CheckSpeedchoiceOption(RUN_EVERYWHERE, ON) == TRUE)
         return FALSE;
     if (IsRunningDisallowedByMetatile(tile) != FALSE || gMapHeader.mapType == MAP_TYPE_INDOOR)
         return TRUE;
@@ -879,7 +879,7 @@ static bool8 IsRunningDisallowedByMetatile(u8 tile)
 {
     if (MetatileBehavior_IsRunningDisallowed(tile))
         return TRUE;
-    if (MetatileBehavior_IsFortreeBridge(tile) && (PlayerGetZCoord() & 1) == 0 && CheckSpeedchoiceOption(TD_RUN_EVERYWHERE, OFF) == TRUE)
+    if (MetatileBehavior_IsFortreeBridge(tile) && (PlayerGetZCoord() & 1) == 0 && CheckSpeedchoiceOption(RUN_EVERYWHERE, OFF) == TRUE)
         return TRUE;
     return FALSE;
 }

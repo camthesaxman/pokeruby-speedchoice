@@ -23,6 +23,10 @@
 #include "string_util.h"
 #include "task.h"
 #include "trainer_card.h"
+#include "speedchoice.h"
+
+extern struct MapObjectTimerBackup gMapObjectTimerBackup[MAX_SPRITES];
+extern bool8 gLastMenuWasSubmenu;
 
 //Menu actions
 enum {
@@ -138,6 +142,16 @@ static bool32 sub_80719FC(u8 *ptr);
 static void sub_8071B54(void);
 static void Task_8071B64(u8 taskId);
 
+void DoMapObjectTimerBackup(void)
+{
+    u8 i;
+
+    for(i = 0; i < MAX_SPRITES; i++)
+    {
+        gMapObjectTimerBackup[i].backedUp = TRUE;
+        gMapObjectTimerBackup[i].timer = gSprites[i].data3;
+    }
+}
 
 static void BuildStartMenuActions(void)
 {
@@ -259,6 +273,8 @@ static void InitStartMenu(void)
 {
     s16 step = 0;
     s16 index = 0;
+	
+	DoMapObjectTimerBackup();
 
     while (InitStartMenuMultistep(&step, &index) == FALSE)
         ;
@@ -349,6 +365,7 @@ static u8 StartMenu_InputProcessCallback(void)
 //When player selects POKEDEX
 static u8 StartMenu_PokedexCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         IncrementGameStat(0x29);
@@ -362,6 +379,7 @@ static u8 StartMenu_PokedexCallback(void)
 //When player selects POKEMON
 static u8 StartMenu_PokemonCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         PlayRainSoundEffect();
@@ -374,6 +392,7 @@ static u8 StartMenu_PokemonCallback(void)
 //When player selects BAG
 static u8 StartMenu_BagCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         PlayRainSoundEffect();
@@ -386,6 +405,7 @@ static u8 StartMenu_BagCallback(void)
 //When player selects POKENAV
 static u8 StartMenu_PokenavCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         PlayRainSoundEffect();
@@ -398,6 +418,7 @@ static u8 StartMenu_PokenavCallback(void)
 //When player selects his/her name
 static u8 StartMenu_PlayerCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         PlayRainSoundEffect();
@@ -418,6 +439,7 @@ static u8 StartMenu_SaveCallback(void)
 //When player selects OPTION
 static u8 StartMenu_OptionCallback(void)
 {
+    gLastMenuWasSubmenu = TRUE;
     if (!gPaletteFade.active)
     {
         PlayRainSoundEffect();

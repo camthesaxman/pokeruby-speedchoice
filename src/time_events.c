@@ -42,7 +42,7 @@ void UpdateMirageRnd(u16 days)
 
 bool8 IsMirageIslandPresent(void)
 {
-    if(CheckSpeedchoiceOption(TD_MEME_ISLAND, ON) == TRUE)
+    if(CheckSpeedchoiceOption(MEME_ISLAND, ON) == TRUE)
         return TRUE; // always present.
     else
     {

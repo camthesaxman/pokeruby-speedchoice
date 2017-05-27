@@ -1311,6 +1311,10 @@
 	.byte \selection
 	.endm
 
+	.macro enablenationaldex
+	.byte 0xc7
+	.endm
+
 	@ Writes the name of the specified (box) PC box to the specified buffer.
 	@.macro bufferboxname out, box
 	@.byte 0xc6
@@ -1319,10 +1323,10 @@
 	@.endm
 
 	@ Sets the color of the text in standard message boxes. 0x00 produces blue (male) text, 0x01 produces red (female) text, 0xFF resets the color to the default for the current OW's gender, and all other values produce black text.
-	.macro textcolor color
-	.byte 0xc7
-	.byte \color
-	.endm
+	@.macro textcolor color
+	@.byte 0xc7
+	@.byte \color
+	@.endm
 
 	@ The exact purpose of this command is unknown, but it is related to the blue help-text box that appears on the bottom of the screen when the Main Menu is opened.
 	.macro loadhelp pointer

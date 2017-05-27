@@ -14,8 +14,6 @@
 #include "pokemon.h"
 #include "species.h"
 
-#define MAX_VISION 8
-
 extern u16 TrainerBattleLoadArg16(u8 *ptr);
 
 extern bool8 (*gIsTrainerInRange[])(struct MapObject *, u16, s16, s16);
@@ -72,7 +70,7 @@ bool8 CheckTrainer(u8 trainer)
         if (canApproach != 0)
         {
             // Emerald handling
-            if(CheckSpeedchoiceOption(TD_EMERALD_DOUBLES, ON) == TRUE)
+            if(CheckSpeedchoiceOption(EMERALD_DOUBLES, ON) == TRUE)
             {
                 if(CountAlivePartyMons() < 2 && gTrainers[TrainerBattleLoadArg16(scriptPtr + 2)].doubleBattle == TRUE)
                     return FALSE;
@@ -104,12 +102,12 @@ bool8 TrainerCanApproachPlayer(struct MapObject *trainerObj)
     u8 playerCoord;
 
     PlayerGetDestCoords(&x, &y);
-    if ( trainerObj->trainerType == 1 ) // trainers that don't spin
+    if ( trainerObj->trainerType == 1 )
     {
         playerCoord = gIsTrainerInRange[trainerObj->mapobj_unk_18 - 1](trainerObj, trainerObj->trainerRange_berryTreeId, x, y);
         return CheckPathBetweenTrainerAndPlayer((struct MapObject2 *)trainerObj, playerCoord, trainerObj->mapobj_unk_18);
     }
-    else // spinners
+    else
     {
         for (i = 0; i < 4; i++)
         {
@@ -123,8 +121,8 @@ bool8 TrainerCanApproachPlayer(struct MapObject *trainerObj)
 
 bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-        vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+        vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.x == x
         && y > trainerObj->coords2.y
@@ -136,8 +134,8 @@ bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-        vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+        vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.x == x
         && y < trainerObj->coords2.y
@@ -149,8 +147,8 @@ bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-        vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+        vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.y == y
         && x < trainerObj->coords2.x
@@ -162,8 +160,8 @@ bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 
 
 bool8 IsTrainerInRangeEast(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(TD_MAX_VISION, ON) == TRUE)
-        vision = MAX_VISION;
+    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+        vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.y == y
         && x > trainerObj->coords2.x
@@ -197,7 +195,7 @@ bool8 CheckPathBetweenTrainerAndPlayer(struct MapObject2 *trainerObj, u8 playerC
     {
         var = sub_8060024((struct MapObject *)trainerObj, x, y, direction);
 
-        if (var && (var & COLLISION_MASK))
+        if((CheckSpeedchoiceOption(MAXVISION, OFF) == TRUE) && (var && (var & COLLISION_MASK)))
             return FALSE;
     }
 
@@ -211,7 +209,7 @@ bool8 CheckPathBetweenTrainerAndPlayer(struct MapObject2 *trainerObj, u8 playerC
 
     trainerObj->mapobj_unk_19 = unk19_temp;
     trainerObj->mapobj_unk_19b = unk19b_temp;
-    if (var == 4)
+    if (var == 4 || CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
         return playerCoord;
 
     return FALSE;

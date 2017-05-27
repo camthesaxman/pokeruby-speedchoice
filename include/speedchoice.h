@@ -2,7 +2,7 @@
 #define GUARD_SPEEDCHOICE_H
 
 // global speedchoice config
-#define CURRENT_OPTIONS_NUM 12
+#define CURRENT_OPTIONS_NUM 14
 #define MAX_CHOICES 6
 #define OPTIONS_PER_PAGE 5
 #define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
@@ -12,6 +12,9 @@
 
 #define min(a, b) (a < b ? a : b)
 #define max(a, b) (a > b ? a : b)
+
+#define SPINNER_HELL_TIMER 4 // once every 2 frames since the game runs at 60FPS.
+#define MAX_VISION_RANGE 8
 
 // options
 enum
@@ -28,6 +31,8 @@ enum
     RUN_EVERYWHERE,
     MEME_ISLAND,
     EMERALD_DOUBLES,
+    GLITCH_ROD,
+    BETTER_MARTS,
 
     // STATIC OPTIONS
     PAGE, // to make it match task data
@@ -89,6 +94,12 @@ struct SpeedchoiceConfigStruct
     u8 trueIndex;
     u8 pageIndex;
     u8 pageNum;
+};
+
+struct MapObjectTimerBackup
+{
+    bool8 backedUp;
+    s16 timer;
 };
 
 void CB2_InitSpeedchoiceMenu(void);

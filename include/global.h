@@ -458,6 +458,8 @@ struct SpeedchoiceSaveOptions
     u8 runEverywhere:1;
     u8 memeIsland:1;
     u8 emeraldDoubles:1;
+    u8 glitchRod:1;
+    u8 betterMarts:1;
 };
 
 struct SaveBlock2 /* 0x02024EA4 */

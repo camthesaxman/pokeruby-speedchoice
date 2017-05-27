@@ -133,6 +133,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_152DBA:: @ 8152DBA
 	setvar 0x4051, 1
 	setvar 0x408d, 4
 	setvar 0x4050, 3
+	enablenationaldex @ force national dex
 	releaseall
 	end
 

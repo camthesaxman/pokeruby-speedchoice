@@ -13,7 +13,15 @@ RustboroCity_Mart_EventScript_157BD4:: @ 8157BD4
 	end
 
 RustboroCity_Mart_EventScript_157BEF:: @ 8157BEF
+	checkspeedchoice BETTERMARTS, OFF
+	jumpif TRUE, RustboroItems1
+	pokemart RustboroCitySpeedchoice_Mart_Items1
+	jump AfterRustboroItems1
+
+RustboroItems1::
 	pokemart RustboroCity_Mart_Items1
+
+AfterRustboroItems1::
 	msgbox RustboroCity_Mart_Text_1A0C02, 4
 	release
 	end
@@ -34,8 +42,33 @@ RustboroCity_Mart_Items1:: @ 8157C00
 	release
 	end
 
+	.align 2
+RustboroCitySpeedchoice_Mart_Items1:: @ 8157C00
+	.2byte ITEM_POKE_BALL
+	.2byte ITEM_POTION
+	.2byte ITEM_SUPER_POTION
+	.2byte ITEM_ANTIDOTE
+	.2byte ITEM_PARALYZE_HEAL
+	.2byte ITEM_ESCAPE_ROPE
+	.2byte ITEM_REPEL
+	.2byte ITEM_X_SPEED
+	.2byte ITEM_X_ATTACK
+	.2byte ITEM_X_DEFEND
+	.2byte ITEM_X_SPECIAL
+	.2byte ITEM_NONE
+	release
+	end
+
 RustboroCity_Mart_EventScript_157C18:: @ 8157C18
+	checkspeedchoice BETTERMARTS, OFF
+	jumpif TRUE, RustboroItems2
+	pokemart RustboroCitySpeedchoice_Mart_Items2
+	jump AfterRustboroItems2
+
+RustboroItems2::
 	pokemart RustboroCity_Mart_Items2
+
+AfterRustboroItems2::
 	msgbox RustboroCity_Mart_Text_1A0C02, 4
 	release
 	end
@@ -54,6 +87,25 @@ RustboroCity_Mart_Items2:: @ 8157C28
 	.2byte ITEM_X_SPEED
 	.2byte ITEM_X_ATTACK
 	.2byte ITEM_X_DEFEND
+	.2byte ITEM_NONE
+	release
+	end
+
+	.align 2
+RustboroCitySpeedchoice_Mart_Items2:: @ 8157C28
+	.2byte ITEM_POKE_BALL
+	.2byte ITEM_TIMER_BALL
+	.2byte ITEM_REPEAT_BALL
+	.2byte ITEM_POTION
+	.2byte ITEM_SUPER_POTION
+	.2byte ITEM_ANTIDOTE
+	.2byte ITEM_PARALYZE_HEAL
+	.2byte ITEM_ESCAPE_ROPE
+	.2byte ITEM_REPEL
+	.2byte ITEM_X_SPEED
+	.2byte ITEM_X_ATTACK
+	.2byte ITEM_X_DEFEND
+	.2byte ITEM_X_SPECIAL
 	.2byte ITEM_NONE
 	release
 	end

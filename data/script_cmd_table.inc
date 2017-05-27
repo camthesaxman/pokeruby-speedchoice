@@ -199,6 +199,7 @@ gScriptCmdTable:: @ 814AE30
 	.4byte ScrCmd_warp6
 	.4byte ScrCmd_waitpokecry
 	.4byte ScrCmd_checkspeedchoice
+	.4byte ScrCmd_enablenationaldex
 
 gScriptCmdTableEnd::
 	.4byte ScrCmd_snop

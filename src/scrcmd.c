@@ -1901,3 +1901,10 @@ bool8 ScrCmd_checkspeedchoice(struct ScriptContext *ctx)
 
     return FALSE;
 }
+
+// proper national dex hack
+bool8 ScrCmd_enablenationaldex(struct ScriptContext *ctx)
+{
+    EnableNationalPokedex();
+    return FALSE;
+}

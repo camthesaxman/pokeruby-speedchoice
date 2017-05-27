@@ -53,6 +53,11 @@
 	.equiv SUPER_BIKE, 6
 	.equiv NEWWILDENC, 7
 	.equiv EARLYFLY, 8
+	.equiv RUNEVERYWHERE, 9
+	.equiv MEMEISLAND, 10
+	.equiv EMERALDDOUBLES, 11
+	.equiv GLITCHROD, 12
+	.equiv BETTERMARTS, 13
 	
 	.equiv YES, 0
 	.equiv NO, 1

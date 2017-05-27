@@ -3,6 +3,11 @@
 #include "asm_fieldmap.h"
 #include "field_effect.h"
 #include "sprite.h"
+#include "speedchoice.h"
+#include "rng.h"
+
+extern struct MapObjectTimerBackup gMapObjectTimerBackup[MAX_SPRITES];
+extern bool8 gLastMenuWasSubmenu;
 
 typedef void (*SpriteStepFunc)(struct Sprite *sprite, u8 dir);
 
@@ -216,13 +221,42 @@ u8 sub_806478C(struct Sprite *sprite)
     return v2;
 }
 
-void sub_8064820(struct Sprite *sprite, u16 a2)
+void TryRestoringSpinnerTimerBackup(struct Sprite *sprite)
 {
-    sprite->data3 = a2;
+    u8 i;
+
+    if(gLastMenuWasSubmenu == TRUE && CheckSpeedchoiceOption(SPINNERS, HELL) == TRUE) // only fix bag manip if HELL is enabled.
+    {
+        for(i = 0; i < MAX_SPRITES; i++)
+        {
+            gSprites[i].data3 = gMapObjectTimerBackup[i].timer;
+            gMapObjectTimerBackup[i].timer = 0;
+            gMapObjectTimerBackup[i].backedUp = FALSE;
+        }
+        gLastMenuWasSubmenu = FALSE;
+    }
 }
 
-bool8 sub_8064824(struct Sprite *sprite)
+void SetSpinnerTimer(struct Sprite *sprite, u16 timer)
 {
+    TryRestoringSpinnerTimerBackup(sprite);
+    if(CheckSpeedchoiceOption(SPINNERS, HELL) == TRUE && (gMapObjects[sprite->data0].trainerType == 1 || gMapObjects[sprite->data0].trainerType == 3)) // a bit redundant perhaps?
+    {
+        sprite->data3 = (Random() % 4) * 2 + 2;
+    }
+    else
+    {
+        sprite->data3 = timer;
+    }
+}
+
+bool8 DoSpinnerTimerTick(struct Sprite *sprite)
+{
+    TryRestoringSpinnerTimerBackup(sprite);
+
+	if (sprite->data3 == 0) // don't underflow.
+        return TRUE;
+
     sprite->data3--;
 
     if (sprite->data3 == 0)
