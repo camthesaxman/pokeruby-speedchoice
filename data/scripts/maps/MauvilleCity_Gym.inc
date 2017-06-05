@@ -68,7 +68,19 @@ MauvilleCity_Gym_EventScript_1565A7:: @ 81565A7
 	end
 
 MauvilleCity_Gym_EventScript_1565AB:: @ 81565AB
+	checkspeedchoice NERFGYMLEADERS, YES
+	jumpif TRUE, NerfedWattson
+	jump NormalWattson
+
+NerfedWattson::
+	trainerbattle 1, OPPONENT_WATTSON_NERFED, 0, MauvilleCity_Gym_Text_180C32, MauvilleCity_Gym_Text_180D64, MauvilleCity_Gym_EventScript_1565DB
+	jump AfterWattson
+
+NormalWattson::
 	trainerbattle 1, OPPONENT_WATTSON, 0, MauvilleCity_Gym_Text_180C32, MauvilleCity_Gym_Text_180D64, MauvilleCity_Gym_EventScript_1565DB
+	jump AfterWattson
+
+AfterWattson::
 	checkflag 167
 	jumpif 0, MauvilleCity_Gym_EventScript_15661D
 	compare 0x40ba, 2

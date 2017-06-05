@@ -49,16 +49,24 @@ static void sub_812C01C(void)
 {
     u8 taskId;
 
-    PlaySE(0xEC);
-    BeginNormalPaletteFade(~(1 << (gSprites[GetPlayerAvatarObjectId()].oam.paletteNum + 16)), 4, 0, 8, 0x1F);
+    //PlaySE(0xEC);
+    //BeginNormalPaletteFade(~(1 << (gSprites[GetPlayerAvatarObjectId()].oam.paletteNum + 16)), 4, 0, 8, 0x1F);
     taskId = CreateTask(sub_812C084, 0);
-    gTasks[taskId].data[0] = 0;
-    FieldEffectActiveListRemove(51);
+    //gTasks[taskId].data[0] = 0;
+    //FieldEffectActiveListRemove(51);
 }
 
 static void sub_812C084(u8 taskId)
 {
-    if (!gPaletteFade.active)
+    if (SweetScentWildEncounter() == TRUE)
+    {
+        DestroyTask(taskId);
+    }
+    else
+    {
+        gTasks[taskId].func = sub_812C118;
+    }
+    /*if (!gPaletteFade.active)
     {
         if (gTasks[taskId].data[0] == 64)
         {
@@ -77,14 +85,16 @@ static void sub_812C084(u8 taskId)
         {
             gTasks[taskId].data[0]++;
         }
-    }
+    }*/
 }
 
 static void sub_812C118(u8 taskId)
 {
-    if (!gPaletteFade.active)
+    ScriptContext1_SetupScript(SweetScentNothingHereScript);
+    DestroyTask(taskId);
+    /*if (!gPaletteFade.active)
     {
         ScriptContext1_SetupScript(SweetScentNothingHereScript);
         DestroyTask(taskId);
-    }
+    }*/
 }

@@ -229,9 +229,13 @@ void TryRestoringSpinnerTimerBackup(struct Sprite *sprite)
     {
         for(i = 0; i < MAX_SPRITES; i++)
         {
-            gSprites[i].data3 = gMapObjectTimerBackup[i].timer;
-            gMapObjectTimerBackup[i].timer = 0;
-            gMapObjectTimerBackup[i].backedUp = FALSE;
+            // dont adjust the player's timer for safety.
+            if(gPlayerAvatar.mapObjectId != gSprites[i].data0)
+            {
+                gSprites[i].data3 = gMapObjectTimerBackup[i].timer;
+                gMapObjectTimerBackup[i].timer = 0;
+                gMapObjectTimerBackup[i].backedUp = FALSE;
+            }
         }
         gLastMenuWasSubmenu = FALSE;
     }
@@ -254,7 +258,7 @@ bool8 DoSpinnerTimerTick(struct Sprite *sprite)
 {
     TryRestoringSpinnerTimerBackup(sprite);
 
-	if (sprite->data3 == 0) // don't underflow.
+    if (sprite->data3 == 0) // don't underflow.
         return TRUE;
 
     sprite->data3--;

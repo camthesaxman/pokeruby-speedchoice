@@ -8339,3 +8339,15 @@ gTrainers:: @ 81F04FC
 	.4byte 0x7 @ AI flags
 	.4byte 2 @ party size
 	.4byte gTrainerParty_Roxanne_Nerfed
+	
+@ WATTSON
+	.byte F_TRAINER_PARTY_CUSTOM_MOVESET @ party type flags
+	.byte TRAINER_CLASS_NAME_LEADER
+	.byte TRAINER_ENCOUNTER_MUSIC_MALE @ gender flag and encounter music
+	.byte TRAINER_PIC_WATTSON
+	.string "WATTSON$", 12
+	.2byte ITEM_SUPER_POTION, ITEM_NONE, ITEM_NONE, ITEM_NONE @ items
+	.4byte FALSE @ is double battle
+	.4byte 0x7 @ AI flags
+	.4byte 3 @ party size
+	.4byte gTrainerParty_Wattson_Nerfed

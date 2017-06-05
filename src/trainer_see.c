@@ -121,7 +121,7 @@ bool8 TrainerCanApproachPlayer(struct MapObject *trainerObj)
 
 bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+    if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == FALSE)
         vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.x == x
@@ -134,7 +134,7 @@ bool8 IsTrainerInRangeSouth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+    if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == FALSE)
         vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.x == x
@@ -147,7 +147,7 @@ bool8 IsTrainerInRangeNorth(struct MapObject *trainerObj, s16 vision, s16 x, s16
 
 bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+    if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == FALSE)
         vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.y == y
@@ -160,7 +160,7 @@ bool8 IsTrainerInRangeWest(struct MapObject *trainerObj, s16 vision, s16 x, s16 
 
 bool8 IsTrainerInRangeEast(struct MapObject *trainerObj, s16 vision, s16 x, s16 y)
 {
-    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+    if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == FALSE)
         vision = MAX_VISION_RANGE;
 
     if ( trainerObj->coords2.y == y
@@ -185,7 +185,7 @@ bool8 CheckPathBetweenTrainerAndPlayer(struct MapObject2 *trainerObj, u8 playerC
     u8 i;
     u8 var;
 
-    if (!playerCoord)
+    if(playerCoord == 0)
         return FALSE;
 
     x = trainerObj->coords2.x;
@@ -195,8 +195,11 @@ bool8 CheckPathBetweenTrainerAndPlayer(struct MapObject2 *trainerObj, u8 playerC
     {
         var = sub_8060024((struct MapObject *)trainerObj, x, y, direction);
 
-        if((CheckSpeedchoiceOption(MAXVISION, OFF) == TRUE) && (var && (var & COLLISION_MASK)))
+        // simply dont check at all whether hell collision is active or not.
+        if(CheckSpeedchoiceOption(MAXVISION, SANE) == TRUE && (var && (var & ~1)))
             return FALSE;
+		else if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == TRUE && (var && (var & 1))) // normal handling
+			return FALSE;
     }
 
     // preserve mapobj_unk_19 before clearing.
@@ -209,7 +212,7 @@ bool8 CheckPathBetweenTrainerAndPlayer(struct MapObject2 *trainerObj, u8 playerC
 
     trainerObj->mapobj_unk_19 = unk19_temp;
     trainerObj->mapobj_unk_19b = unk19b_temp;
-    if (var == 4 || CheckSpeedchoiceOption(MAXVISION, ON) == TRUE)
+    if (var == 4 || CheckSpeedchoiceOption(MAXVISION, HELL) == TRUE)
         return playerCoord;
 
     return FALSE;

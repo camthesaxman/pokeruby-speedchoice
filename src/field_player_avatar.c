@@ -1595,7 +1595,7 @@ u8 Fishing6(struct Task *task)
 {
     sub_805A954();
     task->data[0]++;
-    if (!GetFishingWildMonListHeader() || (Random() & 1))
+    if (!GetFishingWildMonListHeader()/* || (Random() & 1)*/) // guarantee a fishing result.
         task->data[0] = 11;
     else
         StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], sub_805FE08(player_get_direction_lower_nybble()));

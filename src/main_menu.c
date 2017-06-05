@@ -906,8 +906,8 @@ static void Task_NewGameSpeech12(u8 taskId)
         }
         else
         {
-            //Initialize Brendan sprite
-            u8 spriteId = gTasks[taskId].data[TD_BRENDAN_SPRITE_ID];
+            //Initialize May sprite
+            u8 spriteId = gTasks[taskId].data[TD_MAY_SPRITE_ID];
 
             gSprites[spriteId].pos1.x = 180;
             gSprites[spriteId].pos1.y = 60;
@@ -955,17 +955,17 @@ static void Task_NewGameSpeech16(u8 taskId)
 
     switch (GenderMenuProcessInput())
     {
-    case MALE:
-        sub_8072DEC();
+    case 0: // female
+	    sub_8072DEC();
         PlaySE(SE_SELECT);
-        gSaveBlock2.playerGender = MALE;
+        gSaveBlock2.playerGender = FEMALE;
         MenuZeroFillWindowRect(2, 4, 8, 9);
         gTasks[taskId].func = Task_NewGameSpeech19;
         break;
-    case FEMALE:
-        sub_8072DEC();
+    case 1: // male
+		sub_8072DEC();
         PlaySE(SE_SELECT);
-        gSaveBlock2.playerGender = FEMALE;
+        gSaveBlock2.playerGender = MALE;
         MenuZeroFillWindowRect(2, 4, 8, 9);
         gTasks[taskId].func = Task_NewGameSpeech19;
         break;
@@ -998,9 +998,9 @@ static void Task_NewGameSpeech17(u8 taskId)
 
         //Set up new trainer sprite
         if (gTasks[taskId].data[TD_GENDER_SELECTION])
-            spriteId = gTasks[taskId].data[TD_MAY_SPRITE_ID];
-        else
             spriteId = gTasks[taskId].data[TD_BRENDAN_SPRITE_ID];
+        else
+            spriteId = gTasks[taskId].data[TD_MAY_SPRITE_ID];
         gSprites[spriteId].pos1.x = 240;
         gSprites[spriteId].pos1.y = 60;
         gSprites[spriteId].invisible = FALSE;

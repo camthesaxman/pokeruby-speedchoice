@@ -25,6 +25,8 @@
 #include "task.h"
 #include "vars.h"
 
+extern bool8 sUsedEscapeOption;
+
 extern void (* gUnknown_03005D00)(u8);
 extern void (* gUnknown_0300485C)(void);
 extern void (* gUnknown_03004AE4)(u8);
@@ -972,10 +974,20 @@ void sub_80C9FC0(u8 var)
 
 void sub_80C9FDC(void)
 {
-    RemoveBagItem(gScriptItemId, 1);
-    sub_80A3E0C();
-    CopyItemName(gScriptItemId, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, gOtherText_UsedItem);
+    if(sUsedEscapeOption == TRUE)
+    {
+        //sub_80A3E0C();
+        CopyItemName(ITEM_ESCAPE_ROPE, gStringVar2);
+        StringExpandPlaceholders(gStringVar4, gOtherText_UsedItem);
+    }
+    else
+    {
+        RemoveBagItem(gScriptItemId, 1);
+        sub_80A3E0C();
+        CopyItemName(gScriptItemId, gStringVar2);
+        StringExpandPlaceholders(gStringVar4, gOtherText_UsedItem);
+    }
+	sUsedEscapeOption = FALSE;
 }
 
 void ItemUseOutOfBattle_Repel(u8 var)

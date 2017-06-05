@@ -2,7 +2,7 @@ RustboroCity_Gym_MapScripts:: @ 81578D8
 	.byte 0
 
 RustboroCity_Gym_EventScript_1578D9:: @ 81578D9
-	checkspeedchoice NERFROXANNE, YES
+	checkspeedchoice NERFGYMLEADERS, YES
 	jumpif TRUE, RustboroCity_Gym_NerfedRoxanne
 	jump RustboroCity_Gym_NormalRoxanne
 

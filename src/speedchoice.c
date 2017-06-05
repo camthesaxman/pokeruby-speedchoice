@@ -19,9 +19,9 @@ extern u8 gUnknown_0839F5FC[];  //palette
 
 extern u8 gSystemText_Terminator[];
 
-const u8 gSpeedchoiceCurrentVersion[] = _("{PALETTE 9}BETA8");
-
+// HEADER
 const u8 gSpeedchoiceTextHeader[] = _("{PALETTE 9}SPEEDCHOICE MENU");
+const u8 gSpeedchoiceCurrentVersion[] = _("{PALETTE 9}BETA9");
 
 // OPTION CHOICES
 const u8 gSpeedchoiceTextYes[] = _("{PALETTE 15}YES");
@@ -33,6 +33,9 @@ const u8 gSpeedchoiceTextKeep[] = _("{PALETTE 15}KEEP");
 const u8 gSpeedchoiceTextHell[] = _("{PALETTE 15}HELL");
 const u8 gSpeedchoiceTextSemi[] = _("{PALETTE 15}SEMI");
 const u8 gSpeedchoiceTextFull[] = _("{PALETTE 15}FULL");
+const u8 gSpeedchoiceTextStatic[] = _("{PALETTE 15}SAME");
+const u8 gSpeedchoiceTextRand[] = _("{PALETTE 15}RAND");
+const u8 gSpeedchoiceTextSane[] = _("{PALETTE 15}SANE");
 
 // PAGE 1
 const u8 gSpeedchoiceOptionBWExp[] = _("{PALETTE 8}B/W EXP");
@@ -42,7 +45,7 @@ const u8 gSpeedchoiceOptionSpinners[] = _("{PALETTE 15}SPINNERS");
 const u8 gSpeedchoiceOptionMaxVision[] = _("{PALETTE 15}MAX VISION");
 
 // PAGE 2
-const u8 gSpeedchoiceOptionNerfRoxanne[] = _("{PALETTE 15}NERF ROXANNE");
+const u8 gSpeedchoiceOptionNerfGymLeaders[] = _("{PALETTE 15}NERF GYM LEADERS");
 const u8 gSpeedchoiceOptionSuperBike[] = _("{PALETTE 15}SUPER BIKE");
 const u8 gSpeedchoiceOptionNewWildEnc[] = _("{PALETTE 15}NEW WILD ENC.");
 const u8 gSpeedchoiceOptionEarlyFly[] = _("{PALETTE 15}EARLY FLY");
@@ -53,6 +56,7 @@ const u8 gSpeedchoiceOptionMemeIsland[] = _("{PALETTE 15}MEME ISLAND");
 const u8 gSpeedchoiceOptionEmeraldDoubles[] = _("{PALETTE 15}EMERALD DOUBLES");
 const u8 gSpeedchoiceOptionGlitchRod[] = _("{PALETTE 15}GLITCH ROD");
 const u8 gSpeedchoiceOptionBetterMarts[] = _("{PALETTE 15}BETTER MARTS");
+const u8 gSpeedchoiceOptionGoodEarlyWilds[] = _("{PALETTE 15}GOOD EARLY WILDS");
 
 // CONSTANT OPTIONS
 const u8 gSpeedchoiceOptionPage[] = _("{PALETTE 15}PAGE");
@@ -63,8 +67,8 @@ const u8 gSpeedchoiceTooltipBWEXP[] = _("(WIP) Will replace the\ncurrent experie
 const u8 gSpeedchoiceTooltipAqualess[] = _("SEMI: Stops villian team events\nafter Mt. Chimney.\pFULL: Skips all the villian team\nevents. Also allows Dive to be used\pwithout Gym 7’s badge.");
 const u8 gSpeedchoiceTooltipInstantText[] = _("Self-explanatory.\nHold A or B to mash.");
 const u8 gSpeedchoiceTooltipSpinners[] = _("NERF: Will prevent\nspinners from noticing\pthe player while running.\pHELL: Rapidly spins\nevery spinner every frame.\pAlso fixes bag manip.");
-const u8 gSpeedchoiceTooltipMaxVision[] = _("Extends trainer vision to 8.");
-const u8 gSpeedchoiceTooltipNerfRoxanne[] = _("Reduces Gym Leader Roxanne’s\nteam levels by 2 and\premoves 1 of her potions.");
+const u8 gSpeedchoiceTooltipMaxVision[] = _("SANE: Will extend trainer vision\nto 8, but prevent trainers from\pwalking through walls or solid\nobjects.\pHELL: No collision or\nelevation detection.");
+const u8 gSpeedchoiceTooltipNerfGymLeaders[] = _("Reduces Gym Leader Roxanne’s\nteam levels by 2 and\premoves 1 of her potions.\pAlso nerfs Gym Leader Wattson’s\nteam levels by 3 and removes one\pof his Super Potions.");
 const u8 gSpeedchoiceTooltipSuperBike[] = _("While riding the bicycle, you\ncan switch between bikes with\pthe R button.");
 const u8 gSpeedchoiceTooltipNewWildEnc[] = _("Intended to be used with\nthe randomizer.\pTreats grass and fishing slots\nas 6 and 2 slots respectively.");
 const u8 gSpeedchoiceTooltipEarlyFly[] = _("Recieve HM02 instead of\nItemfinder at Rival 2.\pAllows use of Fly without use of\nGym 6’s badge.");
@@ -73,59 +77,83 @@ const u8 gSpeedchoiceTooltipMemeIsland[] = _("Mirage Island always appears.");
 const u8 gSpeedchoiceTooltipEmeraldDoubles[] = _("Treat double battle trainers\n(such as twins) as having either\p0 vision or greater than 1 vision.");
 const u8 gSpeedchoiceTooltipGlitchRod[] = _("Restores the old behavior\nof fishing from BETA 7 where\plevel is not accounted for\nby the rod type.");
 const u8 gSpeedchoiceTooltipBetterMarts[] = _("Improves the item selections\nof many Pokemon marts.\pAdds repels to Oldale Mart.\pAdds repels and super repels to\nMauville Mart.\pAdds X Specials to Rustboro\nMart.");
+const u8 gSpeedchoiceTooltipGoodEarlyWilds[] = _("SAME: Depending on the\nrandomizer check value, wild\pencounters in the grass for\npokemon below lv 10 will have\ptheir final evolution.\pRAND: If they have a branching\nevolution, it will be randomly\pgenerated instead of being static.");
 
 // START GAME
 const u8 gSpeedchoiceStartGameText[] = _("CV: {STR_VAR_1}\nStart the game?");
 
+// MISC STRINGS
+const u8 gSpeedchoiceEscapeText[] = _("ESCAPE");
+
 const struct OptionChoiceConfig OptionChoiceConfigYesNo[MAX_CHOICES] = 
 {
-    { 184, 40, (u8 *)&gSpeedchoiceTextYes },
-    { 155, 40, (u8 *)&gSpeedchoiceTextNo },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL }
+    { 184, (u8 *)&gSpeedchoiceTextYes },
+    { 155, (u8 *)&gSpeedchoiceTextNo },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
 };
 
 const struct OptionChoiceConfig OptionChoiceConfigOnOff[MAX_CHOICES] = 
 {
-    { 184, 40, (u8 *)&gSpeedchoiceTextOn },
-    { 155, 40, (u8 *)&gSpeedchoiceTextOff },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL }
+    { 184, (u8 *)&gSpeedchoiceTextOn },
+    { 155, (u8 *)&gSpeedchoiceTextOff },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
 };
 
 const struct OptionChoiceConfig OptionChoiceConfigNerfKeep[MAX_CHOICES] = 
 {
-    { 124, 40, (u8 *)&gSpeedchoiceTextNerf },
-    { 154, 40, (u8 *)&gSpeedchoiceTextKeep },
-    { 184, 40, (u8 *)&gSpeedchoiceTextHell },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL }
+    { 124, (u8 *)&gSpeedchoiceTextNerf },
+    { 154, (u8 *)&gSpeedchoiceTextKeep },
+    { 184, (u8 *)&gSpeedchoiceTextHell },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
 };
 
 const struct OptionChoiceConfig OptionChoiceConfigSemiFull[MAX_CHOICES] = 
 {
-    { 124, 40, (u8 *)&gSpeedchoiceTextSemi },
-    { 154, 40, (u8 *)&gSpeedchoiceTextKeep },
-    { 184, 40, (u8 *)&gSpeedchoiceTextFull },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL }
+    { 124, (u8 *)&gSpeedchoiceTextSemi },
+    { 154, (u8 *)&gSpeedchoiceTextKeep },
+    { 184, (u8 *)&gSpeedchoiceTextFull },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
+};
+
+const struct OptionChoiceConfig OptionChoiceConfigOffRand[MAX_CHOICES] = 
+{
+    { 129, (u8 *)&gSpeedchoiceTextOff },
+    { 154, (u8 *)&gSpeedchoiceTextStatic },
+    { 184, (u8 *)&gSpeedchoiceTextRand },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
+};
+
+const struct OptionChoiceConfig OptionChoiceConfigSaneHell[MAX_CHOICES] = 
+{
+    { 129, (u8 *)&gSpeedchoiceTextOff },
+    { 154, (u8 *)&gSpeedchoiceTextSane },
+    { 184, (u8 *)&gSpeedchoiceTextHell },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
 };
 
 // this is totally weird, but in order to use ProcessGeneralInput, a struct is needed for page, so, I opt to have a dummy struct which only has the number of choices relevent to the calculation of the selection.
 const struct OptionChoiceConfig OptionChoiceConfigPage[MAX_CHOICES] = 
 {
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL },
-    { -1, -1, NULL }
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL },
+    { -1, NULL }
 };
 
 const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // plus one for page.
@@ -134,8 +162,8 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { 3, (u8 *)&gSpeedchoiceOptionAqualess, (struct OptionChoiceConfig *)OptionChoiceConfigSemiFull, (u8 *)&gSpeedchoiceTooltipAqualess, KEEP, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionInstantText, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipInstantText, OFF, TRUE },
     { 3, (u8 *)&gSpeedchoiceOptionSpinners, (struct OptionChoiceConfig *)OptionChoiceConfigNerfKeep, (u8 *)&gSpeedchoiceTooltipSpinners, KEEP, TRUE },
-    { 2, (u8 *)&gSpeedchoiceOptionMaxVision, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipMaxVision, OFF, TRUE },
-    { 2, (u8 *)&gSpeedchoiceOptionNerfRoxanne, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipNerfRoxanne, NO, TRUE },
+    { 3, (u8 *)&gSpeedchoiceOptionMaxVision, (struct OptionChoiceConfig *)OptionChoiceConfigSaneHell, (u8 *)&gSpeedchoiceTooltipMaxVision, OFF_2, TRUE },
+    { 2, (u8 *)&gSpeedchoiceOptionNerfGymLeaders, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipNerfGymLeaders, NO, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionSuperBike, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipSuperBike, OFF, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionNewWildEnc, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipNewWildEnc, OFF, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionEarlyFly, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipEarlyFly, NO, TRUE },
@@ -144,6 +172,7 @@ const struct SpeedchoiceOption SpeedchoiceOptions[CURRENT_OPTIONS_NUM + 1] = // 
     { 2, (u8 *)&gSpeedchoiceOptionEmeraldDoubles, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipEmeraldDoubles, OFF, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionGlitchRod, (struct OptionChoiceConfig *)OptionChoiceConfigYesNo, (u8 *)&gSpeedchoiceTooltipGlitchRod, NO, TRUE },
     { 2, (u8 *)&gSpeedchoiceOptionBetterMarts, (struct OptionChoiceConfig *)OptionChoiceConfigOnOff, (u8 *)&gSpeedchoiceTooltipBetterMarts, OFF, TRUE },
+    { 3, (u8 *)&gSpeedchoiceOptionGoodEarlyWilds, (struct OptionChoiceConfig *)OptionChoiceConfigOffRand, (u8 *)&gSpeedchoiceTooltipGoodEarlyWilds, OFF, TRUE },
     { MAX_PAGES, (u8 *)&gSpeedchoiceOptionPage, (struct OptionChoiceConfig *)OptionChoiceConfigPage, NULL, 1, TRUE } // see above comment.
 };
 
@@ -171,12 +200,13 @@ void InitializeOptionChoicesAndConfig(u8 taskId)
     for(i = 0; i < CURRENT_OPTIONS_NUM; i++)
         gLocalSpeedchoiceConfig.optionConfig[i] = SpeedchoiceOptions[i].defaultOption;
 
+    // this would be a for loop, but i want to use the fewest bits possible to avoid shifting RAM too much: hence the ugly per-option saving.
     gSaveBlock2.speedchoiceConfig.bwexp = SpeedchoiceOptions[BWEXP].defaultOption;
     gSaveBlock2.speedchoiceConfig.aqualess = SpeedchoiceOptions[AQUALESS].defaultOption;
     gSaveBlock2.speedchoiceConfig.instantText = SpeedchoiceOptions[INSTANTTEXT].defaultOption;
     gSaveBlock2.speedchoiceConfig.spinners = SpeedchoiceOptions[SPINNERS].defaultOption;
     gSaveBlock2.speedchoiceConfig.maxVision = SpeedchoiceOptions[MAXVISION].defaultOption;
-    gSaveBlock2.speedchoiceConfig.nerfRoxanne = SpeedchoiceOptions[NERFROXANNE].defaultOption;
+    gSaveBlock2.speedchoiceConfig.nerfGymLeaders = SpeedchoiceOptions[NERFGYMLEADERS].defaultOption;
     gSaveBlock2.speedchoiceConfig.superbike = SpeedchoiceOptions[SUPERBIKE].defaultOption;
     gSaveBlock2.speedchoiceConfig.newwildencounters = SpeedchoiceOptions[NEWWILDENC].defaultOption;
     gSaveBlock2.speedchoiceConfig.earlyfly = SpeedchoiceOptions[EARLYFLY].defaultOption;
@@ -185,6 +215,7 @@ void InitializeOptionChoicesAndConfig(u8 taskId)
     gSaveBlock2.speedchoiceConfig.emeraldDoubles = SpeedchoiceOptions[EMERALD_DOUBLES].defaultOption;
     gSaveBlock2.speedchoiceConfig.glitchRod = SpeedchoiceOptions[GLITCH_ROD].defaultOption;
     gSaveBlock2.speedchoiceConfig.betterMarts = SpeedchoiceOptions[BETTER_MARTS].defaultOption;
+    gSaveBlock2.speedchoiceConfig.goodEarlyWilds = SpeedchoiceOptions[GOOD_EARLY_WILDS].defaultOption;
 }
 
 bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
@@ -201,8 +232,8 @@ bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
             return gSaveBlock2.speedchoiceConfig.spinners == selection;
         case MAXVISION:
             return gSaveBlock2.speedchoiceConfig.maxVision == selection;
-        case NERFROXANNE:
-            return gSaveBlock2.speedchoiceConfig.nerfRoxanne == selection;
+        case NERFGYMLEADERS:
+            return gSaveBlock2.speedchoiceConfig.nerfGymLeaders == selection;
         case SUPERBIKE:
             return gSaveBlock2.speedchoiceConfig.superbike == selection;
         case NEWWILDENC:
@@ -219,6 +250,8 @@ bool8 CheckSpeedchoiceOption(u8 option, u8 selection)
             return gSaveBlock2.speedchoiceConfig.glitchRod == selection;
         case BETTER_MARTS:
             return gSaveBlock2.speedchoiceConfig.betterMarts == selection;
+        case GOOD_EARLY_WILDS:
+            return gSaveBlock2.speedchoiceConfig.goodEarlyWilds == selection;
         default:
             return FALSE;
     }
@@ -237,8 +270,7 @@ static void DrawOptionMenuChoice(u8 *text, u8 x, u8 y, u8 style)
     MenuPrint_PixelCoords(dst, x, y, 1);
 }
 
-// for selecting options. not unstubbed yet.
-static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
+static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection, bool8 indexedToOne) // if indexedToOne is true (1), i can conveniently use it as the selection anchor.
 {
     if(gMain.newKeys & DPAD_RIGHT)
     {
@@ -247,11 +279,14 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
             PlaySE(SE_HAZURE);
             return selection;
         }
-        if(selection == (option->optionCount - 1)) // options are indexed by 0.
-            selection = 0;
+        if(selection == (option->optionCount - (!indexedToOne))) // i invert the option because when indexedToOne is set to true (or 1) it means i do not subtract 1 since it's not 0 indexed, so invert the boolean in both cases to get the correct modifier.
+            selection = indexedToOne;
         else
             selection++;
-        PlaySE(SE_SELECT);
+        if(indexedToOne == FALSE)
+            PlaySE(SE_SELECT);
+        else
+            PlaySE(SE_WIN_OPEN); // page scrolling.
     }
     // i dont return immediately because emulators could hold both right and left down.
     if(gMain.newKeys & DPAD_LEFT)
@@ -261,40 +296,15 @@ static u8 ProcessGeneralInput(struct SpeedchoiceOption *option, u8 selection)
             PlaySE(SE_HAZURE);
             return selection;
         }
-        if(selection == 0)
-            selection = (option->optionCount - 1); // indexed by 0.
+        if(selection == indexedToOne)
+            selection = (option->optionCount - (!indexedToOne));
         else
             selection--;
-        PlaySE(SE_SELECT);
-    }
-    return selection;
-}
-
-// todo: combine with above function
-static u8 ProcessGeneralInputIndexedToOne(struct SpeedchoiceOption *option, u8 selection)
-{
-    if(gMain.newKeys & DPAD_RIGHT)
-    {
-        if(selection == (option->optionCount)) // pages are indexed by 1.
-            selection = 1;
+        if(indexedToOne == FALSE)
+            PlaySE(SE_SELECT);
         else
-            selection++;
+            PlaySE(SE_WIN_OPEN); // page scrolling.
     }
-    // i dont return immediately because emulators could hold both right and left down.
-    if(gMain.newKeys & DPAD_LEFT)
-    {
-        if(selection == 1)
-            selection = (option->optionCount); // indexed by 1.
-        else
-            selection--;
-    }
-
-    // sanity check, but im unsure if it matters. do NOT let page escape the allowed number of pages!
-    if(selection < 1)
-        selection = 1;
-    if(selection > (option->optionCount))
-        selection = option->optionCount;
-
     return selection;
 }
 
@@ -594,7 +604,7 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
     }
     else if (gMain.newKeys & SELECT_BUTTON) // do tooltip.
     {
-        if(gLocalSpeedchoiceConfig.trueIndex <= CURRENT_OPTIONS_NUM)
+        if(gLocalSpeedchoiceConfig.trueIndex <= CURRENT_OPTIONS_NUM && SpeedchoiceOptions[gLocalSpeedchoiceConfig.trueIndex].tooltip != NULL)
             DrawTooltip(taskId, (struct SpeedchoiceOption *)&SpeedchoiceOptions[gLocalSpeedchoiceConfig.trueIndex]);
     }
     else if (gMain.newKeys & DPAD_UP)
@@ -630,16 +640,15 @@ static void Task_SpeedchoiceMenuProcessInput(u8 taskId)
             default:
                 if(trueIndex < CURRENT_OPTIONS_NUM)
                 {
-                    gLocalSpeedchoiceConfig.optionConfig[trueIndex] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[trueIndex], selection);
+                    gLocalSpeedchoiceConfig.optionConfig[trueIndex] = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[trueIndex], selection, FALSE);
                     DrawGeneralChoices((struct SpeedchoiceOption *)&SpeedchoiceOptions[trueIndex], selection, gLocalSpeedchoiceConfig.pageIndex);
                 }
                 break;
             case PAGE:
-                gLocalSpeedchoiceConfig.pageNum = ProcessGeneralInputIndexedToOne((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gLocalSpeedchoiceConfig.pageNum);
+                gLocalSpeedchoiceConfig.pageNum = ProcessGeneralInput((struct SpeedchoiceOption *)&SpeedchoiceOptions[CURRENT_OPTIONS_NUM], gLocalSpeedchoiceConfig.pageNum, TRUE);
                 DrawPageChoice(gLocalSpeedchoiceConfig.pageNum);
                 if(gLocalSpeedchoiceConfig.pageNum != gStoredPageNum) // only redraw if the page updates!
                 {
-                    PlaySE(SE_WIN_OPEN);
                     DrawPageOptions(taskId, gLocalSpeedchoiceConfig.pageNum);
                     gStoredPageNum = gLocalSpeedchoiceConfig.pageNum; // update the page.
                 }
@@ -672,12 +681,13 @@ u32 CalculateCheckValue(u8 taskId)
 
 static void SaveSpeedchoiceOptions(u8 taskId)
 {
+    // once again i would prefer to use an extensible for loop here, but the options being bitfields means that it cannot currently be done.
     gSaveBlock2.speedchoiceConfig.bwexp = gLocalSpeedchoiceConfig.optionConfig[BWEXP];
     gSaveBlock2.speedchoiceConfig.aqualess = gLocalSpeedchoiceConfig.optionConfig[AQUALESS];
     gSaveBlock2.speedchoiceConfig.instantText = gLocalSpeedchoiceConfig.optionConfig[INSTANTTEXT];
     gSaveBlock2.speedchoiceConfig.spinners = gLocalSpeedchoiceConfig.optionConfig[SPINNERS];
     gSaveBlock2.speedchoiceConfig.maxVision = gLocalSpeedchoiceConfig.optionConfig[MAXVISION];
-    gSaveBlock2.speedchoiceConfig.nerfRoxanne = gLocalSpeedchoiceConfig.optionConfig[NERFROXANNE];
+    gSaveBlock2.speedchoiceConfig.nerfGymLeaders = gLocalSpeedchoiceConfig.optionConfig[NERFGYMLEADERS];
     gSaveBlock2.speedchoiceConfig.superbike = gLocalSpeedchoiceConfig.optionConfig[SUPERBIKE];
     gSaveBlock2.speedchoiceConfig.newwildencounters = gLocalSpeedchoiceConfig.optionConfig[NEWWILDENC];
     gSaveBlock2.speedchoiceConfig.earlyfly = gLocalSpeedchoiceConfig.optionConfig[EARLYFLY];
@@ -686,11 +696,11 @@ static void SaveSpeedchoiceOptions(u8 taskId)
     gSaveBlock2.speedchoiceConfig.emeraldDoubles = gLocalSpeedchoiceConfig.optionConfig[EMERALD_DOUBLES];
     gSaveBlock2.speedchoiceConfig.glitchRod = gLocalSpeedchoiceConfig.optionConfig[GLITCH_ROD];
     gSaveBlock2.speedchoiceConfig.betterMarts = gLocalSpeedchoiceConfig.optionConfig[BETTER_MARTS];
+    gSaveBlock2.speedchoiceConfig.goodEarlyWilds = gLocalSpeedchoiceConfig.optionConfig[GOOD_EARLY_WILDS];
 }
 
 static void Task_SpeedchoiceMenuSave(u8 taskId)
 {
-    // calculate check Value. a pass into a local variable is required for ConvertIntToHexStringN to not raise a warning, even though the local variable is unused.
     ConvertIntToHexStringN(gStringVar1, CalculateCheckValue(taskId), STR_CONV_MODE_LEADING_ZEROS, 8);
 
     gTasks[taskId].func = Task_DrawYesNoText;

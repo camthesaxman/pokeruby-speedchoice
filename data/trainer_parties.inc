@@ -9742,3 +9742,24 @@ gTrainerParty_Roxanne_Nerfed: @ 81EDF30
 	.2byte SPECIES_NOSEPASS
 	.2byte MOVE_TACKLE, MOVE_HARDEN, MOVE_ROCK_THROW, MOVE_ROCK_TOMB
 	.2byte 0 @ padding
+	
+	.align 2
+
+gTrainerParty_Wattson_Nerfed: @ 81EDF70
+	.2byte 200 @ IV (0-255)
+	.2byte 19 @ level
+	.2byte SPECIES_MAGNEMITE
+	.2byte MOVE_SUPERSONIC, MOVE_SONIC_BOOM, MOVE_THUNDER_SHOCK, MOVE_THUNDER_WAVE
+	.2byte 0 @ padding
+
+	.2byte 200 @ IV (0-255)
+	.2byte 18 @ level
+	.2byte SPECIES_VOLTORB
+	.2byte MOVE_ROLLOUT, MOVE_SELF_DESTRUCT, MOVE_SPARK, MOVE_SONIC_BOOM
+	.2byte 0 @ padding
+
+	.2byte 250 @ IV (0-255)
+	.2byte 20 @ level
+	.2byte SPECIES_MAGNETON
+	.2byte MOVE_SUPERSONIC, MOVE_SONIC_BOOM, MOVE_SHOCK_WAVE, MOVE_THUNDER_WAVE
+	.2byte 0 @ padding

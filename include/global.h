@@ -450,8 +450,8 @@ struct SpeedchoiceSaveOptions
     u8 aqualess:2;
     u8 instantText:1;
     u8 spinners:2;
-    u8 maxVision:1;
-    u8 nerfRoxanne:1;
+    u8 maxVision:2;
+    u8 nerfGymLeaders:1;
     u8 superbike:1;
     u8 newwildencounters:1;
     u8 earlyfly:1;
@@ -460,6 +460,7 @@ struct SpeedchoiceSaveOptions
     u8 emeraldDoubles:1;
     u8 glitchRod:1;
     u8 betterMarts:1;
+    u8 goodEarlyWilds:2;
 };
 
 struct SaveBlock2 /* 0x02024EA4 */

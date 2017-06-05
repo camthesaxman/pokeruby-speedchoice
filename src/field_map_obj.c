@@ -208,11 +208,11 @@ u8 InitFieldObjectStateFromTemplate(struct MapObjectTemplate *template, u8 b, u8
     mapObj->elevation = template->elevation;
     mapObj->mapobj_unk_19 = template->unkA_0;
     mapObj->mapobj_unk_19b = template->unkA_4;
-    if(CheckSpeedchoiceOption(SPINNERS, HELL) == TRUE && (template->unkC == 1 || template->unkC == 3))
+    if(CheckSpeedchoiceOption(SPINNERS, HELL) == TRUE && gPlayerAvatar.mapObjectId != var && (template->unkC == 1 || template->unkC == 3))
         mapObj->trainerType = 1;
     else
         mapObj->trainerType = template->unkC;
-    if(CheckSpeedchoiceOption(MAXVISION, ON) == TRUE && (template->unkC == 1 || template->unkC == 3))
+    if(CheckSpeedchoiceOption(MAXVISION, OFF_2) == FALSE && gPlayerAvatar.mapObjectId != var && (template->unkC == 1 || template->unkC == 3))
         mapObj->trainerRange_berryTreeId = MAX_VISION_RANGE;
     else
         mapObj->trainerRange_berryTreeId = template->unkE;

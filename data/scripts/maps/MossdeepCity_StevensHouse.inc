@@ -40,6 +40,7 @@ MossdeepCity_StevensHouse_EventScript_15AA0B:: @ 815AA0B
 	waitmove 0
 	msgbox MossdeepCity_StevensHouse_Text_18DA77, 4
 	giveitem ITEM_HM08
+	giveitem ITEM_EON_TICKET
 	setflag 123
 	setflag 302
 	msgbox MossdeepCity_StevensHouse_Text_18DB22, 4

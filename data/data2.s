@@ -41,8 +41,8 @@ gSpriteAffineAnimTable_81E79AC:: @ 81E79AC
 
 	.align 2
 gUnknown_081E79B0:: @ 81E79B0
-	.4byte gBirchText_Boy, 0
 	.4byte gBirchText_Girl, 0
+	.4byte gBirchText_Boy, 0
 
 	.align 2
 gMalePresetNames:: @ 81E79C0

@@ -378,6 +378,19 @@ struct PokemonStorage
     u8 unkArray[14];
 };
 
+struct Evolution
+{
+    u16 method;
+    u16 param;
+    u16 targetSpecies;
+};
+
+struct EvolutionData
+{
+    struct Evolution evolutions[5];
+};
+
+extern struct EvolutionData gEvolutionTable[];
 extern struct Pokemon gPlayerParty[PARTY_SIZE];
 extern struct Pokemon gEnemyParty[PARTY_SIZE];
 

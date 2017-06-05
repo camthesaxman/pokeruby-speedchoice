@@ -1,11 +1,11 @@
-# Pokémon Ruby and Sapphire Speedchoice (BETA 8)
+# Pokémon Ruby and Sapphire Speedchoice (BETA 9)
 
 This is a fork of the Ruby/Sapphire dissassembly that adds speedrunner oriented options for casual racing between runners.
 
 It builds the following roms:
 
-* pokeruby.gba `sha1: 820c398002140e34c50e8dfe03a9b7e57af46f18`
-* pokesapphire.gba `sha1: b355914dad15c8ef81504b431902bd975136fd17`
+* pokeruby.gba `sha1: 93ca9958f78274f3d56e16dc5437a8be7f466004`
+* pokesapphire.gba `sha1: 2f150bfeb0c688fb38edfa7b0b87cb19d1361275`
 
 Currently, the following options do not work yet:
 

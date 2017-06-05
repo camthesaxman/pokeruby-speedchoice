@@ -2,7 +2,7 @@
 #define GUARD_SPEEDCHOICE_H
 
 // global speedchoice config
-#define CURRENT_OPTIONS_NUM 14
+#define CURRENT_OPTIONS_NUM 15
 #define MAX_CHOICES 6
 #define OPTIONS_PER_PAGE 5
 #define ALLOPTIONS_PER_PAGE OPTIONS_PER_PAGE + 2 // page + start game
@@ -24,7 +24,7 @@ enum
     INSTANTTEXT,
     SPINNERS,
     MAXVISION,
-    NERFROXANNE,
+    NERFGYMLEADERS,
     SUPERBIKE,
     NEWWILDENC,
     EARLYFLY,
@@ -33,6 +33,7 @@ enum
     EMERALD_DOUBLES,
     GLITCH_ROD,
     BETTER_MARTS,
+    GOOD_EARLY_WILDS,
 
     // STATIC OPTIONS
     PAGE, // to make it match task data
@@ -71,9 +72,23 @@ enum
     LAST
 };
 
+enum
+{
+    OFF_2,
+    STATIC,
+    RAND
+};
+
+enum
+{
+    // off_2 is taken up by 0.
+    SANE = 1,
+    // hell is taken up by 2.
+};
+
 struct OptionChoiceConfig
 {
-    s16 x, y;
+    s16 x; // do not store the Y coordinate. Y is automatically calculated depending on the row the option is placed and therefore is not necessary.
     u8 *string; // can be null
 };
 

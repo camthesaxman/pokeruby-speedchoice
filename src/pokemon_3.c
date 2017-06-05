@@ -28,18 +28,6 @@
 #define EVO_LEVEL_SHEDINJA   0x000e // Pokémon reaches the specified level (special value for Shedinja)
 #define EVO_BEAUTY           0x000f // Pokémon levels up with beauty ≥ specified value
 
-struct Evolution
-{
-    u16 method;
-    u16 param;
-    u16 targetSpecies;
-};
-
-struct EvolutionData
-{
-    struct Evolution evolutions[5];
-};
-
 extern void get_battle_strings_(u8 *);
 
 extern u8 gPlayerPartyCount;
@@ -50,7 +38,6 @@ extern struct BattlePokemon gBattleMons[4];
 extern u8 * const gItemEffectTable[];
 extern u8 gUnknown_02024A60;
 extern struct BattleEnigmaBerry gEnigmaBerries[];
-extern struct EvolutionData gEvolutionTable[];
 extern u16 gSpeciesToHoennPokedexNum[];
 extern u16 gSpeciesToNationalPokedexNum[];
 extern u16 gHoennToNationalOrder[];

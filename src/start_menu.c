@@ -23,7 +23,11 @@
 #include "string_util.h"
 #include "task.h"
 #include "trainer_card.h"
+#include "item.h"
+#include "items.h"
 #include "speedchoice.h"
+
+extern bool8 is_light_level_1_2_3_or_6(u8);
 
 extern struct MapObjectTimerBackup gMapObjectTimerBackup[MAX_SPRITES];
 extern bool8 gLastMenuWasSubmenu;
@@ -39,7 +43,8 @@ enum {
     MENU_ACTION_OPTION,
     MENU_ACTION_EXIT,
     MENU_ACTION_RETIRE,
-    MENU_ACTION_PLAYER_LINK
+    MENU_ACTION_PLAYER_LINK,
+    MENU_ACTION_ESCAPE,
 };
 
 static u8 (*saveDialogCallback)(void);
@@ -56,6 +61,7 @@ extern u8 gNumSafariBalls;
 EWRAM_DATA static u8 sStartMenuCursorPos = 0;
 EWRAM_DATA static u8 sNumStartMenuActions = 0;
 EWRAM_DATA static u8 sCurrentStartMenuActions[10] = {0};
+EWRAM_DATA bool8 sUsedEscapeOption = FALSE;
 
 //Text strings
 extern u8 gSystemText_Saving[];
@@ -76,6 +82,7 @@ extern u8 SystemText_Option[];
 extern u8 SystemText_Exit[];
 extern u8 SystemText_Retire[];
 extern u8 SystemText_Player[];
+extern u8 gSpeedchoiceEscapeText[];
 
 static u8 StartMenu_PokedexCallback(void);
 static u8 StartMenu_PokemonCallback(void);
@@ -87,6 +94,7 @@ static u8 StartMenu_OptionCallback(void);
 static u8 StartMenu_ExitCallback(void);
 static u8 StartMenu_RetireCallback(void);
 static u8 StartMenu_PlayerLinkCallback(void);
+static u8 StartMenu_EscapeCallback(void);
 
 static const struct MenuAction sStartMenuItems[] =
 {
@@ -100,6 +108,7 @@ static const struct MenuAction sStartMenuItems[] =
     { SystemText_Exit, StartMenu_ExitCallback },
     { SystemText_Retire, StartMenu_RetireCallback },
     { SystemText_Player, StartMenu_PlayerLinkCallback },
+    { gSpeedchoiceEscapeText, StartMenu_EscapeCallback },
 };
 
 //Private functions
@@ -153,6 +162,25 @@ void DoMapObjectTimerBackup(void)
     }
 }
 
+bool8 CanUseFly(void)
+{
+    if(is_light_level_1_2_3_or_6(gMapHeader.mapType) == TRUE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 IsMapEscapeOption(void)
+{
+    u8 i;
+
+    for(i = 0; i < 16; i++)
+        if((gMapObjects[i].trainerType == 1 || gMapObjects[i].trainerType == 3) && CanUseFly() == FALSE)
+            return TRUE;
+
+    return FALSE;
+}
+
 static void BuildStartMenuActions(void)
 {
     sNumStartMenuActions = 0;
@@ -184,7 +212,10 @@ static void BuildStartMenuActions_Normal(void)
     AddStartMenuAction(MENU_ACTION_PLAYER);
     AddStartMenuAction(MENU_ACTION_SAVE);
     AddStartMenuAction(MENU_ACTION_OPTION);
-    AddStartMenuAction(MENU_ACTION_EXIT);
+    if(IsMapEscapeOption() == TRUE)
+        AddStartMenuAction(MENU_ACTION_ESCAPE);
+    else
+        AddStartMenuAction(MENU_ACTION_EXIT);
 }
 
 static void BuildStartMenuActions_SafariZone(void)
@@ -273,8 +304,8 @@ static void InitStartMenu(void)
 {
     s16 step = 0;
     s16 index = 0;
-	
-	DoMapObjectTimerBackup();
+    
+    DoMapObjectTimerBackup();
 
     while (InitStartMenuMultistep(&step, &index) == FALSE)
         ;
@@ -350,8 +381,9 @@ static u8 StartMenu_InputProcessCallback(void)
         gCallback_03004AE8 = sStartMenuItems[sCurrentStartMenuActions[sStartMenuCursorPos]].func;
         if (gCallback_03004AE8 != StartMenu_SaveCallback &&
            gCallback_03004AE8 != StartMenu_ExitCallback &&
+		   gCallback_03004AE8 != StartMenu_EscapeCallback &&
            gCallback_03004AE8 != StartMenu_RetireCallback)
-            fade_screen(1, 0);
+            fade_screen(1, 0); // is not submenu?
         return 0;
     }
     if (gMain.newKeys & (START_BUTTON | B_BUTTON))
@@ -450,11 +482,39 @@ static u8 StartMenu_OptionCallback(void)
     return 0;
 }
 
+static void ItemUseInEscape_EscapeRope(u8);
+extern void (* gUnknown_03005D00)(u8);
+extern void sub_80CA18C(u8);
+extern void SetUpItemUseOnFieldCallback(u8);
+
 //When player selects EXIT
 static u8 StartMenu_ExitCallback(void)
 {
     CloseMenu();
     return 1;
+}
+
+void CloseMenuWithoutScriptContext(void)
+{
+    PlaySE(SE_SELECT);
+    MenuZeroFillScreen();
+    sub_8064E2C();
+    sub_8072DEC();
+}
+
+static u8 StartMenu_EscapeCallback(void)
+{
+    CloseMenuWithoutScriptContext();
+    CreateTask(ItemUseInEscape_EscapeRope, 0xFF);
+    return 1;
+}
+
+static void ItemUseInEscape_EscapeRope(u8 taskId)
+{
+    sUsedEscapeOption = TRUE;
+    gUnknown_03005D00 = sub_80CA18C; // do escape rope attempt.
+    gTasks[taskId].data[2] = 1; // dont fade to black! Not in a submenu.
+    SetUpItemUseOnFieldCallback(taskId);
 }
 
 //When player selects RETIRE

@@ -11,7 +11,10 @@
 #include "safari_zone.h"
 #include "script.h"
 #include "species.h"
+#include "pokemon.h"
 #include "speedchoice.h"
+
+extern u32 gRandomizerCheckValue;
 
 struct WildPokemon
 {
@@ -3290,6 +3293,33 @@ static void CreateWildMon(u16 species, u8 b)
     CreateMonWithNature(&gEnemyParty[0], species, b, 0x20, PickWildMonNature());
 }
 
+u8 GetEvolutionBranchCount(u16 species)
+{
+    u8 i;
+
+    for(i = 0; gEvolutionTable[species].evolutions[i].targetSpecies != SPECIES_NONE; i++)
+        ;
+
+    return i;
+}
+
+u16 GetRandomFinalEvolution(u16 species)
+{
+    // maybe this can be written as a for loop.
+    while(1)
+    {
+        u8 evoCount = GetEvolutionBranchCount(species);
+
+        if(evoCount == 0) // there are no further evolutions, so return the current one.
+            return species;
+            
+        if(CheckSpeedchoiceOption(GOOD_EARLY_WILDS, STATIC) == TRUE)
+            SeedRng(gRandomizerCheckValue + species); // prevent samey pattern-ness
+
+        species = gEvolutionTable[species].evolutions[Random() % evoCount].targetSpecies;
+    }
+}
+
 static bool8 GenerateWildMon(struct WildPokemonInfo *wildMonInfo, u8 area, bool8 checkRepel)
 {
     u8 wildMonIndex = 0;
@@ -3312,7 +3342,14 @@ static bool8 GenerateWildMon(struct WildPokemonInfo *wildMonInfo, u8 area, bool8
         return FALSE;
     else
     {
-        CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
+        u16 newSpecies;
+        
+        if(CheckSpeedchoiceOption(GOOD_EARLY_WILDS, OFF_2) == FALSE && level < 10)
+            newSpecies = GetRandomFinalEvolution(wildMonInfo->wildPokemon[wildMonIndex].species);
+        else
+            newSpecies = wildMonInfo->wildPokemon[wildMonIndex].species;
+
+        CreateWildMon(newSpecies, level);
         return TRUE;
     }
 }
