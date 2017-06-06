@@ -3297,7 +3297,7 @@ u8 GetEvolutionBranchCount(u16 species)
 {
     u8 i;
 
-    for(i = 0; gEvolutionTable[species].evolutions[i].targetSpecies != SPECIES_NONE; i++)
+    for(i = 0; (gEvolutionTable[species].evolutions[i].targetSpecies != SPECIES_NONE && i < 5); i++)
         ;
 
     return i;
